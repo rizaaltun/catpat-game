@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "chapter": "chapter-01",
+  "worldLength": 15200,
+  "purpose": "visual-layout-handoff",
+  "globalRules": {
+    "staticPlatformBudget": 18,
+    "negativeSpaceTargetPercent": [35, 45],
+    "normalGapWidth": [150, 210],
+    "mechanicGapWidth": [320, 420],
+    "rocksAreWalkable": false,
+    "rocksMayFillGaps": false,
+    "oneDominantMechanicPerCamera": true,
+    "colliderMustFollowVisibleGrassTop": true,
+    "deadlyVoidMustRemainVisuallyOpen": true
+  },
+  "zones": [
+    {
+      "id": "01-safe-intro",
+      "range": [0, 1600],
+      "platforms": ["long", "medium"],
+      "gap": {"width": 150, "requiredAction": "basic-jump"},
+      "props": ["sign", "flowers"],
+      "rule": "No hazards before the first readable jump."
+    },
+    {
+      "id": "02-gap-school",
+      "range": [1600, 3500],
+      "platforms": ["medium", "medium", "short"],
+      "gaps": [
+        {"width": 170, "landingHeightDelta": -15},
+        {"width": 195, "landingHeightDelta": 20}
+      ],
+      "props": ["grass"],
+      "rule": "Keep the void empty; no rock stepping stones and no decorative collider."
+    },
+    {
+      "id": "03-stone-lift",
+      "range": [3500, 4850],
+      "platforms": ["medium", "short-moving", "medium"],
+      "gap": {"width": 380, "requiredAction": "ride-stone-lift"},
+      "motion": {"axis": "y", "distance": 180, "visualSupport": "none"},
+      "rule": "The moving stone floats by game logic; remove the cut vine/rope/pulley completely."
+    },
+    {
+      "id": "04-button-gate",
+      "range": [5000, 6300],
+      "platforms": ["long-runway"],
+      "mechanic": {"input": "pressure-button", "output": "festival-gate-panel-up"},
+      "rule": "Button and gate must be visible together; this camera contains no second mechanic."
+    },
+    {
+      "id": "05-swing-crossing",
+      "range": [6500, 8000],
+      "platforms": ["medium", "swing-platform", "medium"],
+      "gap": {"width": 390, "requiredAction": "ride-swing"},
+      "rule": "Use the full swing silhouette with both ropes and the complete top beam."
+    },
+    {
+      "id": "06-breathing-room",
+      "range": [8200, 9300],
+      "platforms": ["medium", "medium"],
+      "gap": {"width": 180, "requiredAction": "basic-jump"},
+      "props": ["bush", "flowers"],
+      "rule": "A quiet recovery beat: no mechanism and no oversized prop."
+    },
+    {
+      "id": "07-crate-bridge-puzzle",
+      "range": [9500, 11300],
+      "platforms": ["long-runway", "bridge", "medium-landing"],
+      "placements": {
+        "crateStartX": 9680,
+        "pressurePlateX": 10380,
+        "void": [10650, 11010],
+        "bridgeSpan": [10620, 11040]
+      },
+      "gap": {"width": 360, "requiredAction": "push-crate-to-pressure-plate"},
+      "causalChain": ["push-crate", "plate-depresses", "bridge-extends", "cross-gap"],
+      "rule": "The crate has no decorative purpose: without it the bridge remains unusable."
+    },
+    {
+      "id": "08-optional-mushroom-route",
+      "range": [11500, 13200],
+      "platforms": ["long", "upper-short", "medium-landing"],
+      "mushroom": {
+        "role": "optional-bounce-pad",
+        "visibleHeight": [85, 100],
+        "relativeToPlayer": "approximately-half-height",
+        "reward": "ticket"
+      },
+      "rule": "The main route stays readable; the mushroom only launches toward the optional upper ticket."
+    },
+    {
+      "id": "09-festival-finish",
+      "range": [13200, 15200],
+      "platforms": ["safe-finish-ground"],
+      "props": ["tent", "flowers", "festival-gate"],
+      "rule": "After the last challenge, keep the reward area safe, open, and uncluttered."
+    }
+  ],
+  "forbiddenPatterns": [
+    "continuous road-like floor through every camera",
+    "rocks inserted between every platform",
+    "crate placed beside a bridge without a pressure-plate dependency",
+    "mushroom larger than the player",
+    "cropped vine or rope above a moving platform",
+    "decorative pixels used as invisible collision"
+  ]
+}

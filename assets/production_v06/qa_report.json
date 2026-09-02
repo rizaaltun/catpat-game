@@ -1,0 +1,406 @@
+{
+  "schemaVersion": 1,
+  "package": "catpat-chapter01-art-v06",
+  "result": "PASS",
+  "rgbaAssetsAudited": 17,
+  "checks": [
+    "RGBA mode",
+    "four transparent corners",
+    "non-empty visible bounds",
+    "sprite-frame margin >= 12 px",
+    "fixed 512x512 sprite cells"
+  ],
+  "assets": [
+    {
+      "file": "assets/production_v06/sprites/crate_push_sheet.png",
+      "size": [
+        3072,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "frameMargins": [
+        [
+          99,
+          109,
+          100,
+          82
+        ],
+        [
+          80,
+          114,
+          103,
+          87
+        ],
+        [
+          101,
+          110,
+          78,
+          76
+        ],
+        [
+          90,
+          110,
+          102,
+          84
+        ],
+        [
+          93,
+          129,
+          93,
+          82
+        ],
+        [
+          99,
+          109,
+          100,
+          82
+        ]
+      ]
+    },
+    {
+      "file": "assets/production_v06/sprites/mushroom_bounce_sheet.png",
+      "size": [
+        3072,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "frameMargins": [
+        [
+          116,
+          94,
+          117,
+          42
+        ],
+        [
+          109,
+          139,
+          110,
+          42
+        ],
+        [
+          97,
+          214,
+          97,
+          42
+        ],
+        [
+          126,
+          49,
+          127,
+          42
+        ],
+        [
+          119,
+          79,
+          120,
+          42
+        ],
+        [
+          116,
+          94,
+          117,
+          42
+        ]
+      ]
+    },
+    {
+      "file": "assets/production_v06/platforms/platform_long.png",
+      "size": [
+        768,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        24,
+        294,
+        744,
+        500
+      ]
+    },
+    {
+      "file": "assets/production_v06/platforms/platform_medium.png",
+      "size": [
+        768,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        114,
+        255,
+        654,
+        500
+      ]
+    },
+    {
+      "file": "assets/production_v06/platforms/platform_short.png",
+      "size": [
+        768,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        307,
+        312,
+        460,
+        500
+      ]
+    },
+    {
+      "file": "assets/production_v06/platforms/platform_ramp.png",
+      "size": [
+        768,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        183,
+        106,
+        585,
+        500
+      ]
+    },
+    {
+      "file": "assets/production_v06/platforms/platform_bridge.png",
+      "size": [
+        768,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        203,
+        234,
+        565,
+        500
+      ]
+    },
+    {
+      "file": "assets/production_v06/mechanisms/crate_pressure_plate.png",
+      "size": [
+        768,
+        422
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        10,
+        10,
+        758,
+        412
+      ]
+    },
+    {
+      "file": "assets/production_v06/mechanisms/swing_platform_complete.png",
+      "size": [
+        764,
+        768
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        0,
+        8,
+        753,
+        768
+      ]
+    },
+    {
+      "file": "assets/production_v06/mechanisms/festival_gate_frame.png",
+      "size": [
+        768,
+        754
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        0,
+        11,
+        756,
+        743
+      ]
+    },
+    {
+      "file": "assets/production_v06/mechanisms/festival_gate_panel.png",
+      "size": [
+        768,
+        754
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        205,
+        278,
+        563,
+        604
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_tree.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        35,
+        38,
+        464,
+        496
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_bush.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        46,
+        196,
+        474,
+        491
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_flowers.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        71,
+        113,
+        430,
+        496
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_grass.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        56,
+        112,
+        453,
+        493
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_sign.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        99,
+        104,
+        423,
+        481
+      ]
+    },
+    {
+      "file": "assets/production_v06/decorations/decor_tent.png",
+      "size": [
+        512,
+        512
+      ],
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "visibleBounds": [
+        32,
+        50,
+        471,
+        493
+      ]
+    }
+  ],
+  "previewFiles": [
+    "assets/production_v06/preview/chapter01_art_direction_v06.png",
+    "assets/production_v06/preview/alpha_qa_v06.jpg"
+  ]
+}

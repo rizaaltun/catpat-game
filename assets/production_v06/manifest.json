@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 6,
+  "packageId": "catpat-chapter01-art-v06",
+  "status": "art-only-not-runtime-integrated",
+  "chapter": {
+    "id": "chapter-01",
+    "worldLength": 15200,
+    "visualTheme": "spacious-storybook-forest",
+    "targetStaticPlatformCount": 18,
+    "previousLayoutMustNotBeReused": true
+  },
+  "scaleGuide": {
+    "playerVisibleHeight": 175,
+    "crateVisibleWidth": [90, 100],
+    "mushroomVisibleHeight": [85, 100],
+    "pressurePlateVisibleWidth": [125, 140],
+    "normalJumpGap": [150, 210],
+    "mechanicRequiredGap": [320, 420]
+  },
+  "spriteSheets": {
+    "crate": {
+      "file": "sprites/crate_push_sheet.png",
+      "frameSize": [512, 512],
+      "frameCount": 6,
+      "pivot": [256, 430],
+      "fps": 9,
+      "loop": false,
+      "sequence": ["idle", "push-left", "push-right", "push-left-small", "settle", "idle-recover"],
+      "authoring": "pivot-locked frames derived from approved clean RGBA source"
+    },
+    "mushroom": {
+      "file": "sprites/mushroom_bounce_sheet.png",
+      "frameSize": [512, 512],
+      "frameCount": 6,
+      "pivot": [256, 470],
+      "fps": 12,
+      "loop": false,
+      "sequence": ["idle", "anticipate", "compress", "release", "recover", "idle"],
+      "authoring": "pivot-locked frames derived from approved clean RGBA source"
+    },
+    "player": {
+      "externalFolder": "../characters/catpat/animation_v03",
+      "frameCount": 14,
+      "instruction": "Keep the existing 14-frame character set; do not replace it with a static image."
+    }
+  },
+  "mechanisms": {
+    "cratePressurePlate": {
+      "file": "mechanisms/crate_pressure_plate.png",
+      "visibleWidth": 132,
+      "pressedOffset": 12,
+      "accepts": "crate",
+      "effect": "extend-or-raise-bridge",
+      "mustRemainVisibleWithBridge": true
+    },
+    "swingPlatform": {
+      "file": "mechanisms/swing_platform_complete.png",
+      "instruction": "Use the complete asset. Do not crop ropes, upper beam, or lower platform."
+    },
+    "stoneLift": {
+      "file": "platforms/platform_short.png",
+      "instruction": "Move the stone platform itself. No vine, rope, pulley, or cut hanging line."
+    },
+    "festivalGate": {
+      "frame": "mechanisms/festival_gate_frame.png",
+      "panel": "mechanisms/festival_gate_panel.png"
+    }
+  },
+  "platforms": {
+    "long": "platforms/platform_long.png",
+    "medium": "platforms/platform_medium.png",
+    "short": "platforms/platform_short.png",
+    "ramp": "platforms/platform_ramp.png",
+    "bridge": "platforms/platform_bridge.png",
+    "rules": [
+      "Never cover a traversal gap with decorative rocks.",
+      "Never hide a collider outside the visible grass top.",
+      "Do not tile platforms edge-to-edge across an entire camera view.",
+      "Keep 35-45 percent visual negative space in traversal views.",
+      "Use one dominant mechanic or focal point per camera view."
+    ]
+  },
+  "decorations": {
+    "allowed": [
+      "decorations/decor_tree.png",
+      "decorations/decor_bush.png",
+      "decorations/decor_flowers.png",
+      "decorations/decor_grass.png",
+      "decorations/decor_sign.png",
+      "decorations/decor_tent.png"
+    ],
+    "rockPolicy": "No decorative rock asset is included in V06. Rocks cannot act as seam fillers, steps, or hidden collision."
+  },
+  "background": "backgrounds/forest_valley.jpg",
+  "quality": {
+    "transparentRgba": true,
+    "bakedCheckerboard": false,
+    "croppedFragments": false,
+    "minimumSpriteMargin": 12,
+    "fixedSpritePivots": true,
+    "qaReport": "qa_report.json",
+    "directionPreview": "preview/chapter01_art_direction_v06.png",
+    "alphaPreview": "preview/alpha_qa_v06.jpg"
+  }
+}
