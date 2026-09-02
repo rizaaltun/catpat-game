@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "dist"
-OUTPUT = OUTPUT_DIR / "catpat-bolum-1-v04-1.html"
+OUTPUT = OUTPUT_DIR / "catpat-bolum-1-v05.html"
 
 MODULES = (
     "src/core/Input.js",
@@ -26,25 +26,23 @@ MODULES = (
 )
 
 MANIFESTS = (
-    "assets/characters/catpat/animation_v02/animation_manifest.json",
-    "assets/environments/forest/platforms_v02/platform_manifest.json",
+    "assets/characters/catpat/animation_v03/animation_manifest.json",
+    "assets/environments/forest/platforms_v03/platform_manifest.json",
     "assets/environments/forest/decorations_v02/manifest.json",
-    "assets/gameplay/forest/objects_v02/manifest.json",
-    "assets/gameplay/forest/mechanisms_v03/manifest.json",
+    "assets/gameplay/forest/objects_v03/manifest.json",
+    "assets/gameplay/forest/mechanisms_v04/manifest.json",
 )
 
 ASSET_DIRECTORIES = (
-    "assets/characters/catpat/animation_v02",
-    "assets/environments/forest/platforms_v02",
+    "assets/characters/catpat/animation_v03",
+    "assets/environments/forest/platforms_v03",
     "assets/environments/forest/decorations_v02",
     "assets/environments/forest/backgrounds_v02",
-    "assets/gameplay/forest/objects_v02",
-    "assets/gameplay/forest/mechanisms_v03",
+    "assets/gameplay/forest/objects_v03",
+    "assets/gameplay/forest/mechanisms_v04",
 )
 
-SOURCE_ONLY_ASSETS = {
-    "assets/gameplay/forest/mechanisms_v03/festival_gate.png",
-}
+SOURCE_ONLY_ASSETS: set[str] = set()
 
 
 def data_url(path: Path) -> str:
@@ -66,7 +64,7 @@ def main() -> None:
         html,
     )
     html = re.sub(r'\s*<script\s+type="module"\s+src="\./src/main\.js(?:\?[^\"]*)?"></script>', "", html)
-    html = html.replace("<title>Çatpat — Bölüm 1 V04.1</title>", "<title>Çatpat — Bölüm 1 V04.1 Test Sürümü</title>")
+    html = html.replace("<title>Çatpat — Bölüm 1 V05</title>", "<title>Çatpat — Bölüm 1 V05 Test Sürümü</title>")
 
     module_sources = {name: (ROOT / name).read_text(encoding="utf-8") for name in MODULES}
     game_path = "src/game/Game.js"
@@ -92,7 +90,7 @@ def main() -> None:
                 continue
             assets[f"./{relative}"] = data_url(path)
 
-    ticket_source = "./assets/gameplay/forest/objects_v02/obj_ticket.png"
+    ticket_source = "./assets/gameplay/forest/objects_v03/obj_ticket.png"
     html = html.replace(ticket_source, assets[ticket_source])
 
     boot = rf"""
@@ -147,7 +145,7 @@ import(moduleUrls['src/main.js']).catch(error => {{
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(html, encoding="utf-8")
 
-    expected_images = 44
+    expected_images = 43
     if len(assets) != expected_images:
         raise RuntimeError(f"expected {expected_images} embedded images, found {len(assets)}")
     print(

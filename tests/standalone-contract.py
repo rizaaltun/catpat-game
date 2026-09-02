@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-BUILD = ROOT / "dist/catpat-bolum-1-v04-1.html"
+BUILD = ROOT / "dist/catpat-bolum-1-v05.html"
 
 
 def main() -> None:
@@ -17,7 +17,7 @@ def main() -> None:
     assert "window.__CATPAT_ASSETS" in html
     assert "window.__CATPAT_MANIFESTS" in html
     assert "window.__CATPAT_ASSETS[path]" in html
-    assert "BÖLÜM 1 AKTİF · V04.1 · 15.2K" in html
+    assert "BÖLÜM 1 AKTİF · V05 · 15.2K" in html
     assert "import(moduleUrls['src/main.js'])" in html
     assert '<script type="module" src=' not in html
     assert '<link rel="stylesheet"' not in html

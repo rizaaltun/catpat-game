@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "canvas": {
     "width": 512,
     "height": 512
@@ -93,6 +93,7 @@
         375
       ],
       "renderScale": 0.3,
+      "animation": {"states": ["idle", "push", "settle"], "pivotLocked": true},
       "solid": {
         "type": "rect",
         "bounds": [
@@ -174,6 +175,7 @@
         490
       ],
       "renderScale": 0.3,
+      "animation": {"states": ["idle", "compress", "launch", "recover"], "pivotLocked": true},
       "trigger": {
         "type": "rect",
         "bounds": [

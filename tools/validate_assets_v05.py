@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the v02 character and platform contracts used by the game."""
+"""Validate the complete V05 art package used by the game."""
 
 from __future__ import annotations
 
@@ -10,12 +10,12 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CHARACTER = ROOT / "assets/characters/catpat/animation_v02"
-PLATFORMS = ROOT / "assets/environments/forest/platforms_v02"
+CHARACTER = ROOT / "assets/characters/catpat/animation_v03"
+PLATFORMS = ROOT / "assets/environments/forest/platforms_v03"
 BACKGROUND = ROOT / "assets/environments/forest/backgrounds_v02/forest_valley.jpg"
 DECORATIONS = ROOT / "assets/environments/forest/decorations_v02"
-OBJECTS = ROOT / "assets/gameplay/forest/objects_v02"
-MECHANISMS = ROOT / "assets/gameplay/forest/mechanisms_v03"
+OBJECTS = ROOT / "assets/gameplay/forest/objects_v03"
+MECHANISMS = ROOT / "assets/gameplay/forest/mechanisms_v04"
 
 
 def assert_rgba(path: Path, size: tuple[int, int]) -> Image.Image:
@@ -26,6 +26,11 @@ def assert_rgba(path: Path, size: tuple[int, int]) -> Image.Image:
     width, height = size
     corners = [alpha.getpixel(point) for point in ((0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1))]
     assert corners == [0, 0, 0, 0], f"{path}: opaque corner {corners}"
+    visible = alpha.point(lambda value: 255 if value >= 8 else 0).getbbox()
+    assert visible, f"{path}: empty alpha"
+    left, top, right, bottom = visible
+    margins = (left, top, width - right, height - bottom)
+    assert min(margins) >= 8, f"{path}: clipped/unsafe alpha margin {margins}"
     return image
 
 
@@ -56,7 +61,7 @@ def validate_platforms() -> int:
 
 def validate_manifest_assets(directory: Path, expected_count: int) -> int:
     manifest = json.loads((directory / "manifest.json").read_text())
-    assert manifest["version"] == 2
+    assert manifest["version"] in {2, 3}
     assert manifest["canvas"] == {"width": 512, "height": 512}
     assert len(manifest["assets"]) == expected_count
 
@@ -73,13 +78,14 @@ def validate_manifest_assets(directory: Path, expected_count: int) -> int:
 
 def validate_mechanisms() -> int:
     manifest = json.loads((MECHANISMS / "manifest.json").read_text())
-    assert manifest["version"] == 3
-    assert len(manifest["assets"]) == 5
+    assert manifest["version"] == 4
+    assert len(manifest["assets"]) == 4
     for name, metadata in manifest["assets"].items():
         image = assert_rgba(MECHANISMS / name, tuple(metadata["canvas"]))
         assert image.getchannel("A").getbbox(), f"{name}: empty alpha"
         assert 0 < metadata["renderScale"] <= 1, f"{name}: invalid render scale"
-    assert len(manifest["assets"]["vine_lift.png"]["walkable"]) >= 2
+    assert "vine_lift.png" not in manifest["assets"]
+    assert "motionPivot" in manifest["assets"]["swing_platform.png"]
     assert manifest["assets"]["festival_gate_frame.png"]["solid"]["type"] == "rect"
     return len(manifest["assets"])
 
@@ -100,6 +106,8 @@ def validate_level01_art() -> tuple[int, int, int]:
     assert object_manifest["assets"]["obj_crate.png"]["solid"]["type"] == "rect"
     assert object_manifest["assets"]["obj_mud.png"]["trigger"]["type"] == "ellipse"
     assert object_manifest["assets"]["obj_mushroom.png"]["role"] == "bounce-pad"
+    assert object_manifest["assets"]["obj_crate.png"]["animation"]["pivotLocked"] is True
+    assert object_manifest["assets"]["obj_mushroom.png"]["animation"]["pivotLocked"] is True
     mechanisms = validate_mechanisms()
     return decorations, objects, mechanisms
 

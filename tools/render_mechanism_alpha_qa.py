@@ -10,8 +10,8 @@ from PIL import Image, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DIRECTORY = ROOT / "assets/gameplay/forest/mechanisms_v03"
-OUTPUT = ROOT / "qa-mechanisms-alpha-v03.png"
+DIRECTORY = ROOT / "assets/gameplay/forest/mechanisms_v04"
+OUTPUT = ROOT / "qa-mechanisms-alpha-v04.png"
 
 
 def main() -> None:

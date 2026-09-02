@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "assets": {
     "pressure_button.png": {
       "canvas": [768, 422],
@@ -9,18 +9,12 @@
       "trigger": {"type": "rect", "bounds": [135, 52, 635, 260]},
       "pressedOffset": 12
     },
-    "vine_lift.png": {
-      "canvas": [563, 768],
-      "role": "vertical-platform",
-      "pivot": [281, 759],
-      "renderScale": 0.38,
-      "walkable": [[30, 574], [112, 557], [281, 550], [452, 558], [535, 576]]
-    },
     "swing_platform.png": {
       "canvas": [764, 768],
       "role": "moving-platform",
       "pivot": [382, 760],
       "renderScale": 0.42,
+      "motionPivot": [382, 64],
       "walkable": [[92, 518], [190, 506], [382, 503], [574, 507], [670, 520]]
     },
     "festival_gate_frame.png": {
@@ -43,6 +37,6 @@
     "transparentRgba": true,
     "cornerAlpha": 0,
     "codeDrawnFallbackAllowed": false,
-    "sourceAsset": "festival_gate.png"
+    "sourceAsset": "split frame and panel"
   }
 }

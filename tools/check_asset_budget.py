@@ -10,17 +10,17 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = {
-    "character": ROOT / "assets/characters/catpat/animation_v02",
-    "platforms": ROOT / "assets/environments/forest/platforms_v02",
+    "character": ROOT / "assets/characters/catpat/animation_v03",
+    "platforms": ROOT / "assets/environments/forest/platforms_v03",
     "decorations": ROOT / "assets/environments/forest/decorations_v02",
-    "objects": ROOT / "assets/gameplay/forest/objects_v02",
-    "mechanisms": ROOT / "assets/gameplay/forest/mechanisms_v03",
+    "objects": ROOT / "assets/gameplay/forest/objects_v03",
+    "mechanisms": ROOT / "assets/gameplay/forest/mechanisms_v04",
     "background": ROOT / "assets/environments/forest/backgrounds_v02",
 }
 MIB = 1024 * 1024
 MAX_ENCODED = 12 * MIB
 MAX_DECODED = 72 * MIB
-SOURCE_ONLY_ASSETS = {"festival_gate.png"}
+SOURCE_ONLY_ASSETS: set[str] = set()
 
 
 def image_cost(path: Path) -> tuple[int, int]:
@@ -51,7 +51,7 @@ def main() -> None:
             f"{encoded / MIB:.2f} MiB encoded / {decoded / MIB:.2f} MiB decoded"
         )
 
-    assert total_count == 44, f"expected 44 production images, found {total_count}"
+    assert total_count == 43, f"expected 43 production images, found {total_count}"
     assert total_encoded <= MAX_ENCODED, f"encoded asset budget exceeded: {total_encoded / MIB:.2f} MiB"
     assert total_decoded <= MAX_DECODED, f"decoded texture budget exceeded: {total_decoded / MIB:.2f} MiB"
     print(

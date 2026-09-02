@@ -12,7 +12,6 @@ export const LEVELS = [
   },
   {id: 1, title: 'Dal Dal Üstüne', subtitle: 'Maymun ve Porsuk’un oyunu', objective: 'Arkadaşların kurduğu parkuru birlikte tamamla', theme: 'branches', length: 4300, implemented: false},
   {id: 2, title: 'Pıtpıt’ın Papatyaları', subtitle: 'Acele etmeden ilerle', objective: 'Papatyalara zarar vermeden Pıtpıt’a ulaş', theme: 'daisies', length: 4600, implemented: false},
-  {id: 3, title: 'Orman Marketi', subtitle: 'Doğru zamanı bekle', objective: 'Sıradakilere yardım ederek kasaya ulaş', theme: 'market', length: 4200, implemented: false},
 ];
 
 // x/y always denotes the first walkable point, not the image corner. Adjacent
@@ -30,9 +29,10 @@ const LEVEL01_PLATFORMS = [
   {id: 'rest-garden', asset: 'platform_medium.png', x: 2450, y: 520, scale: 0.84},
   {id: 'cloud-launch', asset: 'platform_short.png', x: 2860, y: 500, scale: 0.95},
 
-  // 2 — Cloud garden and vertical vine lift.
+  // 2 — Cloud garden and a self-contained rising stone platform.
   {id: 'cloud-landing', asset: 'platform_medium.png', x: 3300, y: 420, scale: 0.84},
   {id: 'lift-step', asset: 'platform_step_stone.png', x: 3710, y: 405, scale: 0.85},
+  {id: 'stone-lift', asset: 'platform_short.png', x: 3865, y: 520, scale: 0.95, motion: {axis: 'y', range: 170, speed: 0.76, phase: 1.3}},
   {id: 'lift-balcony', asset: 'platform_medium.png', x: 4050, y: 350, scale: 0.84},
   {id: 'balcony-step', asset: 'platform_step_stone.png', x: 4460, y: 405, scale: 0.85},
   {id: 'descent-step', asset: 'platform_short.png', x: 4595, y: 465, scale: 0.95},
@@ -114,16 +114,15 @@ const LEVEL01_OBJECTS = [
 ];
 
 const LEVEL01_MECHANISMS = [
-  {id: 'vine-lift', asset: 'vine_lift.png', kind: 'mechanism-platform', surfaceX: 3865, surfaceY: 520, scale: 0.38, motion: {axis: 'y', range: 170, speed: 0.76, phase: 1.3}},
   {id: 'gate-button', asset: 'pressure_button.png', kind: 'pressure-button', x: 5885, y: 610, scale: 0.18, targets: ['festival-gate'], latch: true},
   {id: 'festival-gate', asset: 'festival_gate_frame.png', kind: 'lift-gate', x: 6450, y: 610, scale: 0.55},
-  {id: 'swing-platform', asset: 'swing_platform.png', kind: 'mechanism-platform', surfaceX: 8280, surfaceY: 445, scale: 0.42, motion: {axis: 'x', range: 105, speed: 0.82, phase: 0.6}},
+  {id: 'swing-platform', asset: 'swing_platform.png', kind: 'mechanism-platform', surfaceX: 8280, surfaceY: 445, scale: 0.42, motion: {axis: 'swing', range: 0.075, speed: 1.35, phase: 0.6}},
   {id: 'rhythm-button', asset: 'pressure_button.png', kind: 'pressure-button', x: 9900, y: 610, scale: 0.16, targets: ['rhythm-lift'], latch: true},
 ];
 
 const LEVEL01_ZONES = [
   {id: 'cloud-garden', x: 2780, speaker: 'Çatpat', text: 'Bulutun ritmi var. Her boşluğu hızla değil, doğru anla geçebilirim.'},
-  {id: 'vine-lift-zone', x: 3770, speaker: 'Orman', text: 'Sarmaşık asansör aşağı iner, bekler ve yeniden yükselir.'},
+  {id: 'stone-lift-zone', x: 3770, speaker: 'Orman', text: 'Taş platform aşağı iner, kısa bir an bekler ve yeniden yükselir.'},
   {id: 'gate-zone', x: 5570, speaker: 'Çatpat', text: 'Kapı ağır görünüyor… yakındaki yuvarlak düğme bir şeye bağlı olmalı.'},
   {id: 'swing-zone', x: 8130, speaker: 'Çatpat', text: 'Kütük sallanıyor. Bir an durup hareketini okuyayım.'},
   {id: 'rhythm-zone', x: 9650, speaker: 'Orman', text: 'İkinci düğme, ilerideki taşı uyandırır.'},
@@ -262,6 +261,8 @@ function createSurfaceObject(config, metadata, scale) {
     baseX: originX,
     baseY: originY,
     drawMode: 'origin',
+    localWalkable: metadata.walkable.map(point => [...point]),
+    rotation: 0,
     surfaces: [],
   };
   const points = metadata.walkable.map(([x, y]) => ({

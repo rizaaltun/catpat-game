@@ -6,12 +6,12 @@ import {LEVELS, createLevel} from '../src/game/levels.js';
 
 const readJson = async path => JSON.parse(await readFile(new URL(path, import.meta.url)));
 const manifests = {
-  platforms: await readJson('../assets/environments/forest/platforms_v02/platform_manifest.json'),
+  platforms: await readJson('../assets/environments/forest/platforms_v03/platform_manifest.json'),
   decorations: await readJson('../assets/environments/forest/decorations_v02/manifest.json'),
-  objects: await readJson('../assets/gameplay/forest/objects_v02/manifest.json'),
-  mechanisms: await readJson('../assets/gameplay/forest/mechanisms_v03/manifest.json'),
+  objects: await readJson('../assets/gameplay/forest/objects_v03/manifest.json'),
+  mechanisms: await readJson('../assets/gameplay/forest/mechanisms_v04/manifest.json'),
 };
-const character = await readJson('../assets/characters/catpat/animation_v02/animation_manifest.json');
+const character = await readJson('../assets/characters/catpat/animation_v03/animation_manifest.json');
 const level = createLevel(LEVELS[0], manifests);
 const bridge = level.platforms.find(platform => platform.id === 'crate-bridge');
 for (const surface of bridge.surfaces) {
@@ -39,7 +39,7 @@ const route = [
   'moving-cloud',
   'cloud-landing',
   'lift-step',
-  'vine-lift',
+  'stone-lift',
   'lift-balcony',
   'balcony-step',
   'descent-step',

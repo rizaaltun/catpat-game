@@ -2,11 +2,11 @@ import {Player} from './Player.js';
 import {LevelRuntime, objectRect} from './LevelRuntime.js';
 import {LEVELS, createLevel} from './levels.js';
 
-const CHARACTER_ROOT = './assets/characters/catpat/animation_v02/';
-const PLATFORM_ROOT = './assets/environments/forest/platforms_v02/';
+const CHARACTER_ROOT = './assets/characters/catpat/animation_v03/';
+const PLATFORM_ROOT = './assets/environments/forest/platforms_v03/';
 const DECORATION_ROOT = './assets/environments/forest/decorations_v02/';
-const OBJECT_ROOT = './assets/gameplay/forest/objects_v02/';
-const MECHANISM_ROOT = './assets/gameplay/forest/mechanisms_v03/';
+const OBJECT_ROOT = './assets/gameplay/forest/objects_v03/';
+const MECHANISM_ROOT = './assets/gameplay/forest/mechanisms_v04/';
 
 export class Game {
   constructor(canvas, input, ui) {
@@ -268,19 +268,31 @@ export class Game {
       return;
     }
     if (object.drawMode === 'origin') {
-      ctx.drawImage(
-        image,
-        object.x - camera.x,
-        object.y - camera.y,
-        image.width * object.scale,
-        image.height * object.scale,
-      );
+      const motionPivot = object.metadata.motionPivot;
+      if (motionPivot && object.rotation) {
+        const pivotX = motionPivot[0] * object.scale;
+        const pivotY = motionPivot[1] * object.scale;
+        ctx.translate(object.x + pivotX - camera.x, object.y + pivotY - camera.y);
+        ctx.rotate(object.rotation);
+        ctx.drawImage(image, -pivotX, -pivotY, image.width * object.scale, image.height * object.scale);
+      } else {
+        ctx.drawImage(
+          image,
+          object.x - camera.x,
+          object.y - camera.y,
+          image.width * object.scale,
+          image.height * object.scale,
+        );
+      }
     } else {
       const buttonPress = object.kind === 'pressure-button'
         ? object.pressed * object.metadata.pressedOffset * object.scale
         : 0;
+      const motion = objectRenderMotion(object, this.runtime.time);
       ctx.translate(object.x - camera.x, object.y + bob + buttonPress - camera.y);
-      ctx.scale(pulse, pulse);
+      ctx.translate(0, motion.y);
+      ctx.rotate(motion.rotation);
+      ctx.scale(pulse * motion.scaleX, pulse * motion.scaleY);
       ctx.drawImage(
         image,
         -object.pivot[0] * object.scale,
@@ -336,6 +348,47 @@ export class Game {
 }
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+export function objectRenderMotion(object, time) {
+  if (object.kind === 'mushroom') {
+    if (object.animationState === 'launch') {
+      const t = object.animationTime || 0;
+      if (t < 0.085) return {scaleX: 1.13, scaleY: 0.64, y: 0, rotation: 0};
+      if (t < 0.17) return {scaleX: 0.91, scaleY: 1.17, y: 0, rotation: 0};
+      const settle = Math.max(0, 1 - (t - 0.17) / 0.25);
+      return {
+        scaleX: 1 - Math.sin(t * 34) * 0.045 * settle,
+        scaleY: 1 + Math.sin(t * 34) * 0.065 * settle,
+        y: 0,
+        rotation: 0,
+      };
+    }
+    const breathe = Math.sin(time * 2.4) * 0.012;
+    return {scaleX: 1 - breathe, scaleY: 1 + breathe, y: 0, rotation: 0};
+  }
+  if (object.kind === 'crate') {
+    const strength = object.wobble || 0;
+    const impact = object.animationState === 'settle' ? Math.max(0, 1 - (object.animationTime || 0) / 0.55) : 1;
+    return {
+      scaleX: 1 + Math.abs(strength) * 0.012 * impact,
+      scaleY: 1 - Math.abs(strength) * 0.018 * impact,
+      y: 0,
+      rotation: Math.sin((object.animationTime || 0) * 22) * 0.055 * strength * impact,
+    };
+  }
+  if (object.kind === 'mud') {
+    const ripple = Math.sin(time * 3.2) * 0.018;
+    return {scaleX: 1 + ripple, scaleY: 1 - ripple * 0.45, y: 0, rotation: 0};
+  }
+  if (object.kind === 'ticket') {
+    return {scaleX: 1, scaleY: 1, y: 0, rotation: Math.sin(time * 2.8 + object.bob) * 0.07};
+  }
+  if (object.kind === 'star') {
+    const sparkle = 1 + Math.sin(time * 5.2 + object.bob) * 0.055;
+    return {scaleX: sparkle, scaleY: sparkle, y: 0, rotation: Math.sin(time * 2.1) * 0.045};
+  }
+  return {scaleX: 1, scaleY: 1, y: 0, rotation: 0};
+}
 
 async function loadJson(path) {
   const response = await fetch(path);

@@ -1,10 +1,11 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "characterId": "catpat",
   "source": "approved legacy Catpat package",
   "frameCanvas": {"width": 512, "height": 640},
   "pivot": {"x": 256, "y": 620, "anchor": "visible-feet-bottom"},
   "displayScale": 0.28,
+  "renderMotion": {"idleBreath": true, "runWeightShift": true, "landingSquash": true, "feetPivotLocked": true},
   "collider": {"width": 68, "height": 102, "anchor": "feet-bottom"},
   "clips": {
     "idle": {"loop": true, "fps": 1, "frames": ["idle/catpat_idle_00.png"]},

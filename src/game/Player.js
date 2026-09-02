@@ -76,15 +76,29 @@ export class Player {
     if (this.vy < 0) return;
     let landingY = Infinity;
     let landingSurface = null;
-    for (const surface of surfaces) {
-      const y = surfaceYAt(surface, this.x);
-      if (y === null) continue;
-      const crossed = previousFeetY <= y + LANDING_TOLERANCE && currentFeetY >= y;
-      if (crossed && y < landingY) {
-        landingY = y;
-        landingSurface = surface;
+    const findLanding = footSamples => {
+      let candidateY = Infinity;
+      let candidateSurface = null;
+      for (const sampleX of footSamples) {
+        for (const surface of surfaces) {
+          const y = surfaceYAt(surface, sampleX);
+          if (y === null) continue;
+          const crossed = previousFeetY <= y + LANDING_TOLERANCE && currentFeetY >= y;
+          if (crossed && y < candidateY) {
+            candidateY = y;
+            candidateSurface = surface;
+          }
+        }
       }
-    }
+      return {y: candidateY, surface: candidateSurface};
+    };
+
+    const centerHasSurface = surfaces.some(surface => surfaceYAt(surface, this.x) !== null);
+    const candidate = centerHasSurface
+      ? findLanding([this.x])
+      : findLanding([this.x - this.w * 0.28, this.x + this.w * 0.28]);
+    landingY = candidate.y;
+    landingSurface = candidate.surface;
 
     if (landingY < Infinity) {
       this.y = landingY - this.h / 2;
@@ -107,7 +121,10 @@ export class Player {
     const feetY = this.feetY - camera.y;
     ctx.save();
     ctx.translate(screenX, feetY);
-    ctx.scale(this.facing, 1);
+    const motion = this.renderMotion();
+    ctx.translate(0, motion.y);
+    ctx.rotate(motion.rotation * this.facing);
+    ctx.scale(this.facing * motion.scaleX, motion.scaleY);
     ctx.drawImage(
       frame,
       -pivot.x * scale,
@@ -116,6 +133,22 @@ export class Player {
       frame.height * scale,
     );
     ctx.restore();
+  }
+
+  renderMotion() {
+    if (this.state === 'idle') {
+      const breath = Math.sin(this.animTime * 3.1);
+      return {scaleX: 1 - breath * 0.008, scaleY: 1 + breath * 0.012, y: -Math.max(0, breath) * 1.2, rotation: 0};
+    }
+    if (this.state === 'run' || this.state === 'walk') {
+      const stride = Math.sin(this.animTime * (this.state === 'walk' ? 16 : 22));
+      return {scaleX: 1 + Math.abs(stride) * 0.012, scaleY: 1 - Math.abs(stride) * 0.009, y: -Math.abs(stride) * 1.5, rotation: stride * 0.012};
+    }
+    if (this.state === 'land') {
+      const recover = Math.min(1, this.animTime / 0.12);
+      return {scaleX: 1.08 - recover * 0.08, scaleY: 0.92 + recover * 0.08, y: 0, rotation: 0};
+    }
+    return {scaleX: 1, scaleY: 1, y: 0, rotation: 0};
   }
 
   selectFrame(frames) {

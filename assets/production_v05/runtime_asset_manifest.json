@@ -1,0 +1,44 @@
+{
+  "packageId": "catpat-chapter-1-runtime-v05",
+  "build": "CH1-V05-15200",
+  "chapterCount": 3,
+  "implementedChapters": [1],
+  "runtimeAssets": {
+    "characterPng": 14,
+    "platformPng": 8,
+    "decorationPng": 8,
+    "objectPng": 8,
+    "mechanismPng": 4,
+    "backgroundJpg": 1,
+    "totalImages": 43
+  },
+  "activeRoots": {
+    "character": "assets/characters/catpat/animation_v03",
+    "platforms": "assets/environments/forest/platforms_v03",
+    "decorations": "assets/environments/forest/decorations_v02",
+    "objects": "assets/gameplay/forest/objects_v03",
+    "mechanisms": "assets/gameplay/forest/mechanisms_v04",
+    "background": "assets/environments/forest/backgrounds_v02"
+  },
+  "animationContracts": {
+    "character": ["idle", "run", "walk", "jump", "fall", "land", "celebrate"],
+    "mushroom": ["idle", "compress", "launch", "recover"],
+    "crate": ["idle", "push", "settle"],
+    "swingPlatform": ["pivot-locked swing"],
+    "stoneLift": ["vertical carry"]
+  },
+  "qualityGates": {
+    "rgbaRequired": true,
+    "cornerAlpha": 0,
+    "minimumVisibleMarginPx": 8,
+    "bakedCheckerboardAllowed": false,
+    "croppedVisiblePixelsAllowed": false,
+    "colliderFromAlphaAllowed": false,
+    "feetPivotLocked": true
+  },
+  "removed": [
+    "assets/gameplay/forest/mechanisms_v03/vine_lift.png",
+    "assets/gameplay/forest/mechanisms_v03/festival_gate.png",
+    "assets/production_v04"
+  ]
+}

@@ -3,10 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node tests/physics-smoke.mjs && node tests/level01-reachability.mjs && node tests/level01-runtime-smoke.mjs && node tests/input-multitouch-smoke.mjs && node tests/save-migration-smoke.mjs && python3 tests/dom-contract.py && python3 tests/asset-contact.py",
-    "test:assets": "python3 tools/validate_assets_v02.py",
-    "test:production-spec": "python3 tools/validate_production_assets_v04.py --spec-only",
-    "test:production-assets": "python3 tools/validate_production_assets_v04.py --require-complete",
+    "test": "node tests/physics-smoke.mjs && node tests/level01-reachability.mjs && node tests/level01-runtime-smoke.mjs && node tests/animation-contract.mjs && node tests/input-multitouch-smoke.mjs && node tests/save-migration-smoke.mjs && python3 tests/dom-contract.py && python3 tests/asset-contact.py",
+    "test:assets": "python3 tools/validate_assets_v05.py",
     "test:budget": "python3 tools/check_asset_budget.py",
     "test:visual": "python3 tools/render_mechanism_alpha_qa.py && node tools/render_runtime_qa.mjs",
     "build:test": "python3 tools/build_standalone_test.py && python3 tests/standalone-contract.py"

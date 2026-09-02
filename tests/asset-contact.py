@@ -37,12 +37,12 @@ def validate(directory: Path, manifest_name: str, tolerance: int) -> int:
 
 def main() -> None:
     platform_points = validate(
-        ROOT / "assets/environments/forest/platforms_v02",
+        ROOT / "assets/environments/forest/platforms_v03",
         "platform_manifest.json",
         12,
     )
     mechanism_points = validate(
-        ROOT / "assets/gameplay/forest/mechanisms_v03",
+        ROOT / "assets/gameplay/forest/mechanisms_v04",
         "manifest.json",
         6,
     )

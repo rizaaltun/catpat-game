@@ -34,6 +34,16 @@ export class LevelRuntime {
     this.cloud = level.objects.find(item => item.id === 'moving-cloud');
     this.checkpoint = this.checkpoints[0];
 
+    if (this.crate) {
+      this.crate.wobble = 0;
+      this.crate.animationState = 'idle';
+      this.crate.animationTime = 0;
+    }
+    if (this.mushroom) {
+      this.mushroom.animationState = 'idle';
+      this.mushroom.animationTime = 0;
+    }
+
     this.emit('objective', {text: level.objective});
     this.emit('progress', {current: 0, total: this.totalTickets});
     this.emit('dialogue', {
@@ -46,7 +56,19 @@ export class LevelRuntime {
   updateBeforePlayer(dt, player) {
     this.time += dt;
     this.goalReminderCooldown = Math.max(0, this.goalReminderCooldown - dt);
-    if (this.mushroom) this.mushroom.cooldown = Math.max(0, (this.mushroom.cooldown || 0) - dt);
+    if (this.mushroom) {
+      this.mushroom.cooldown = Math.max(0, (this.mushroom.cooldown || 0) - dt);
+      this.mushroom.animationTime += dt;
+      if (this.mushroom.animationState !== 'idle' && this.mushroom.animationTime >= 0.42) {
+        this.mushroom.animationState = 'idle';
+        this.mushroom.animationTime = 0;
+      }
+    }
+    if (this.crate) {
+      this.crate.animationTime += dt;
+      this.crate.wobble = approach(this.crate.wobble || 0, 0, dt * 2.8);
+      if (Math.abs(this.crate.wobble) < 0.02 && !this.cratePlaced) this.crate.animationState = 'idle';
+    }
 
     for (const surface of this.level.surfaces) {
       surface.dx = 0;
@@ -102,6 +124,11 @@ export class LevelRuntime {
     const desiredOffset = requirement
       ? wave * motion.range
       : (motion.axis === 'y' ? motion.range : 0);
+    if (motion.axis === 'swing') {
+      const nextRotation = requirement ? desiredOffset : 0;
+      this.rotateOwner(owner, nextRotation, player);
+      return;
+    }
     const offset = motion.requires
       ? approach(owner.motionOffset || 0, desiredOffset, (motion.activationSpeed || 250) * dt)
       : desiredOffset;
@@ -109,6 +136,44 @@ export class LevelRuntime {
     const nextX = owner.baseX + (motion.axis === 'x' ? offset : 0);
     const nextY = owner.baseY + (motion.axis === 'y' ? offset : 0);
     this.translateOwner(owner, nextX - owner.x, nextY - owner.y, player);
+  }
+
+  rotateOwner(owner, rotation, player = null) {
+    const previous = owner.rotation || 0;
+    if (Math.abs(previous - rotation) < 0.00001) return;
+    owner.rotation = rotation;
+    const pivot = owner.metadata.motionPivot || [owner.metadata.canvas?.[0] / 2 || 0, 0];
+    const pivotX = owner.x + pivot[0] * owner.scale;
+    const pivotY = owner.y + pivot[1] * owner.scale;
+    const cos = Math.cos(rotation);
+    const sin = Math.sin(rotation);
+    for (let index = 0; index < owner.surfaces.length; index += 1) {
+      const localA = owner.localWalkable[index];
+      const localB = owner.localWalkable[index + 1];
+      const ax = (localA[0] - pivot[0]) * owner.scale;
+      const ay = (localA[1] - pivot[1]) * owner.scale;
+      const bx = (localB[0] - pivot[0]) * owner.scale;
+      const by = (localB[1] - pivot[1]) * owner.scale;
+      const next = [
+        pivotX + ax * cos - ay * sin,
+        pivotY + ax * sin + ay * cos,
+        pivotX + bx * cos - by * sin,
+        pivotY + bx * sin + by * cos,
+      ];
+      const surface = owner.surfaces[index];
+      const oldMidX = (surface.x1 + surface.x2) / 2;
+      const oldMidY = (surface.y1 + surface.y2) / 2;
+      surface.x1 = next[0];
+      surface.y1 = next[1];
+      surface.x2 = next[2];
+      surface.y2 = next[3];
+      surface.dx += (next[0] + next[2]) / 2 - oldMidX;
+      surface.dy += (next[1] + next[3]) / 2 - oldMidY;
+    }
+    if (player?.groundedSurface?.owner === owner) {
+      player.x += player.groundedSurface.dx;
+      player.y += player.groundedSurface.dy;
+    }
   }
 
   translateOwner(owner, dx, dy, player = null) {
@@ -261,6 +326,11 @@ export class LevelRuntime {
         this.crate.pushLimits[1],
       );
       this.translateOwner(this.crate, proposed - this.crate.x, 0);
+      if (this.crate.animationState !== 'push') {
+        this.crate.animationState = 'push';
+        this.crate.animationTime = 0;
+      }
+      this.crate.wobble = direction;
     }
 
     const [nextLeft, , nextRight] = objectRect(this.crate, this.crate.metadata.solid.bounds);
@@ -271,6 +341,9 @@ export class LevelRuntime {
     if (this.crate.x >= 11685) {
       this.cratePlaced = true;
       this.translateOwner(this.crate, Math.max(0, 11695 - this.crate.x), 0);
+      this.crate.animationState = 'settle';
+      this.crate.animationTime = 0;
+      this.crate.wobble = 1;
       this.emit('dialogue', {
         speaker: 'Çatpat',
         text: 'Sandığın ağırlığı ipi gerdi. Son köprü yükseliyor!',
@@ -296,6 +369,8 @@ export class LevelRuntime {
     player.state = 'jump';
     player.animTime = 0;
     this.mushroom.cooldown = 0.55;
+    this.mushroom.animationState = 'launch';
+    this.mushroom.animationTime = 0;
   }
 
   resolveCheckpoints(player) {

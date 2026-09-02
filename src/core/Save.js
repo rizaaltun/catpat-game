@@ -1,6 +1,6 @@
 const KEY = 'catpat-nezaket-save-v2';
 const LEGACY_KEY = 'catpat-nezaket-save-v1';
-const MAX_LEVEL_ID = 3;
+const MAX_LEVEL_ID = 2;
 
 function clampLevel(value) {
   return Math.max(0, Math.min(MAX_LEVEL_ID, Number.isInteger(value) ? value : 0));
@@ -57,4 +57,3 @@ export class Save {
     this.write();
   }
 }
-

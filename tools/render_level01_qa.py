@@ -14,10 +14,10 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUT = ROOT / "qa-level01-layout.json"
 OUTPUT = ROOT / "qa-level01-scenes.png"
-PLATFORMS = ROOT / "assets/environments/forest/platforms_v02"
+PLATFORMS = ROOT / "assets/environments/forest/platforms_v03"
 DECORATIONS = ROOT / "assets/environments/forest/decorations_v02"
-OBJECTS = ROOT / "assets/gameplay/forest/objects_v02"
-CHARACTER = ROOT / "assets/characters/catpat/animation_v02"
+OBJECTS = ROOT / "assets/gameplay/forest/objects_v03"
+CHARACTER = ROOT / "assets/characters/catpat/animation_v03"
 BACKGROUND = ROOT / "assets/environments/forest/backgrounds_v02/forest_valley.jpg"
 VIEW = (1280, 720)
 

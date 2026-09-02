@@ -7,12 +7,12 @@ import {LEVELS, createLevel} from '../src/game/levels.js';
 
 const readJson = async path => JSON.parse(await readFile(new URL(path, import.meta.url)));
 const manifests = {
-  platforms: await readJson('../assets/environments/forest/platforms_v02/platform_manifest.json'),
+  platforms: await readJson('../assets/environments/forest/platforms_v03/platform_manifest.json'),
   decorations: await readJson('../assets/environments/forest/decorations_v02/manifest.json'),
-  objects: await readJson('../assets/gameplay/forest/objects_v02/manifest.json'),
-  mechanisms: await readJson('../assets/gameplay/forest/mechanisms_v03/manifest.json'),
+  objects: await readJson('../assets/gameplay/forest/objects_v03/manifest.json'),
+  mechanisms: await readJson('../assets/gameplay/forest/mechanisms_v04/manifest.json'),
 };
-const character = await readJson('../assets/characters/catpat/animation_v02/animation_manifest.json');
+const character = await readJson('../assets/characters/catpat/animation_v03/animation_manifest.json');
 
 const makeWorld = () => {
   const level = createLevel(LEVELS[0], manifests);
@@ -117,14 +117,38 @@ const placeOnGround = (player, x, feetY) => {
   assert.ok(runtime.cloud.x !== cloudX, 'cloud should move');
   assert.ok(Math.abs((player.x - playerX) - (runtime.cloud.x - cloudX)) < 0.001, 'cloud should carry its rider');
 
-  const vineLift = runtime.level.objects.find(object => object.id === 'vine-lift');
+  const stoneLift = runtime.level.platforms.find(platform => platform.id === 'stone-lift');
   player.grounded = true;
-  player.groundedSurface = vineLift.surfaces[0];
+  player.groundedSurface = stoneLift.surfaces[0];
   const liftPlayerY = player.y;
-  const liftY = vineLift.y;
+  const liftY = stoneLift.y;
   runtime.updateBeforePlayer(0.1, player);
-  assert.notEqual(vineLift.y, liftY, 'vine lift should move vertically');
-  assert.ok(Math.abs((player.y - liftPlayerY) - (vineLift.y - liftY)) < 0.001, 'vine lift should carry its rider vertically');
+  assert.notEqual(stoneLift.y, liftY, 'stone lift should move vertically');
+  assert.ok(Math.abs((player.y - liftPlayerY) - (stoneLift.y - liftY)) < 0.001, 'stone lift should carry its rider vertically');
+
+  const swing = runtime.level.objects.find(object => object.id === 'swing-platform');
+  const swingSurface = swing.surfaces[0];
+  player.groundedSurface = swingSurface;
+  const swingPlayer = {x: player.x, y: player.y};
+  const swingSurfaceMid = {
+    x: (swingSurface.x1 + swingSurface.x2) / 2,
+    y: (swingSurface.y1 + swingSurface.y2) / 2,
+  };
+  runtime.updateBeforePlayer(0.1, player);
+  const nextSwingMid = {
+    x: (swingSurface.x1 + swingSurface.x2) / 2,
+    y: (swingSurface.y1 + swingSurface.y2) / 2,
+  };
+  assert.notEqual(swing.rotation, 0, 'swing art must rotate around its top pivot');
+  assert.ok(nextSwingMid.x !== swingSurfaceMid.x || nextSwingMid.y !== swingSurfaceMid.y, 'swing collider must rotate with the art');
+  assert.ok(Math.abs((player.x - swingPlayer.x) - (nextSwingMid.x - swingSurfaceMid.x)) < 0.001, 'swing must carry its rider horizontally');
+  assert.ok(Math.abs((player.y - swingPlayer.y) - (nextSwingMid.y - swingSurfaceMid.y)) < 0.001, 'swing must carry its rider vertically');
+
+  runtime.mushroom.cooldown = 0;
+  placeOnGround(player, runtime.mushroom.x, runtime.mushroom.y);
+  runtime.resolveMushroom(player);
+  assert.equal(runtime.mushroom.animationState, 'launch', 'mushroom must enter its visible squash/release animation');
+  assert.equal(runtime.mushroom.animationTime, 0);
 }
 
 console.log('level 01 runtime smoke: choices/collect/checkpoints/buttons/gate/crate/cloud/lift/goal OK');

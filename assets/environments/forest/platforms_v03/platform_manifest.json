@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "canvas": {"width": 768, "height": 512},
   "anchor": "walkable-polyline",
   "assets": {
@@ -48,6 +48,8 @@
     "transparentRgba": true,
     "cornerAlpha": 0,
     "croppedNeighborFragmentsAllowed": false,
-    "codeDrawnFallbackAllowed": false
+    "codeDrawnFallbackAllowed": false,
+    "minimumTransparentMargin": 10,
+    "footWidthCollisionSampling": true
   }
 }

@@ -9,10 +9,10 @@ const toolsDir = dirname(fileURLToPath(import.meta.url));
 const root = resolve(toolsDir, '..');
 const readJson = async path => JSON.parse(await readFile(resolve(root, path), 'utf8'));
 const manifests = {
-  platforms: await readJson('assets/environments/forest/platforms_v02/platform_manifest.json'),
+  platforms: await readJson('assets/environments/forest/platforms_v03/platform_manifest.json'),
   decorations: await readJson('assets/environments/forest/decorations_v02/manifest.json'),
-  objects: await readJson('assets/gameplay/forest/objects_v02/manifest.json'),
-  mechanisms: await readJson('assets/gameplay/forest/mechanisms_v03/manifest.json'),
+  objects: await readJson('assets/gameplay/forest/objects_v03/manifest.json'),
+  mechanisms: await readJson('assets/gameplay/forest/mechanisms_v04/manifest.json'),
 };
 const level = createLevel(LEVELS[0], manifests);
 const output = resolve(process.argv[2] || resolve(root, 'qa-level01-layout.json'));

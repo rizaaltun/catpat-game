@@ -23,6 +23,7 @@ globalThis.fetch = async requestPath => {
 };
 
 const {Game} = await import('../src/game/Game.js');
+const {objectRect} = await import('../src/game/LevelRuntime.js');
 const canvas = createCanvas(1280, 720);
 const input = {
   state: {left: false, right: false, jump: false, focus: false, interact: false},
@@ -54,8 +55,10 @@ await capture('Bulut bahçesi', 2500, () => {
   setPlayer(3080, 430, 'jump', -120);
 });
 
-await capture('Sarmaşık asansörü', 3450, () => {
-  setPlayer(3930, 430, 'idle');
+await capture('Taş asansör', 3450, () => {
+  const lift = game.level.platforms.find(item => item.id === 'stone-lift');
+  const surface = lift.surfaces[0];
+  setPlayer((surface.x1 + surface.x2) / 2, (surface.y1 + surface.y2) / 2, 'idle');
 });
 
 const gate = game.level.objects.find(item => item.kind === 'lift-gate');
@@ -75,7 +78,8 @@ const crate = game.level.objects.find(item => item.kind === 'crate');
 game.runtime.translateOwner(crate, 11695 - crate.x, 0);
 
 await capture('Sandık / köprü / mantar', 10850, () => {
-  setPlayer(11620, 540, 'run');
+  const [crateLeft] = objectRect(crate, crate.metadata.solid.bounds);
+  setPlayer(crateLeft - game.player.w / 2 - 18, 540, 'run');
 });
 
 await capture('Festival varışı', 13400, () => {
@@ -100,7 +104,12 @@ for (let index = 0; index < scenes.length; index += 1) {
 }
 await writeFile(resolve(root, 'qa-runtime-scenes.png'), sheet.toBuffer('image/png'));
 await renderWorldDebug();
-console.log(`runtime visual QA: ${scenes.length} real Game.draw scenes + full-world debug slices OK`);
+await renderAnimationQA();
+const performanceResult = benchmarkRuntime();
+console.log(
+  `runtime visual QA: ${scenes.length} real Game.draw scenes + full-world debug slices + animation states OK; `
+  + `draw p95 ${performanceResult.p95.toFixed(2)} ms (${performanceResult.fpsFloor.toFixed(0)} FPS floor)`,
+);
 
 async function capture(name, cameraX, setup) {
   setup();
@@ -157,4 +166,78 @@ async function renderWorldDebug() {
     debugCtx.fillText(`kamera x=${cameras[index]}`, x + 12, y + height + 23);
   }
   await writeFile(resolve(root, 'qa-world-debug.png'), debugSheet.toBuffer('image/png'));
+}
+
+async function renderAnimationQA() {
+  const mushroom = game.level.objects.find(item => item.kind === 'mushroom');
+  const states = [
+    {name: 'Karakter · idle', camera: 0, setup: () => setPlayer(410, 610, 'idle')},
+    {name: 'Karakter · run', camera: 0, setup: () => setPlayer(410, 610, 'run')},
+    {name: 'Karakter · land', camera: 0, setup: () => setPlayer(410, 610, 'land')},
+    {name: 'Mantar · idle', camera: 11820, setup: () => setObjectState(mushroom, 'idle', 0)},
+    {name: 'Mantar · compress', camera: 11820, setup: () => setObjectState(mushroom, 'launch', 0.04)},
+    {name: 'Mantar · release', camera: 11820, setup: () => setObjectState(mushroom, 'launch', 0.12)},
+    {name: 'Sandık · push', camera: 10850, setup: () => setCrateState('push', 0.05, 1)},
+    {name: 'Sandık · settle', camera: 10850, setup: () => setCrateState('settle', 0.18, 1)},
+  ];
+  const shots = [];
+  for (const state of states) {
+    game.player.x = -10000;
+    state.setup();
+    game.camera.x = state.camera;
+    game.camera.y = 0;
+    game.draw();
+    shots.push({name: state.name, image: await loadImage(canvas.toBuffer('image/png'))});
+  }
+
+  const width = 480;
+  const height = 270;
+  const footer = 34;
+  const columns = 4;
+  const output = createCanvas(width * columns, (height + footer) * 2);
+  const outputCtx = output.getContext('2d');
+  outputCtx.fillStyle = '#17202a';
+  outputCtx.fillRect(0, 0, output.width, output.height);
+  outputCtx.font = '15px "QA Sans"';
+  outputCtx.fillStyle = '#ffffff';
+  for (let index = 0; index < shots.length; index += 1) {
+    const x = (index % columns) * width;
+    const y = Math.floor(index / columns) * (height + footer);
+    outputCtx.drawImage(shots[index].image, x, y, width, height);
+    outputCtx.fillText(shots[index].name, x + 12, y + height + 23);
+  }
+  await writeFile(resolve(root, 'qa-animation-states-v05.png'), output.toBuffer('image/png'));
+
+  function setObjectState(object, state, time) {
+    object.animationState = state;
+    object.animationTime = time;
+  }
+
+  function setCrateState(state, time, wobble) {
+    crate.animationState = state;
+    crate.animationTime = time;
+    crate.wobble = wobble;
+  }
+}
+
+function benchmarkRuntime() {
+  const cameras = [0, 2400, 4800, 7200, 9600, 12000, 13920];
+  game.debug = false;
+  game.player.x = -10000;
+  for (let index = 0; index < 42; index += 1) {
+    game.camera.x = cameras[index % cameras.length];
+    game.draw();
+  }
+  const samples = [];
+  for (let index = 0; index < 280; index += 1) {
+    game.camera.x = cameras[index % cameras.length];
+    const started = performance.now();
+    game.draw();
+    game.ctx.getImageData(0, 0, 1, 1);
+    samples.push(performance.now() - started);
+  }
+  samples.sort((a, b) => a - b);
+  const p95 = samples[Math.floor(samples.length * 0.95)];
+  if (p95 > 16.67) throw new Error(`render performance budget exceeded: p95=${p95.toFixed(2)}ms`);
+  return {p95, fpsFloor: 1000 / p95};
 }
