@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "canvas": {"width": 768, "height": 512},
+  "anchor": "walkable-polyline",
+  "assets": {
+    "platform_long.png": {
+      "visibleBounds": {"x": 24, "y": 294, "width": 720, "height": 206},
+      "walkable": [[55, 349], [715, 349]],
+      "collider": "flat"
+    },
+    "platform_medium.png": {
+      "visibleBounds": {"x": 114, "y": 255, "width": 540, "height": 245},
+      "walkable": [[145, 320], [630, 320]],
+      "collider": "flat"
+    },
+    "platform_short.png": {
+      "visibleBounds": {"x": 307, "y": 312, "width": 153, "height": 188},
+      "walkable": [[320, 371], [340, 363], [450, 363]],
+      "collider": "polyline"
+    },
+    "platform_step_stone.png": {
+      "visibleBounds": {"x": 291, "y": 367, "width": 185, "height": 133},
+      "walkable": [[305, 389], [460, 389]],
+      "collider": "flat"
+    },
+    "platform_rock.png": {
+      "visibleBounds": {"x": 244, "y": 287, "width": 280, "height": 213},
+      "walkable": [[257, 307], [300, 292], [350, 287], [400, 292], [455, 307]],
+      "collider": "polyline"
+    },
+    "platform_tall_pillar.png": {
+      "visibleBounds": {"x": 285, "y": 140, "width": 197, "height": 360},
+      "walkable": [[296, 159], [472, 159]],
+      "collider": "flat"
+    },
+    "platform_bridge.png": {
+      "visibleBounds": {"x": 203, "y": 234, "width": 362, "height": 266},
+      "walkable": [[270, 332], [300, 342], [384, 348], [470, 340], [523, 331]],
+      "collider": "polyline"
+    },
+    "platform_ramp.png": {
+      "visibleBounds": {"x": 183, "y": 106, "width": 402, "height": 394},
+      "walkable": [[205, 414], [535, 250]],
+      "collider": "slope-up"
+    }
+  },
+  "quality": {
+    "transparentRgba": true,
+    "cornerAlpha": 0,
+    "croppedNeighborFragmentsAllowed": false,
+    "codeDrawnFallbackAllowed": false
+  }
+}

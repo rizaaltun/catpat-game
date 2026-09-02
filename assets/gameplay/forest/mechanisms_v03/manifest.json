@@ -1,0 +1,48 @@
+{
+  "version": 3,
+  "assets": {
+    "pressure_button.png": {
+      "canvas": [768, 422],
+      "role": "pressure-button",
+      "pivot": [384, 412],
+      "renderScale": 0.22,
+      "trigger": {"type": "rect", "bounds": [135, 52, 635, 260]},
+      "pressedOffset": 12
+    },
+    "vine_lift.png": {
+      "canvas": [563, 768],
+      "role": "vertical-platform",
+      "pivot": [281, 759],
+      "renderScale": 0.38,
+      "walkable": [[30, 574], [112, 557], [281, 550], [452, 558], [535, 576]]
+    },
+    "swing_platform.png": {
+      "canvas": [764, 768],
+      "role": "moving-platform",
+      "pivot": [382, 760],
+      "renderScale": 0.42,
+      "walkable": [[92, 518], [190, 506], [382, 503], [574, 507], [670, 520]]
+    },
+    "festival_gate_frame.png": {
+      "canvas": [768, 754],
+      "role": "lift-gate-frame",
+      "pivot": [384, 743],
+      "renderScale": 0.55,
+      "solid": {"type": "rect", "bounds": [205, 285, 563, 594]},
+      "liftDistance": 430,
+      "panelAsset": "festival_gate_panel.png"
+    },
+    "festival_gate_panel.png": {
+      "canvas": [768, 754],
+      "role": "lift-gate-panel",
+      "pivot": [384, 743],
+      "renderScale": 0.55
+    }
+  },
+  "quality": {
+    "transparentRgba": true,
+    "cornerAlpha": 0,
+    "codeDrawnFallbackAllowed": false,
+    "sourceAsset": "festival_gate.png"
+  }
+}

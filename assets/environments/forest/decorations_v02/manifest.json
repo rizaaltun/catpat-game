@@ -1,0 +1,126 @@
+{
+  "version": 2,
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "alphaCutoff": 8,
+  "assets": {
+    "decor_bunting.png": {
+      "visibleBounds": [
+        29,
+        101,
+        469,
+        488
+      ],
+      "pivot": [
+        249,
+        488
+      ],
+      "renderScale": 0.5,
+      "layer": "back"
+    },
+    "decor_bush.png": {
+      "visibleBounds": [
+        46,
+        196,
+        474,
+        491
+      ],
+      "pivot": [
+        260,
+        491
+      ],
+      "renderScale": 0.42,
+      "layer": "back"
+    },
+    "decor_flowers.png": {
+      "visibleBounds": [
+        71,
+        113,
+        430,
+        496
+      ],
+      "pivot": [
+        251,
+        496
+      ],
+      "renderScale": 0.32,
+      "layer": "front"
+    },
+    "decor_grass.png": {
+      "visibleBounds": [
+        56,
+        112,
+        453,
+        493
+      ],
+      "pivot": [
+        255,
+        493
+      ],
+      "renderScale": 0.28,
+      "layer": "front"
+    },
+    "decor_rocks.png": {
+      "visibleBounds": [
+        26,
+        211,
+        487,
+        492
+      ],
+      "pivot": [
+        257,
+        490
+      ],
+      "renderScale": 0.34,
+      "layer": "front"
+    },
+    "decor_sign.png": {
+      "visibleBounds": [
+        99,
+        104,
+        423,
+        481
+      ],
+      "pivot": [
+        261,
+        481
+      ],
+      "renderScale": 0.42,
+      "layer": "front",
+      "interaction": {
+        "type": "repairable-sign",
+        "radius": 96
+      }
+    },
+    "decor_tent.png": {
+      "visibleBounds": [
+        32,
+        50,
+        471,
+        493
+      ],
+      "pivot": [
+        251,
+        491
+      ],
+      "renderScale": 0.7,
+      "layer": "back"
+    },
+    "decor_tree.png": {
+      "visibleBounds": [
+        35,
+        38,
+        464,
+        496
+      ],
+      "pivot": [
+        250,
+        496
+      ],
+      "renderScale": 0.62,
+      "layer": "back"
+    }
+  }
+}

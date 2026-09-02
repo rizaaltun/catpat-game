@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 2,
+  "characterId": "catpat",
+  "source": "approved legacy Catpat package",
+  "frameCanvas": {"width": 512, "height": 640},
+  "pivot": {"x": 256, "y": 620, "anchor": "visible-feet-bottom"},
+  "displayScale": 0.28,
+  "collider": {"width": 68, "height": 102, "anchor": "feet-bottom"},
+  "clips": {
+    "idle": {"loop": true, "fps": 1, "frames": ["idle/catpat_idle_00.png"]},
+    "run": {
+      "loop": true,
+      "fps": 10,
+      "frames": [
+        "run/catpat_run_00.png",
+        "run/catpat_run_01.png",
+        "run/catpat_run_02.png",
+        "run/catpat_run_03.png",
+        "run/catpat_run_04.png",
+        "run/catpat_run_05.png",
+        "run/catpat_run_06.png",
+        "run/catpat_run_07.png"
+      ]
+    },
+    "jump": {
+      "loop": false,
+      "frames": [
+        "jump/catpat_jump_start_00.png",
+        "jump/catpat_jump_air_00.png",
+        "air/catpat_jump_fall_00.png",
+        "land/catpat_land_00.png"
+      ]
+    },
+    "celebrate": {
+      "loop": false,
+      "frames": ["celebrate/catpat_celebrate_00.png"]
+    }
+  },
+  "quality": {
+    "transparentRgba": true,
+    "fixedVisibleBottom": 620,
+    "horizontalCenterTolerance": 1,
+    "whiteHaloAllowed": false
+  }
+}

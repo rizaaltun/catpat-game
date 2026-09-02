@@ -1,0 +1,11 @@
+dist/
+.downloads/
+generated_images/
+source-assets/
+__pycache__/
+*.pyc
+qa-*.png
+qa-*.jpg
+qa-*.json
+assets/environments/forest/terrain_v04/
+

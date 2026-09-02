@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#123f3b" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Çatpat — Bölüm 1 V04.1</title>
+  <link rel="stylesheet" href="./src/styles.css?v=ch1-v04-1-15200" />
+</head>
+<body>
+  <main id="app" aria-label="Çatpat: Nezaket Ormanı">
+    <canvas id="game" width="1280" height="720" aria-label="Oyun alanı"></canvas>
+
+    <section id="menu" class="screen is-visible" aria-labelledby="game-title">
+      <div class="menu-art" aria-hidden="true"><span class="leaf leaf-a"></span><span class="leaf leaf-b"></span></div>
+      <div class="menu-card">
+        <p class="eyebrow">R&amp;B STUDIO SUNAR</p>
+        <p class="build-badge">BÖLÜM 1 AKTİF · V04.1 · 15.2K</p>
+        <h1 id="game-title"><span>Çatpat</span><small>Nezaket Ormanı</small></h1>
+        <p class="menu-copy">Koş, keşfet, durup düşün ve ormanı birlikte güzelleştir.</p>
+        <div class="menu-actions">
+          <button class="button button-primary" data-action="continue">Devam Et</button>
+          <button class="button button-secondary" data-action="levels">Bölümler</button>
+          <button class="button button-quiet" data-action="settings">Ayarlar</button>
+        </div>
+        <p class="playtest-controls"><strong>TEST KONTROLLERİ</strong> Yön tuşları · Space ile zıpla · Shift ile odaklan · E ile etkileş</p>
+      </div>
+      <p class="orientation-note">En iyi deneyim için cihazını yatay çevir.</p>
+    </section>
+
+    <section id="level-select" class="screen" aria-labelledby="levels-title">
+      <div class="panel wide-panel">
+        <header class="panel-header"><button class="icon-button" data-action="back" aria-label="Geri">←</button><div><p class="eyebrow">YOLCULUK</p><h2 id="levels-title">Bölümler</h2></div></header>
+        <div id="level-grid" class="level-grid"></div>
+      </div>
+    </section>
+
+    <section id="settings" class="screen" aria-labelledby="settings-title">
+      <div class="panel settings-panel">
+        <header class="panel-header"><button class="icon-button" data-action="back" aria-label="Geri">←</button><div><p class="eyebrow">OYUN DENEYİMİ</p><h2 id="settings-title">Ayarlar</h2></div></header>
+        <label class="setting-row"><span>Müzik</span><input type="range" min="0" max="100" value="70" data-setting="music" /></label>
+        <label class="setting-row"><span>Efektler</span><input type="range" min="0" max="100" value="85" data-setting="sfx" /></label>
+        <label class="setting-row"><span>Hareket azalt</span><input type="checkbox" data-setting="reducedMotion" /></label>
+        <label class="setting-row"><span>Dokunmatik tuşlar</span><input type="checkbox" checked data-setting="touchControls" /></label>
+      </div>
+    </section>
+
+    <section id="pause" class="screen" aria-labelledby="pause-title">
+      <div class="panel pause-panel"><p class="eyebrow">KISA BİR MOLA</p><h2 id="pause-title">Oyun Duraklatıldı</h2><div class="menu-actions"><button class="button button-primary" data-action="resume">Devam Et</button><button class="button button-secondary" data-action="restart">Baştan Başla</button><button class="button button-quiet" data-action="menu">Ana Menü</button></div></div>
+    </section>
+
+    <div id="hud" class="hud" hidden>
+      <div class="hud-stack">
+        <div class="hud-objective"><span class="hud-label">HEDEF</span><strong id="objective">Orman yolunu keşfet</strong></div>
+        <div class="hud-progress" aria-label="Toplanan şenlik biletleri"><img src="./assets/gameplay/forest/objects_v02/obj_ticket.png" alt="" /><strong id="ticket-count">0/3</strong></div>
+      </div>
+      <button class="hud-pause" data-action="pause" aria-label="Duraklat">Ⅱ</button>
+    </div>
+
+    <div id="interaction-prompt" class="interaction-prompt" hidden></div>
+    <div id="dialogue" class="dialogue" hidden><div><strong id="speaker"></strong><p id="dialogue-text"></p></div></div>
+
+    <div id="touch-controls" aria-hidden="true">
+      <div class="touch-cluster move-cluster"><button data-input="left">←</button><button data-input="right">→</button></div>
+      <div class="touch-cluster action-cluster"><button class="interact-button" data-input="interact" aria-label="Etkileşim">✓</button><button class="focus-button" data-input="focus" aria-label="Odaklı adım">◎</button><button class="jump-button" data-input="jump" aria-label="Zıpla">↑</button></div>
+    </div>
+  </main>
+  <script type="module" src="./src/main.js?v=ch1-v04-1-15200"></script>
+</body>
+</html>

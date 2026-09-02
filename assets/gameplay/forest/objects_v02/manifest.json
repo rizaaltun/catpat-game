@@ -1,0 +1,233 @@
+{
+  "version": 2,
+  "canvas": {
+    "width": 512,
+    "height": 512
+  },
+  "alphaCutoff": 8,
+  "assets": {
+    "obj_apple.png": {
+      "visibleBounds": [
+        133,
+        102,
+        404,
+        420
+      ],
+      "role": "collectible",
+      "pivot": [
+        268,
+        261
+      ],
+      "renderScale": 0.2,
+      "trigger": {
+        "type": "circle",
+        "center": [
+          268,
+          261
+        ],
+        "radius": 120
+      }
+    },
+    "obj_cloud.png": {
+      "visibleBounds": [
+        81,
+        159,
+        460,
+        388
+      ],
+      "role": "moving-platform",
+      "pivot": [
+        256,
+        388
+      ],
+      "renderScale": 0.52,
+      "walkable": [
+        [
+          90,
+          250
+        ],
+        [
+          130,
+          210
+        ],
+        [
+          184,
+          207
+        ],
+        [
+          215,
+          174
+        ],
+        [
+          258,
+          160
+        ],
+        [
+          300,
+          190
+        ],
+        [
+          340,
+          207
+        ],
+        [
+          386,
+          188
+        ],
+        [
+          445,
+          228
+        ]
+      ]
+    },
+    "obj_crate.png": {
+      "visibleBounds": [
+        102,
+        54,
+        415,
+        375
+      ],
+      "role": "pushable-weight",
+      "pivot": [
+        259,
+        375
+      ],
+      "renderScale": 0.3,
+      "solid": {
+        "type": "rect",
+        "bounds": [
+          116,
+          66,
+          402,
+          375
+        ]
+      },
+      "walkable": [
+        [
+          120,
+          66
+        ],
+        [
+          400,
+          66
+        ]
+      ]
+    },
+    "obj_lantern.png": {
+      "visibleBounds": [
+        116,
+        27,
+        425,
+        455
+      ],
+      "role": "checkpoint",
+      "pivot": [
+        271,
+        455
+      ],
+      "renderScale": 0.24,
+      "trigger": {
+        "type": "rect",
+        "bounds": [
+          145,
+          70,
+          405,
+          455
+        ]
+      }
+    },
+    "obj_mud.png": {
+      "visibleBounds": [
+        95,
+        157,
+        432,
+        377
+      ],
+      "role": "slow-hazard",
+      "pivot": [
+        264,
+        377
+      ],
+      "renderScale": 0.3,
+      "trigger": {
+        "type": "ellipse",
+        "center": [
+          264,
+          304
+        ],
+        "radius": [
+          150,
+          67
+        ]
+      }
+    },
+    "obj_mushroom.png": {
+      "visibleBounds": [
+        96,
+        32,
+        436,
+        490
+      ],
+      "role": "bounce-pad",
+      "pivot": [
+        266,
+        490
+      ],
+      "renderScale": 0.3,
+      "trigger": {
+        "type": "rect",
+        "bounds": [
+          105,
+          38,
+          425,
+          170
+        ]
+      }
+    },
+    "obj_star.png": {
+      "visibleBounds": [
+        107,
+        103,
+        425,
+        421
+      ],
+      "role": "optional-collectible",
+      "pivot": [
+        266,
+        262
+      ],
+      "renderScale": 0.18,
+      "trigger": {
+        "type": "circle",
+        "center": [
+          266,
+          262
+        ],
+        "radius": 122
+      }
+    },
+    "obj_ticket.png": {
+      "visibleBounds": [
+        93,
+        115,
+        445,
+        401
+      ],
+      "role": "festival-token",
+      "pivot": [
+        269,
+        258
+      ],
+      "renderScale": 0.2,
+      "trigger": {
+        "type": "rect",
+        "bounds": [
+          115,
+          130,
+          425,
+          385
+        ]
+      }
+    }
+  }
+}
