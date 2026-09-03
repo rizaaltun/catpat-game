@@ -290,6 +290,7 @@ export class Game {
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawBackground(ctx, camera);
     for (const platform of mission.platforms) this.drawPlatform(ctx, platform, camera);
+    this.drawDecorations(ctx, camera, 'back', mission.decorations);
     this.drawMissionExtras(ctx, camera);
     for (const object of mission.objects) {
       if (object.visible === false || object.collected) continue;
@@ -297,6 +298,7 @@ export class Game {
     }
     this.player.draw(ctx, camera, this.frames);
     this.drawFriend(ctx, camera, mission.friend, mission.friendSpawn.x, mission.friendSpawn.y);
+    this.drawDecorations(ctx, camera, 'front', mission.decorations);
     if (mission.tint) {
       ctx.fillStyle = mission.tint;
       ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -448,8 +450,8 @@ export class Game {
     ctx.drawImage(this.background, -shift, height - drawHeight, drawWidth, drawHeight);
   }
 
-  drawDecorations(ctx, camera, layer) {
-    for (const decoration of this.level.decorations) {
+  drawDecorations(ctx, camera, layer, list = this.level.decorations) {
+    for (const decoration of list) {
       if (decoration.layer !== layer || !this.isNearCamera(decoration.x, camera, 440)) continue;
       const image = this.decorationImages[decoration.asset];
       ctx.save();

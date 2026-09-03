@@ -1,4 +1,4 @@
-import {createPlatform, createObject, segmentsFromPoints} from './levels.js';
+import {createPlatform, createObject, createDecoration, segmentsFromPoints} from './levels.js';
 
 // Each "help a friend" mission is a small, self-contained pocket world with
 // its own coordinate space (always starting near x=0) — entering/leaving is
@@ -7,65 +7,91 @@ import {createPlatform, createObject, segmentsFromPoints} from './levels.js';
 const MISSIONS = {
   'apple-garden': {
     id: 'apple-garden',
-    length: 1200,
+    length: 2450,
     tint: 'rgba(255, 214, 130, 0.14)',
     spawn: {x: 90, y: 420},
     introText: 'Rüzgâr elma fidanımı devirdi. Bir tohum bulup yeniden eksem, bahçem tekrar meyve verir mi?',
     objectiveText: 'Porsuk’a yardım et: tohumu ek, elmaları topla, sepete bırak',
     platformConfigs: [
-      {id: 'mission-start', asset: 'platform_medium.png', x: 0, y: 500, scale: 0.9},
-      {id: 'mission-plot', asset: 'platform_long.png', x: 480, y: 500, scale: 0.95},
+      {id: 'mission-start', asset: 'platform_medium.png', x: 0, y: 520, scale: 0.9},
+      {id: 'mission-rise', asset: 'platform_short.png', x: 596.5, y: 460, scale: 0.9},
+      {id: 'mission-garden', asset: 'platform_long.png', x: 863.5, y: 500, scale: 0.95},
+      {id: 'mission-basket', asset: 'platform_medium.png', x: 1660.5, y: 520, scale: 0.9},
+    ],
+    decorationConfigs: [
+      {id: 'd1', asset: 'decor_tree.png', x: 60, y: 520, scale: 0.5, layer: 'back'},
+      {id: 'd2', asset: 'decor_bush.png', x: 650, y: 460, scale: 0.3, layer: 'back'},
+      {id: 'd3', asset: 'decor_tree.png', x: 950, y: 500, scale: 0.42, layer: 'back'},
+      {id: 'd4', asset: 'decor_flowers.png', x: 1350, y: 500, scale: 0.26, layer: 'front'},
+      {id: 'd5', asset: 'decor_bush.png', x: 1750, y: 520, scale: 0.32, layer: 'back'},
+      {id: 'd6', asset: 'decor_grass.png', x: 300, y: 520, scale: 0.22, layer: 'front'},
     ],
     objectConfigs: [
-      {id: 'apple-1', asset: 'obj_apple.png', kind: 'apple-prop', x: 700, y: 340, scale: 0.22},
-      {id: 'apple-2', asset: 'obj_apple.png', kind: 'apple-prop', x: 760, y: 320, scale: 0.22},
-      {id: 'apple-3', asset: 'obj_apple.png', kind: 'apple-prop', x: 820, y: 345, scale: 0.22},
-      {id: 'apple-4', asset: 'obj_apple.png', kind: 'apple-prop', x: 760, y: 370, scale: 0.22},
+      {id: 'apple-1', asset: 'obj_apple.png', kind: 'apple-prop', x: 1090, y: 340, scale: 0.22},
+      {id: 'apple-2', asset: 'obj_apple.png', kind: 'apple-prop', x: 1150, y: 320, scale: 0.22},
+      {id: 'apple-3', asset: 'obj_apple.png', kind: 'apple-prop', x: 1210, y: 345, scale: 0.22},
+      {id: 'apple-4', asset: 'obj_apple.png', kind: 'apple-prop', x: 1150, y: 370, scale: 0.22},
     ],
     props: {
-      seed: {x: 230, y: 500, radius: 70, taken: false},
-      plot: {x: 760, y: 500, radius: 90},
-      basket: {x: 1010, y: 500, radius: 90},
+      seed: {x: 200, y: 520, radius: 70, taken: false},
+      plot: {x: 1150, y: 500, radius: 90},
+      basket: {x: 1900, y: 520, radius: 90},
     },
-    friendSpawn: {x: 1060, y: 500},
+    friendSpawn: {x: 1950, y: 520},
   },
   'dark-lanterns': {
     id: 'dark-lanterns',
-    length: 1350,
+    length: 3400,
     tint: 'rgba(18, 24, 54, 0.5)',
     spawn: {x: 90, y: 420},
-    introText: 'Karanlıkta yuvama dönerken yolumu göremiyorum. Fenerleri benimle yakar mısın?',
+    introText: 'Karanlıkta yuvama dönerken yolumu göremiyorum. Bu inişli çıkışlı yolda fenerleri benimle yakar mısın?',
     objectiveText: 'Baykuş’a yardım et: üç feneri de yak',
     platformConfigs: [
-      {id: 'mission-start', asset: 'platform_medium.png', x: 0, y: 500, scale: 0.9},
-      {id: 'mission-mid', asset: 'platform_long.png', x: 480, y: 500, scale: 0.95},
-      {id: 'mission-end', asset: 'platform_medium.png', x: 1130, y: 500, scale: 0.9},
+      {id: 'mission-start', asset: 'platform_medium.png', x: 0, y: 520, scale: 0.9},
+      {id: 'mission-step1', asset: 'platform_short.png', x: 606.5, y: 460, scale: 0.9},
+      {id: 'mission-mid', asset: 'platform_long.png', x: 903.5, y: 510, scale: 0.95},
+      {id: 'mission-step2', asset: 'platform_short.png', x: 1690.5, y: 450, scale: 0.9},
+      {id: 'mission-lower', asset: 'platform_medium.png', x: 1997.5, y: 520, scale: 0.9},
+      {id: 'mission-end', asset: 'platform_medium.png', x: 2604, y: 480, scale: 0.9},
+    ],
+    decorationConfigs: [
+      {id: 'd1', asset: 'decor_tree.png', x: 60, y: 520, scale: 0.46, layer: 'back'},
+      {id: 'd2', asset: 'decor_tree.png', x: 1100, y: 510, scale: 0.5, layer: 'back'},
+      {id: 'd3', asset: 'decor_bush.png', x: 1350, y: 510, scale: 0.3, layer: 'back'},
+      {id: 'd4', asset: 'decor_grass.png', x: 2100, y: 520, scale: 0.22, layer: 'front'},
+      {id: 'd5', asset: 'decor_tree.png', x: 2800, y: 480, scale: 0.44, layer: 'back'},
     ],
     objectConfigs: [
-      {id: 'lantern-1', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 250, y: 500, scale: 0.22},
-      {id: 'lantern-2', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 700, y: 500, scale: 0.22},
-      {id: 'lantern-3', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 950, y: 500, scale: 0.22},
+      {id: 'lantern-1', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 665, y: 460, scale: 0.22},
+      {id: 'lantern-2', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 1750, y: 450, scale: 0.22},
+      {id: 'lantern-3', asset: 'obj_lantern.png', kind: 'lantern-prop', x: 2660, y: 480, scale: 0.22},
     ],
     props: {},
-    friendSpawn: {x: 1190, y: 500},
+    friendSpawn: {x: 2900, y: 480},
   },
   'lost-toy': {
     id: 'lost-toy',
-    length: 1050,
+    length: 1900,
     tint: 'rgba(255, 255, 255, 0)',
-    spawn: {x: 90, y: 460},
-    introText: 'Topum boşluğun öbür ucuna yuvarlandı. Küçüğüm, oraya zıplayamıyorum — sen alabilir misin?',
+    spawn: {x: 90, y: 440},
+    introText: 'Topum boşluğun öbür ucuna yuvarlandı. Küçüğüm, o kadar zıplayamıyorum — sen alabilir misin?',
     objectiveText: 'Civciv’e yardım et: kayıp topu bul',
     platformConfigs: [
       {id: 'mission-start', asset: 'platform_medium.png', x: 0, y: 540, scale: 0.9},
-      {id: 'mission-mid', asset: 'platform_short.png', x: 430, y: 480, scale: 0.9},
-      {id: 'mission-far', asset: 'platform_medium.png', x: 730, y: 420, scale: 0.9},
+      {id: 'mission-step1', asset: 'platform_short.png', x: 606.5, y: 480, scale: 0.9},
+      {id: 'mission-step2', asset: 'platform_short.png', x: 883.5, y: 420, scale: 0.9},
+      {id: 'mission-far', asset: 'platform_medium.png', x: 1170.5, y: 360, scale: 0.9},
+    ],
+    decorationConfigs: [
+      {id: 'd1', asset: 'decor_bush.png', x: 60, y: 540, scale: 0.28, layer: 'back'},
+      {id: 'd2', asset: 'decor_tree.png', x: 750, y: 480, scale: 0.4, layer: 'back'},
+      {id: 'd3', asset: 'decor_flowers.png', x: 1400, y: 360, scale: 0.24, layer: 'front'},
     ],
     objectConfigs: [
-      {id: 'lost-toy-star', asset: 'obj_star.png', kind: 'toy-prop', x: 900, y: 420, scale: 0.24},
+      {id: 'lost-toy-star', asset: 'obj_star.png', kind: 'toy-prop', x: 1350, y: 360, scale: 0.24},
     ],
     props: {},
-    friendSpawn: {x: 80, y: 540},
+    friendSpawn: {x: 60, y: 540},
   },
 };
 
@@ -74,6 +100,7 @@ export function createMissionWorld(missionId, manifests) {
   if (!config) throw new Error(`Unknown mission: ${missionId}`);
 
   const platforms = config.platformConfigs.map(item => createPlatform(item, manifests.platforms));
+  const decorations = config.decorationConfigs.map(item => createDecoration(item, manifests.decorations));
   const objects = config.objectConfigs.map(item => ({
     ...createObject(item, manifests.objects),
     visible: item.kind !== 'apple-prop',
@@ -89,6 +116,7 @@ export function createMissionWorld(missionId, manifests) {
     introText: config.introText,
     objectiveText: config.objectiveText,
     platforms,
+    decorations,
     objects,
     surfaces,
     props: JSON.parse(JSON.stringify(config.props)),
