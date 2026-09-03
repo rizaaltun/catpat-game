@@ -99,12 +99,12 @@ const LEVEL01_MECHANISMS = [
   {id: 'crate-plate', asset: 'crate_pressure_plate.png', kind: 'crate-plate', x: 9650, y: 610, scale: 0.20, targets: ['crate-bridge']},
 ];
 
-// Placeholder critters until real character art lands (see docs note in
-// Mission.js) — color/label only, drawn procedurally by Game.drawFriend().
+// Friend sprite sheets: assets/gameplay/forest/friends_v01/, 2 frames each
+// (0 waiting, 1 happy) — see friends_v01/manifest.json.
 const LEVEL01_FRIENDS = [
-  {id: 'friend-porsuk', name: 'Porsuk', x: 3230, y: 600, color: '#b9793f', missionId: 'apple-garden'},
-  {id: 'friend-baykus', name: 'Baykuş', x: 8250, y: 520, color: '#6f8ea6', missionId: 'dark-lanterns'},
-  {id: 'friend-civciv', name: 'Civciv', x: 11150, y: 610, color: '#f2c94c', missionId: 'lost-toy'},
+  {id: 'friend-porsuk', name: 'Porsuk', x: 3230, y: 600, sheetAsset: 'friend_porsuk_sheet.png', missionId: 'apple-garden'},
+  {id: 'friend-baykus', name: 'Baykuş', x: 8250, y: 520, sheetAsset: 'friend_baykus_sheet.png', missionId: 'dark-lanterns'},
+  {id: 'friend-civciv', name: 'Civciv', x: 11150, y: 610, sheetAsset: 'friend_civciv_sheet.png', missionId: 'lost-toy'},
 ];
 
 const LEVEL01_ZONES = [

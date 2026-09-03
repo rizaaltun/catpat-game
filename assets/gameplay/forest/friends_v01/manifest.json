@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "canvas": {"width": 512, "height": 512},
+  "spriteSheets": {
+    "friend_porsuk_sheet.png": {
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sequence": ["waiting", "happy"]
+    },
+    "friend_baykus_sheet.png": {
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sequence": ["waiting", "happy"]
+    },
+    "friend_civciv_sheet.png": {
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sequence": ["waiting", "happy"]
+    }
+  }
+}

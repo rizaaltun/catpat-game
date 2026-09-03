@@ -73,16 +73,16 @@ const makeInteract = () => {
     runtime.update(1 / 60, player, idle);
   }
   assert.equal(runtime.grown, true, 'the seed must grow into apples after waiting');
-  const apples = mission.objects.filter(item => item.kind === 'apple-prop');
-  assert.equal(apples.length, 4, 'the apple tree must offer four apples');
-  assert.ok(apples.every(apple => apple.visible), 'apples must become visible once grown');
+  assert.equal(runtime.treeGrowthStage(), 3, 'the grown tree must render the five-apple frame');
+  const offsets = mission.props.appleOffsets;
+  assert.equal(offsets.length, 5, 'the apple tree must offer five apples (baked into tree_stage_4_apples.png)');
 
-  for (const apple of apples) {
-    player.x = apple.x;
-    player.y = apple.y - character.collider.height / 2;
+  for (const offset of offsets) {
+    player.x = mission.props.plot.x + offset.dx;
+    player.y = mission.props.plot.y + offset.dy - character.collider.height / 2;
     runtime.update(1 / 60, player, idle);
   }
-  assert.equal(runtime.appleCount, 4, 'walking over each apple must collect it');
+  assert.equal(runtime.appleCount, 5, 'walking over each apple spot must collect it');
 
   player.x = mission.props.basket.x;
   player.y = mission.props.basket.y - character.collider.height / 2;

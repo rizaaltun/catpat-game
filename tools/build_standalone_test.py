@@ -32,6 +32,8 @@ MANIFESTS = (
     "assets/environments/forest/decorations_v02/manifest.json",
     "assets/gameplay/forest/objects_v03/manifest.json",
     "assets/gameplay/forest/mechanisms_v04/manifest.json",
+    "assets/gameplay/forest/friends_v01/manifest.json",
+    "assets/gameplay/forest/mission_props_v01/manifest.json",
 )
 
 ASSET_DIRECTORIES = (
@@ -41,6 +43,8 @@ ASSET_DIRECTORIES = (
     "assets/environments/forest/backgrounds_v02",
     "assets/gameplay/forest/objects_v03",
     "assets/gameplay/forest/mechanisms_v04",
+    "assets/gameplay/forest/friends_v01",
+    "assets/gameplay/forest/mission_props_v01",
 )
 
 SOURCE_ONLY_ASSETS: set[str] = set()
@@ -146,7 +150,7 @@ import(moduleUrls['src/main.js']).catch(error => {{
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT.write_text(html, encoding="utf-8")
 
-    expected_images = 43
+    expected_images = 50
     if len(assets) != expected_images:
         raise RuntimeError(f"expected {expected_images} embedded images, found {len(assets)}")
     print(

@@ -16,6 +16,8 @@ BACKGROUND = ROOT / "assets/environments/forest/backgrounds_v02/forest_valley.jp
 DECORATIONS = ROOT / "assets/environments/forest/decorations_v02"
 OBJECTS = ROOT / "assets/gameplay/forest/objects_v03"
 MECHANISMS = ROOT / "assets/gameplay/forest/mechanisms_v04"
+FRIENDS = ROOT / "assets/gameplay/forest/friends_v01"
+MISSION_PROPS = ROOT / "assets/gameplay/forest/mission_props_v01"
 
 
 def assert_rgba(path: Path, size: tuple[int, int]) -> Image.Image:
@@ -114,6 +116,62 @@ def validate_mechanisms() -> int:
     return len(manifest["assets"])
 
 
+def validate_friends() -> int:
+    return validate_sprite_sheets(FRIENDS, "manifest.json", 3)
+
+
+def validate_painted_assets(directory: Path, expected_count: int) -> int:
+    """Like validate_manifest_assets, but for naturally anti-aliased art
+    (externally illustrated, not the flat-cutout pipeline) — skips the
+    zero-low-alpha-residue rule, since soft edges there are intentional."""
+    manifest = json.loads((directory / "manifest.json").read_text())
+    assert len(manifest["assets"]) == expected_count
+    for name, metadata in manifest["assets"].items():
+        image = assert_rgba(directory / name, (512, 512))
+        visible = image.getchannel("A").point(lambda value: 255 if value >= 8 else 0).getbbox()
+        assert list(visible) == metadata["visibleBounds"], f"{name}: stale visible bounds"
+        pivot_x, pivot_y = metadata["pivot"]
+        assert 0 <= pivot_x <= 512 and 0 <= pivot_y <= 512, f"{name}: invalid pivot"
+        assert 0 < metadata["renderScale"] <= 1, f"{name}: invalid render scale"
+    return len(manifest["assets"])
+
+
+def validate_tree_growth_sheet() -> int:
+    """The trunk deliberately touches the frame's bottom edge in every stage
+    (pivot sits only 32px above it) so the tree plants exactly at the ground
+    line with no floating gap — so unlike validate_sprite_sheets, the bottom
+    margin is allowed down to 0; left/top/right still need real margin."""
+    manifest = json.loads((MISSION_PROPS / "manifest.json").read_text())
+    metadata = manifest["spriteSheets"]["tree_growth_sheet.png"]
+    assert metadata["sequence"] == ["sprout", "sapling", "leafy", "apples"], "tree growth stages must be in order"
+    frame_w, frame_h = metadata["frameSize"]
+    frame_count = metadata["frameCount"]
+    path = MISSION_PROPS / "tree_growth_sheet.png"
+    image = Image.open(path)
+    assert image.mode == "RGBA", f"{path}: expected RGBA, got {image.mode}"
+    assert image.size == (frame_w * frame_count, frame_h), f"{path}: unexpected size {image.size}"
+    alpha = image.getchannel("A")
+    width, height = image.size
+    corners = [alpha.getpixel(point) for point in ((0, 0), (width - 1, 0), (0, height - 1), (width - 1, height - 1))]
+    assert corners == [0, 0, 0, 0], f"{path}: opaque corner {corners}"
+    for index in range(frame_count):
+        cell = image.crop((index * frame_w, 0, (index + 1) * frame_w, frame_h))
+        bbox = cell.getchannel("A").point(lambda value: 255 if value >= 8 else 0).getbbox()
+        assert bbox, f"{path}: frame {index} empty alpha"
+        left, top, right, bottom = bbox
+        assert min(left, top, frame_w - right) >= 8, f"{path}: frame {index} side/top margin too tight {(left, top, frame_w - right)}"
+    pivot_x, pivot_y = metadata["pivot"]
+    assert 0 <= pivot_x <= frame_w and 0 <= pivot_y <= frame_h, f"{path}: invalid pivot"
+    assert 0 < metadata["renderScale"] <= 1, f"{path}: invalid render scale"
+    return 1
+
+
+def validate_mission_props() -> int:
+    props = validate_painted_assets(MISSION_PROPS, 3)
+    sheets = validate_tree_growth_sheet()
+    return props + sheets
+
+
 def validate_level01_art() -> tuple[int, int, int]:
     with Image.open(BACKGROUND) as background:
         assert background.mode == "RGB"
@@ -139,11 +197,14 @@ def main() -> None:
     characters = validate_character()
     platforms = validate_platforms()
     decorations, objects, mechanisms = validate_level01_art()
+    friends = validate_friends()
+    mission_props = validate_mission_props()
     print(
         "asset validation: "
         f"{characters} character frames / {platforms} platforms / "
         f"{decorations} decorations / {objects} gameplay objects (incl. 2 sprite sheets) / "
-        f"{mechanisms} mechanisms / 1 background OK"
+        f"{mechanisms} mechanisms / {friends} friend sheets / {mission_props} mission props "
+        "/ 1 background OK"
     )
 
 

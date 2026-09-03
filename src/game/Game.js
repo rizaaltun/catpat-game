@@ -1,13 +1,15 @@
 import {Player} from './Player.js';
 import {LevelRuntime, objectRect} from './LevelRuntime.js';
 import {LEVELS, createLevel} from './levels.js';
-import {createMissionWorld, MissionRuntime, SEED_GROW_SECONDS} from './Mission.js';
+import {createMissionWorld, MissionRuntime} from './Mission.js';
 
 const CHARACTER_ROOT = './assets/characters/catpat/animation_v03/';
 const PLATFORM_ROOT = './assets/environments/forest/platforms_v03/';
 const DECORATION_ROOT = './assets/environments/forest/decorations_v02/';
 const OBJECT_ROOT = './assets/gameplay/forest/objects_v03/';
 const MECHANISM_ROOT = './assets/gameplay/forest/mechanisms_v04/';
+const FRIEND_ROOT = './assets/gameplay/forest/friends_v01/';
+const MISSION_PROP_ROOT = './assets/gameplay/forest/mission_props_v01/';
 
 export class Game {
   constructor(canvas, input, ui) {
@@ -37,12 +39,14 @@ export class Game {
   }
 
   async loadAssets() {
-    const [characterManifest, platformManifest, decorationManifest, objectManifest, mechanismManifest] = await Promise.all([
+    const [characterManifest, platformManifest, decorationManifest, objectManifest, mechanismManifest, friendManifest, missionPropManifest] = await Promise.all([
       loadJson(`${CHARACTER_ROOT}animation_manifest.json`),
       loadJson(`${PLATFORM_ROOT}platform_manifest.json`),
       loadJson(`${DECORATION_ROOT}manifest.json`),
       loadJson(`${OBJECT_ROOT}manifest.json`),
       loadJson(`${MECHANISM_ROOT}manifest.json`),
+      loadJson(`${FRIEND_ROOT}manifest.json`),
+      loadJson(`${MISSION_PROP_ROOT}manifest.json`),
     ]);
     this.characterManifest = characterManifest;
     this.manifests = {
@@ -50,6 +54,8 @@ export class Game {
       decorations: decorationManifest,
       objects: objectManifest,
       mechanisms: mechanismManifest,
+      friends: friendManifest,
+      missionProps: missionPropManifest,
     };
 
     const clip = characterManifest.clips;
@@ -75,18 +81,23 @@ export class Game {
       runFps: clip.run.fps,
     };
 
-    const [platformImages, decorationImages, objectImages, spriteSheetImages, mechanismImages, background] = await Promise.all([
+    const [platformImages, decorationImages, objectImages, spriteSheetImages, mechanismImages, friendImages, missionPropImages, missionPropSheetImages, background] = await Promise.all([
       loadImageMap(platformManifest.assets, PLATFORM_ROOT),
       loadImageMap(decorationManifest.assets, DECORATION_ROOT),
       loadImageMap(objectManifest.assets, OBJECT_ROOT),
       loadImageMap(objectManifest.spriteSheets || {}, OBJECT_ROOT),
       loadImageMap(mechanismManifest.assets, MECHANISM_ROOT),
+      loadImageMap(friendManifest.spriteSheets || {}, FRIEND_ROOT),
+      loadImageMap(missionPropManifest.assets || {}, MISSION_PROP_ROOT),
+      loadImageMap(missionPropManifest.spriteSheets || {}, MISSION_PROP_ROOT),
       loadImage('./assets/environments/forest/backgrounds_v02/forest_valley.jpg'),
     ]);
     this.platformImages = platformImages;
     this.decorationImages = decorationImages;
     this.objectImages = {...objectImages, ...spriteSheetImages};
     this.mechanismImages = mechanismImages;
+    this.friendImages = friendImages;
+    this.missionPropImages = {...missionPropImages, ...missionPropSheetImages};
     this.background = background;
   }
 
@@ -137,6 +148,7 @@ export class Game {
   }
 
   update(dt) {
+    this.time = (this.time || 0) + dt;
     this.teleportFlash = Math.max(0, this.teleportFlash - dt * 2.6);
 
     if (this.mission) {
@@ -345,76 +357,75 @@ export class Game {
     if (this.mission.type !== 'apple-garden') return;
     const props = this.mission.props;
     const runtime = this.missionRuntime;
+    const art = this.mission.art;
+    const propAssets = this.manifests.missionProps.assets;
+    const propSheets = this.manifests.missionProps.spriteSheets;
 
-    if (!props.seed.taken) {
-      ctx.save();
-      ctx.translate(props.seed.x - camera.x, props.seed.y - camera.y);
-      ctx.fillStyle = '#8a5a2b';
-      ctx.beginPath();
-      ctx.ellipse(0, -14, 10, 14, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-    }
+    const drawProp = (assetName, x, y) => {
+      const meta = propAssets[assetName];
+      const image = this.missionPropImages[assetName];
+      ctx.drawImage(
+        image,
+        x - camera.x - meta.pivot[0] * meta.renderScale,
+        y - camera.y - meta.pivot[1] * meta.renderScale,
+        512 * meta.renderScale,
+        512 * meta.renderScale,
+      );
+    };
 
-    ctx.save();
-    ctx.translate(props.plot.x - camera.x, props.plot.y - camera.y);
-    if (runtime.planted) {
-      const growth = runtime.grown ? 1 : Math.min(1, runtime.growTimer / SEED_GROW_SECONDS);
-      const trunkHeight = 20 + growth * 130;
-      ctx.fillStyle = '#7a4a26';
-      ctx.fillRect(-9, -trunkHeight, 18, trunkHeight);
-      if (growth > 0.25) {
-        const canopyScale = (growth - 0.25) / 0.75;
-        ctx.fillStyle = '#5fa050';
-        ctx.beginPath();
-        ctx.arc(0, -trunkHeight, 30 + canopyScale * 46, 0, Math.PI * 2);
-        ctx.fill();
-      }
+    if (!props.seed.taken) drawProp(art.seed, props.seed.x, props.seed.y);
+
+    if (!runtime.planted) {
+      drawProp(art.soil, props.plot.x, props.plot.y);
     } else {
-      ctx.fillStyle = '#6b4a2a';
-      ctx.beginPath();
-      ctx.ellipse(0, -6, 46, 14, 0, 0, Math.PI * 2);
-      ctx.fill();
+      const meta = propSheets[art.tree];
+      const image = this.missionPropImages[art.tree];
+      const [frameW, frameH] = meta.frameSize;
+      const frameIndex = runtime.treeGrowthStage();
+      ctx.drawImage(
+        image,
+        frameIndex * frameW, 0, frameW, frameH,
+        props.plot.x - camera.x - meta.pivot[0] * meta.renderScale,
+        props.plot.y - camera.y - meta.pivot[1] * meta.renderScale,
+        frameW * meta.renderScale, frameH * meta.renderScale,
+      );
     }
-    ctx.restore();
 
-    ctx.save();
-    ctx.translate(props.basket.x - camera.x, props.basket.y - camera.y);
-    ctx.fillStyle = '#c98a3f';
-    ctx.fillRect(-32, -34, 64, 30);
-    ctx.strokeStyle = '#8a5a2b';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(-32, -34, 64, 30);
-    for (let index = -1; index <= 1; index += 1) ctx.strokeRect(-32 + (index + 1) * 21.3, -34, 0, 30);
-    ctx.restore();
+    drawProp(art.basket, props.basket.x, props.basket.y);
   }
 
   drawFriend(ctx, camera, friend, x, y) {
     if (!friend || !this.isNearCamera(x, camera, 390)) return;
     const screenX = x - camera.x;
     const screenY = y - camera.y;
+    const meta = this.manifests.friends.spriteSheets[friend.sheetAsset];
+    const image = this.friendImages[friend.sheetAsset];
+    const [frameW, frameH] = meta.frameSize;
+    const frameIndex = friend.helped ? 1 : 0;
+
+    // Subtle pivot-locked idle breathing: <=2px lift, <=1.5% scale change.
+    // Feet stay fixed because the scale is applied around the translate
+    // origin (the friend's own x/y), same pattern as Player.renderMotion.
+    const breath = Math.sin(this.time * 2.1 + x * 0.013);
+    const scaleY = 1 + breath * 0.015;
+    const scaleX = 1 - breath * 0.008;
+    const lift = -Math.max(0, breath) * 2;
+
     ctx.save();
     ctx.translate(screenX, screenY);
-    ctx.fillStyle = friend.color;
-    ctx.beginPath();
-    ctx.ellipse(0, -34, 34, 34, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#20302c';
-    ctx.beginPath();
-    ctx.arc(-11, -40, 4.2, 0, Math.PI * 2);
-    ctx.arc(11, -40, 4.2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#20302c';
-    ctx.lineWidth = 2.4;
-    ctx.beginPath();
-    if (friend.helped) ctx.arc(0, -27, 8, 0.15 * Math.PI, 0.85 * Math.PI);
-    else ctx.arc(0, -20, 6, 1.15 * Math.PI, 1.85 * Math.PI);
-    ctx.stroke();
+    ctx.translate(0, lift);
+    ctx.scale(scaleX, scaleY);
+    ctx.drawImage(
+      image,
+      frameIndex * frameW, 0, frameW, frameH,
+      -meta.pivot[0] * meta.renderScale, -meta.pivot[1] * meta.renderScale,
+      frameW * meta.renderScale, frameH * meta.renderScale,
+    );
     ctx.restore();
 
     if (!friend.helped) {
       ctx.save();
-      ctx.translate(screenX, screenY - 80);
+      ctx.translate(screenX, screenY - meta.pivot[1] * meta.renderScale - 22);
       ctx.fillStyle = '#ffe27a';
       ctx.beginPath();
       ctx.arc(0, 0, 11, 0, Math.PI * 2);

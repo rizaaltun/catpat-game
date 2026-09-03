@@ -23,7 +23,7 @@ def main() -> None:
     assert '<link rel="stylesheet"' not in html
     assert not re.findall(r'<img[^>]+src="\./', html), "unembedded HTML image"
     assert html.count("data:image/") >= 40, "production images were not embedded"
-    assert BUILD.stat().st_size < 12 * 1024 * 1024, "standalone build is unexpectedly large"
+    assert BUILD.stat().st_size < 15 * 1024 * 1024, "standalone build is unexpectedly large"
     print(f"standalone contract: offline dependencies embedded / {BUILD.stat().st_size / 1048576:.2f} MiB OK")
 
 

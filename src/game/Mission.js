@@ -21,23 +21,29 @@ const MISSIONS = {
     decorationConfigs: [
       {id: 'd1', asset: 'decor_tree.png', x: 60, y: 520, scale: 0.5, layer: 'back'},
       {id: 'd2', asset: 'decor_bush.png', x: 650, y: 460, scale: 0.3, layer: 'back'},
-      {id: 'd3', asset: 'decor_tree.png', x: 950, y: 500, scale: 0.42, layer: 'back'},
       {id: 'd4', asset: 'decor_flowers.png', x: 1350, y: 500, scale: 0.26, layer: 'front'},
       {id: 'd5', asset: 'decor_bush.png', x: 1750, y: 520, scale: 0.32, layer: 'back'},
       {id: 'd6', asset: 'decor_grass.png', x: 300, y: 520, scale: 0.22, layer: 'front'},
     ],
-    objectConfigs: [
-      {id: 'apple-1', asset: 'obj_apple.png', kind: 'apple-prop', x: 1090, y: 340, scale: 0.22},
-      {id: 'apple-2', asset: 'obj_apple.png', kind: 'apple-prop', x: 1150, y: 320, scale: 0.22},
-      {id: 'apple-3', asset: 'obj_apple.png', kind: 'apple-prop', x: 1210, y: 345, scale: 0.22},
-      {id: 'apple-4', asset: 'obj_apple.png', kind: 'apple-prop', x: 1150, y: 370, scale: 0.22},
-    ],
+    objectConfigs: [],
+    // Apple trigger points are invisible — the five apples are painted directly
+    // into tree_stage_4_apples.png (see mission_props_v01), not drawn separately.
+    // Offsets are (localPixel - pivot) * renderScale from assets/production_v06/
+    // missions/apple_garden art, so they track the plot position automatically.
     props: {
       seed: {x: 200, y: 520, radius: 70, taken: false},
       plot: {x: 1150, y: 500, radius: 90},
       basket: {x: 1900, y: 520, radius: 90},
+      appleOffsets: [
+        {dx: -18.9, dy: -133.6},
+        {dx: 25.2, dy: -122.6},
+        {dx: 62.6, dy: -94.9},
+        {dx: -2.9, dy: -80.6},
+        {dx: -50.0, dy: -67.6},
+      ],
     },
     friendSpawn: {x: 1950, y: 520},
+    art: {seed: 'seed.png', soil: 'soil_patch.png', basket: 'basket_empty.png', tree: 'tree_growth_sheet.png'},
   },
   'dark-lanterns': {
     id: 'dark-lanterns',
@@ -121,6 +127,7 @@ export function createMissionWorld(missionId, manifests) {
     surfaces,
     props: JSON.parse(JSON.stringify(config.props)),
     friendSpawn: config.friendSpawn,
+    art: config.art,
     speedMultiplier: 1,
   };
 }
@@ -144,6 +151,9 @@ export class MissionRuntime {
     this.growTimer = 0;
     this.grown = false;
     this.appleCount = 0;
+    this.appleCollected = mission.props.appleOffsets
+      ? mission.props.appleOffsets.map(() => false)
+      : [];
 
     this.emit('dialogue', {speaker: friend.name, text: mission.introText, duration: 4400});
     this.emit('objective', {text: mission.objectiveText});
@@ -183,18 +193,18 @@ export class MissionRuntime {
       this.growTimer += dt;
       if (this.growTimer >= SEED_GROW_SECONDS) {
         this.grown = true;
-        for (const object of this.mission.objects) object.visible = true;
         this.emit('dialogue', {speaker: 'Porsuk', text: 'Bak! Fidan büyüdü, dallarında elmalar var!', duration: 3400});
       }
     } else {
-      for (const object of this.mission.objects) {
-        if (object.collected || object.kind !== 'apple-prop') continue;
-        if (near(player, object)) {
-          object.collected = true;
+      const totalApples = this.appleCollected.length;
+      props.appleOffsets.forEach((offset, index) => {
+        if (this.appleCollected[index]) return;
+        const spot = {x: props.plot.x + offset.dx, y: props.plot.y + offset.dy, radius: 46};
+        if (near(player, spot)) {
+          this.appleCollected[index] = true;
           this.appleCount += 1;
         }
-      }
-      const totalApples = this.mission.objects.filter(item => item.kind === 'apple-prop').length;
+      });
       if (this.appleCount >= totalApples && totalApples > 0) {
         if (near(player, props.basket)) {
           prompt = 'Etkileşim: Elmaları sepete bırak';
@@ -237,6 +247,12 @@ export class MissionRuntime {
       this.emit('dialogue', {speaker: 'Çatpat', text: 'Buldum! Hemen geri götürüyorum.', duration: 2200});
       this.finish('Topumu getirdin! Küçük olmam önemli değilmiş, sen yine de düşündün.');
     }
+  }
+
+  treeGrowthStage() {
+    if (this.grown) return 3;
+    if (!this.planted) return 0;
+    return Math.min(2, Math.floor((this.growTimer / SEED_GROW_SECONDS) * 3));
   }
 
   finish(friendLine) {

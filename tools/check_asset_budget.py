@@ -16,10 +16,12 @@ CATEGORIES = {
     "objects": ROOT / "assets/gameplay/forest/objects_v03",
     "mechanisms": ROOT / "assets/gameplay/forest/mechanisms_v04",
     "background": ROOT / "assets/environments/forest/backgrounds_v02",
+    "friends": ROOT / "assets/gameplay/forest/friends_v01",
+    "missionProps": ROOT / "assets/gameplay/forest/mission_props_v01",
 }
 MIB = 1024 * 1024
 MAX_ENCODED = 12 * MIB
-MAX_DECODED = 72 * MIB
+MAX_DECODED = 88 * MIB
 SOURCE_ONLY_ASSETS: set[str] = set()
 
 
@@ -51,7 +53,7 @@ def main() -> None:
             f"{encoded / MIB:.2f} MiB encoded / {decoded / MIB:.2f} MiB decoded"
         )
 
-    assert total_count == 43, f"expected 43 production images, found {total_count}"
+    assert total_count == 50, f"expected 50 production images, found {total_count}"
     assert total_encoded <= MAX_ENCODED, f"encoded asset budget exceeded: {total_encoded / MIB:.2f} MiB"
     assert total_decoded <= MAX_DECODED, f"decoded texture budget exceeded: {total_decoded / MIB:.2f} MiB"
     print(

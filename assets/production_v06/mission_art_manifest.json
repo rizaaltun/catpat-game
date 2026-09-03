@@ -1,0 +1,76 @@
+{
+  "version": "v06-mission-art-1",
+  "format": "RGBA PNG",
+  "background": "transparent",
+  "friends": {
+    "friend-porsuk": {
+      "path": "friends/friend_porsuk_sheet.png",
+      "canvas": [1024, 512],
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "states": {"waiting": 0, "happy": 1},
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sha256": "e2af7cd882f4d9e89a1660768b4306d6e1a563df6f12aa5246d269725b2231bf"
+    },
+    "friend-baykus": {
+      "path": "friends/friend_baykus_sheet.png",
+      "canvas": [1024, 512],
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "states": {"waiting": 0, "happy": 1},
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sha256": "819857b19128e3c441efff161d64ef6b3ff83e96d919823793d31aabd5db7c58"
+    },
+    "friend-civciv": {
+      "path": "friends/friend_civciv_sheet.png",
+      "canvas": [1024, 512],
+      "frameSize": [512, 512],
+      "frameCount": 2,
+      "states": {"waiting": 0, "happy": 1},
+      "pivot": [256, 480],
+      "renderScale": 0.18,
+      "sha256": "9c81b2d65f28d89686755a8977b202b42265c7193877b6471d0e47369ada2d59"
+    }
+  },
+  "appleGarden": {
+    "seed": {
+      "path": "missions/apple_garden/seed.png",
+      "canvas": [512, 512],
+      "pivot": [256, 480],
+      "renderScale": 0.075,
+      "sha256": "f3220e2f145034eb3eb09eacb96f16458cecf46cd4d331e889d38f2b99038b91"
+    },
+    "soilPatch": {
+      "path": "missions/apple_garden/soil_patch.png",
+      "canvas": [512, 512],
+      "pivot": [256, 480],
+      "renderScale": 0.24,
+      "sha256": "b6ee98bd6d54739169561f9a9da99bf11ee46ade1448d8ce647567404e41591a"
+    },
+    "basketEmpty": {
+      "path": "missions/apple_garden/basket_empty.png",
+      "canvas": [512, 512],
+      "pivot": [256, 480],
+      "renderScale": 0.20,
+      "sha256": "7da605946f5d3102cdabcc62e4e69af2ab70b42434f7150213a47d06c3706d50"
+    },
+    "treeGrowth": {
+      "path": "missions/apple_garden/tree_growth_sheet.png",
+      "stagePaths": [
+        "missions/apple_garden/tree_stage_1_sprout.png",
+        "missions/apple_garden/tree_stage_2_sapling.png",
+        "missions/apple_garden/tree_stage_3_leafy.png",
+        "missions/apple_garden/tree_stage_4_apples.png"
+      ],
+      "canvas": [2048, 512],
+      "frameSize": [512, 512],
+      "frameCount": 4,
+      "states": {"sprout": 0, "sapling": 1, "leafy": 2, "apples": 3},
+      "pivot": [256, 480],
+      "renderScale": 0.42,
+      "sha256": "99eb3670fb3ebf903f8e4b3e87d00f8d058e2aa23aa025cdf165119cf0417c64"
+    }
+  }
+}

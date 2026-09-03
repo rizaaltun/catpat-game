@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "canvas": {"width": 512, "height": 512},
+  "assets": {
+    "seed.png": {"visibleBounds": [171, 257, 338, 413], "pivot": [256, 480], "renderScale": 0.075},
+    "soil_patch.png": {"visibleBounds": [69, 325, 448, 464], "pivot": [256, 480], "renderScale": 0.24},
+    "basket_empty.png": {"visibleBounds": [68, 232, 472, 476], "pivot": [256, 480], "renderScale": 0.20}
+  },
+  "spriteSheets": {
+    "tree_growth_sheet.png": {
+      "frameSize": [512, 512],
+      "frameCount": 4,
+      "pivot": [256, 480],
+      "renderScale": 0.42,
+      "sequence": ["sprout", "sapling", "leafy", "apples"]
+    }
+  }
+}
