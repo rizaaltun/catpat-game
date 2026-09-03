@@ -19,10 +19,11 @@ export class LevelRuntime {
 
     this.sign = level.decorations.find(item => item.id === 'repairable-sign');
     this.crate = level.objects.find(item => item.kind === 'crate');
-    this.mud = level.objects.find(item => item.kind === 'mud');
+    this.cratePlate = level.objects.find(item => item.kind === 'crate-plate');
     this.mushroom = level.objects.find(item => item.kind === 'mushroom');
     this.checkpoints = level.objects.filter(item => item.kind === 'checkpoint');
     this.buttons = level.objects.filter(item => item.kind === 'pressure-button');
+    this.pressables = [...this.buttons, ...(this.cratePlate ? [this.cratePlate] : [])];
     this.gates = level.objects.filter(item => item.kind === 'lift-gate');
     this.bridge = level.platforms.find(item => item.mechanism === 'crate-weight');
     this.motionOwners = [
@@ -30,8 +31,7 @@ export class LevelRuntime {
       ...level.objects.filter(item => item.motion),
     ];
 
-    // Backward-compatible handles used by the focused smoke tests.
-    this.cloud = level.objects.find(item => item.id === 'moving-cloud');
+    // Backward-compatible handle used by the focused smoke tests.
     this.checkpoint = this.checkpoints[0];
 
     if (this.crate) {
@@ -77,7 +77,7 @@ export class LevelRuntime {
 
     for (const owner of this.motionOwners) this.updateMotion(owner, dt, player);
 
-    for (const button of this.buttons) {
+    for (const button of this.pressables) {
       button.pressed = approach(button.pressed, button.active ? 1 : 0, dt * 6.5);
     }
     for (const gate of this.gates) {
@@ -90,8 +90,6 @@ export class LevelRuntime {
       this.translateOwner(this.bridge, 0, nextOffset - this.bridge.currentOffsetY, player);
       this.bridge.currentOffsetY = nextOffset;
     }
-
-    this.level.speedMultiplier = this.isPlayerInMud(player) ? 0.53 : 1;
   }
 
   updateAfterPlayer(dt, player, input) {
@@ -103,7 +101,7 @@ export class LevelRuntime {
     this.resolveCollectibles(player);
     const signPrompt = this.resolveSign(player, input);
     const cratePrompt = !this.cratePlaced && Math.abs(player.x - this.crate.x) < 195
-      ? 'Sandığı yassı taşın üstüne it'
+      ? 'Sandığı plakaya it'
       : '';
     this.setPrompt(signPrompt || cratePrompt || gatePrompt);
     this.resolveCheckpoints(player);
@@ -275,9 +273,7 @@ export class LevelRuntime {
       if (nextActive) {
         this.emit('dialogue', {
           speaker: 'Çatpat',
-          text: button.id === 'gate-button'
-            ? 'Tık! Düğme aşağı indi; büyük kapı yukarı kalkıyor.'
-            : 'İkinci düğme taşı uyandırdı. Şimdi ritmini izleyebilirim.',
+          text: 'Tık! Plaka aşağı indi; büyük kapı yukarı kalkıyor.',
           duration: 3200,
         });
         this.emit('mechanism', {id: button.id, active: true});
@@ -338,19 +334,22 @@ export class LevelRuntime {
       ? nextLeft - player.w / 2 - 0.5
       : nextRight + player.w / 2 + 0.5;
 
-    if (this.crate.x >= 11685) {
-      this.cratePlaced = true;
-      this.translateOwner(this.crate, Math.max(0, 11695 - this.crate.x), 0);
-      this.crate.animationState = 'settle';
-      this.crate.animationTime = 0;
-      this.crate.wobble = 1;
-      this.emit('dialogue', {
-        speaker: 'Çatpat',
-        text: 'Sandığın ağırlığı ipi gerdi. Son köprü yükseliyor!',
-        duration: 3600,
-      });
-      this.emit('objective', {text: this.tickets === this.totalTickets ? 'Festival çadırına ulaş' : 'Kalan şenlik biletlerini bul'});
-    }
+    if (!this.cratePlate) return;
+    const crateRect = objectRect(this.crate, this.crate.metadata.solid.bounds);
+    const plateRect = objectRect(this.cratePlate, this.cratePlate.metadata.trigger.bounds);
+    if (!rectsOverlap(crateRect, plateRect)) return;
+
+    this.cratePlaced = true;
+    this.cratePlate.active = true;
+    this.crate.animationState = 'settle';
+    this.crate.animationTime = 0;
+    this.crate.wobble = 1;
+    this.emit('dialogue', {
+      speaker: 'Çatpat',
+      text: 'Sandık plakaya oturdu. Köprü yükseliyor!',
+      duration: 3600,
+    });
+    this.emit('objective', {text: this.tickets === this.totalTickets ? 'Festival çadırına ulaş' : 'Kalan şenlik biletlerini bul'});
   }
 
   resolveMushroom(player) {
@@ -422,17 +421,6 @@ export class LevelRuntime {
       duration: 4200,
     });
     this.emit('complete', {delay: 4.3});
-  }
-
-  isPlayerInMud(player) {
-    if (!this.mud || !player.grounded) return false;
-    const trigger = this.mud.metadata.trigger;
-    const centerX = this.mud.x + (trigger.center[0] - this.mud.pivot[0]) * this.mud.scale;
-    const centerY = this.mud.y + (trigger.center[1] - this.mud.pivot[1]) * this.mud.scale;
-    const radiusX = trigger.radius[0] * this.mud.scale;
-    const radiusY = trigger.radius[1] * this.mud.scale;
-    const normalized = ((player.x - centerX) / radiusX) ** 2 + ((player.feetY - centerY) / radiusY) ** 2;
-    return normalized <= 1.35;
   }
 
   setPrompt(text) {

@@ -76,6 +76,28 @@ def validate_manifest_assets(directory: Path, expected_count: int) -> int:
     return len(manifest["assets"])
 
 
+def validate_sprite_sheets(directory: Path, manifest_name: str, expected_count: int) -> int:
+    manifest = json.loads((directory / manifest_name).read_text())
+    sheets = manifest.get("spriteSheets", {})
+    assert len(sheets) == expected_count
+    for name, metadata in sheets.items():
+        frame_w, frame_h = metadata["frameSize"]
+        frame_count = metadata["frameCount"]
+        image = assert_rgba(directory / name, (frame_w * frame_count, frame_h))
+        for index in range(frame_count):
+            cell = image.crop((index * frame_w, 0, (index + 1) * frame_w, frame_h))
+            bbox = cell.getchannel("A").point(lambda value: 255 if value >= 8 else 0).getbbox()
+            assert bbox, f"{name}: frame {index} empty alpha"
+            left, top, right, bottom = bbox
+            margins = (left, top, frame_w - right, frame_h - bottom)
+            assert min(margins) >= 12, f"{name}: frame {index} margin below 12px {margins}"
+        pivot_x, pivot_y = metadata["pivot"]
+        assert 0 <= pivot_x <= frame_w and 0 <= pivot_y <= frame_h, f"{name}: invalid pivot"
+        assert 0 < metadata["renderScale"] <= 1, f"{name}: invalid render scale"
+        assert len(metadata["sequence"]) == frame_count, f"{name}: sequence length mismatch"
+    return len(sheets)
+
+
 def validate_mechanisms() -> int:
     manifest = json.loads((MECHANISMS / "manifest.json").read_text())
     assert manifest["version"] == 4
@@ -85,7 +107,9 @@ def validate_mechanisms() -> int:
         assert image.getchannel("A").getbbox(), f"{name}: empty alpha"
         assert 0 < metadata["renderScale"] <= 1, f"{name}: invalid render scale"
     assert "vine_lift.png" not in manifest["assets"]
-    assert "motionPivot" in manifest["assets"]["swing_platform.png"]
+    assert "pressure_button.png" not in manifest["assets"], "renamed to crate_pressure_plate.png in V06"
+    assert "swing_platform.png" not in manifest["assets"], "renamed to swing_platform_complete.png in V06"
+    assert "motionPivot" in manifest["assets"]["swing_platform_complete.png"]
     assert manifest["assets"]["festival_gate_frame.png"]["solid"]["type"] == "rect"
     return len(manifest["assets"])
 
@@ -96,20 +120,19 @@ def validate_level01_art() -> tuple[int, int, int]:
         assert background.size == (1920, 1080)
 
     decorations = validate_manifest_assets(DECORATIONS, 8)
-    objects = validate_manifest_assets(OBJECTS, 8)
+    objects = validate_manifest_assets(OBJECTS, 6)
+    sheets = validate_sprite_sheets(OBJECTS, "manifest.json", 2)
 
     decoration_manifest = json.loads((DECORATIONS / "manifest.json").read_text())
     assert decoration_manifest["assets"]["decor_sign.png"]["interaction"]["type"] == "repairable-sign"
 
     object_manifest = json.loads((OBJECTS / "manifest.json").read_text())
     assert len(object_manifest["assets"]["obj_cloud.png"]["walkable"]) >= 2
-    assert object_manifest["assets"]["obj_crate.png"]["solid"]["type"] == "rect"
     assert object_manifest["assets"]["obj_mud.png"]["trigger"]["type"] == "ellipse"
-    assert object_manifest["assets"]["obj_mushroom.png"]["role"] == "bounce-pad"
-    assert object_manifest["assets"]["obj_crate.png"]["animation"]["pivotLocked"] is True
-    assert object_manifest["assets"]["obj_mushroom.png"]["animation"]["pivotLocked"] is True
+    assert object_manifest["spriteSheets"]["crate_push_sheet.png"]["solid"]["type"] == "rect"
+    assert object_manifest["spriteSheets"]["mushroom_bounce_sheet.png"]["role"] == "bounce-pad"
     mechanisms = validate_mechanisms()
-    return decorations, objects, mechanisms
+    return decorations, objects + sheets, mechanisms
 
 
 def main() -> None:
@@ -119,7 +142,7 @@ def main() -> None:
     print(
         "asset validation: "
         f"{characters} character frames / {platforms} platforms / "
-        f"{decorations} decorations / {objects} gameplay objects / "
+        f"{decorations} decorations / {objects} gameplay objects (incl. 2 sprite sheets) / "
         f"{mechanisms} mechanisms / 1 background OK"
     )
 

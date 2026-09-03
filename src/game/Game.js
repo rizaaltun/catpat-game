@@ -70,13 +70,19 @@ export class Game {
       runFps: clip.run.fps,
     };
 
-    [this.platformImages, this.decorationImages, this.objectImages, this.mechanismImages, this.background] = await Promise.all([
+    const [platformImages, decorationImages, objectImages, spriteSheetImages, mechanismImages, background] = await Promise.all([
       loadImageMap(platformManifest.assets, PLATFORM_ROOT),
       loadImageMap(decorationManifest.assets, DECORATION_ROOT),
       loadImageMap(objectManifest.assets, OBJECT_ROOT),
+      loadImageMap(objectManifest.spriteSheets || {}, OBJECT_ROOT),
       loadImageMap(mechanismManifest.assets, MECHANISM_ROOT),
       loadImage('./assets/environments/forest/backgrounds_v02/forest_valley.jpg'),
     ]);
+    this.platformImages = platformImages;
+    this.decorationImages = decorationImages;
+    this.objectImages = {...objectImages, ...spriteSheetImages};
+    this.mechanismImages = mechanismImages;
+    this.background = background;
   }
 
   async start(id = 0) {
@@ -246,6 +252,19 @@ export class Game {
       ? 1 + Math.sin(this.runtime.time * 4.5) * 0.035
       : 1;
     ctx.save();
+    if (object.metadata.frameCount) {
+      const [frameW, frameH] = object.metadata.frameSize;
+      const frameIndex = selectSpriteFrame(object, this.runtime.time);
+      ctx.translate(object.x - camera.x, object.y - camera.y);
+      ctx.drawImage(
+        image,
+        frameIndex * frameW, 0, frameW, frameH,
+        -object.pivot[0] * object.scale, -object.pivot[1] * object.scale,
+        frameW * object.scale, frameH * object.scale,
+      );
+      ctx.restore();
+      return;
+    }
     if (object.kind === 'lift-gate') {
       const panel = this.mechanismImages[object.metadata.panelAsset];
       const lift = object.openAmount * object.metadata.liftDistance * object.scale;
@@ -285,7 +304,7 @@ export class Game {
         );
       }
     } else {
-      const buttonPress = object.kind === 'pressure-button'
+      const buttonPress = object.kind === 'pressure-button' || object.kind === 'crate-plate'
         ? object.pressed * object.metadata.pressedOffset * object.scale
         : 0;
       const motion = objectRenderMotion(object, this.runtime.time);
@@ -350,32 +369,6 @@ export class Game {
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export function objectRenderMotion(object, time) {
-  if (object.kind === 'mushroom') {
-    if (object.animationState === 'launch') {
-      const t = object.animationTime || 0;
-      if (t < 0.085) return {scaleX: 1.13, scaleY: 0.64, y: 0, rotation: 0};
-      if (t < 0.17) return {scaleX: 0.91, scaleY: 1.17, y: 0, rotation: 0};
-      const settle = Math.max(0, 1 - (t - 0.17) / 0.25);
-      return {
-        scaleX: 1 - Math.sin(t * 34) * 0.045 * settle,
-        scaleY: 1 + Math.sin(t * 34) * 0.065 * settle,
-        y: 0,
-        rotation: 0,
-      };
-    }
-    const breathe = Math.sin(time * 2.4) * 0.012;
-    return {scaleX: 1 - breathe, scaleY: 1 + breathe, y: 0, rotation: 0};
-  }
-  if (object.kind === 'crate') {
-    const strength = object.wobble || 0;
-    const impact = object.animationState === 'settle' ? Math.max(0, 1 - (object.animationTime || 0) / 0.55) : 1;
-    return {
-      scaleX: 1 + Math.abs(strength) * 0.012 * impact,
-      scaleY: 1 - Math.abs(strength) * 0.018 * impact,
-      y: 0,
-      rotation: Math.sin((object.animationTime || 0) * 22) * 0.055 * strength * impact,
-    };
-  }
   if (object.kind === 'mud') {
     const ripple = Math.sin(time * 3.2) * 0.018;
     return {scaleX: 1 + ripple, scaleY: 1 - ripple * 0.45, y: 0, rotation: 0};
@@ -388,6 +381,36 @@ export function objectRenderMotion(object, time) {
     return {scaleX: sparkle, scaleY: sparkle, y: 0, rotation: Math.sin(time * 2.1) * 0.045};
   }
   return {scaleX: 1, scaleY: 1, y: 0, rotation: 0};
+}
+
+// Real pivot-locked animation frames replace code-driven squash/stretch for
+// the crate and mushroom sprite sheets (production_v06 spriteSheets).
+export function selectSpriteFrame(object, time) {
+  if (object.kind === 'crate') return crateFrameIndex(object);
+  if (object.kind === 'mushroom') return mushroomFrameIndex(object, time);
+  return 0;
+}
+
+export function crateFrameIndex(object) {
+  const t = object.animationTime || 0;
+  if (object.animationState === 'push') {
+    if ((object.wobble || 0) > 0) return 2; // push-right
+    return Math.floor(t * 9) % 2 === 0 ? 1 : 3; // push-left / push-left-small
+  }
+  if (object.animationState === 'settle') return t < 0.28 ? 4 : 5; // settle / idle-recover
+  return 0; // idle
+}
+
+export function mushroomFrameIndex(object, time) {
+  if (object.animationState === 'launch') {
+    const t = object.animationTime || 0;
+    if (t < 0.07) return 1; // anticipate
+    if (t < 0.15) return 2; // compress
+    if (t < 0.25) return 3; // release
+    if (t < 0.42) return 4; // recover
+    return 0;
+  }
+  return Math.sin(time * 2.4) > 0 ? 0 : 5; // idle breathing between both idle frames
 }
 
 async function loadJson(path) {

@@ -27,50 +27,30 @@ const owners = new Map([
 ]);
 const route = [
   'start',
-  'trail-step',
-  'trail-ramp',
-  'flower-garden',
-  'garden-short',
-  'garden-step',
-  'trail-long',
-  'checkpoint-rock-1',
-  'rest-garden',
-  'cloud-launch',
-  'moving-cloud',
-  'cloud-landing',
-  'lift-step',
+  'garden-a',
+  'school-a',
+  'school-b',
+  'school-c',
+  'lift-approach',
   'stone-lift',
-  'lift-balcony',
-  'balcony-step',
-  'descent-step',
-  'descent-garden',
-  'checkpoint-run-2',
-  'button-floor',
-  'gate-floor',
-  'gate-ramp',
-  'rise-one',
-  'rise-two',
-  'gate-lookout',
-  'lookout-step',
-  'checkpoint-run-3',
+  'lift-landing',
+  'descent',
+  'button-runway',
+  'gate-exit',
+  'swing-approach',
   'swing-platform',
   'swing-landing',
-  'rhythm-one',
-  'rhythm-two',
-  'rhythm-bridge',
-  'mud-run',
-  'rhythm-ramp',
-  'rhythm-lift',
-  'checkpoint-garden-4',
-  'crate-run',
-  'weight-stone',
+  'rest-a',
+  'rest-b',
+  'crate-runway',
   'crate-bridge',
-  'mushroom-garden',
-  'return-step',
+  'crate-landing',
+  'mushroom-main',
+  'mushroom-landing',
+  'pre-finish',
   'festival-ramp',
-  'festival-highway',
-  'festival-step',
   'festival-floor',
+  'festival-floor-2',
 ];
 
 for (let index = 0; index < route.length - 1; index += 1) {
@@ -81,15 +61,15 @@ for (let index = 0; index < route.length - 1; index += 1) {
 }
 
 const mushroom = level.objects.find(object => object.id === 'mushroom');
-const highTicket = owners.get('high-ticket');
+const mushroomUpper = owners.get('mushroom-upper');
 const bouncePlayer = new Player(mushroom.x, mushroom.y - character.collider.height / 2, character.collider);
 bouncePlayer.previousFeetY = bouncePlayer.feetY;
 bouncePlayer.vy = -1120;
 const neutralInput = {state: {left: false, right: false, jump: true, focus: false, interact: false}, consume: () => false};
-for (let frame = 0; frame < 180 && bouncePlayer.groundedSurface?.owner !== highTicket; frame += 1) {
-  bouncePlayer.update(1 / 60, neutralInput, {surfaces: highTicket.surfaces, speedMultiplier: 1});
+for (let frame = 0; frame < 180 && bouncePlayer.groundedSurface?.owner !== mushroomUpper; frame += 1) {
+  bouncePlayer.update(1 / 60, neutralInput, {surfaces: mushroomUpper.surfaces, speedMultiplier: 1});
 }
-assert.equal(bouncePlayer.groundedSurface?.owner, highTicket, 'mushroom launch cannot reach high ticket');
+assert.equal(bouncePlayer.groundedSurface?.owner, mushroomUpper, 'mushroom launch cannot reach the optional upper platform');
 
 console.log(`level 01 reachability: ${route.length - 1} jumps + mushroom route OK`);
 

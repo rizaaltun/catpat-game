@@ -80,40 +80,6 @@
         ]
       ]
     },
-    "obj_crate.png": {
-      "visibleBounds": [
-        102,
-        54,
-        415,
-        375
-      ],
-      "role": "pushable-weight",
-      "pivot": [
-        259,
-        375
-      ],
-      "renderScale": 0.3,
-      "animation": {"states": ["idle", "push", "settle"], "pivotLocked": true},
-      "solid": {
-        "type": "rect",
-        "bounds": [
-          116,
-          66,
-          402,
-          375
-        ]
-      },
-      "walkable": [
-        [
-          120,
-          66
-        ],
-        [
-          400,
-          66
-        ]
-      ]
-    },
     "obj_lantern.png": {
       "visibleBounds": [
         116,
@@ -162,30 +128,6 @@
         ]
       }
     },
-    "obj_mushroom.png": {
-      "visibleBounds": [
-        96,
-        32,
-        436,
-        490
-      ],
-      "role": "bounce-pad",
-      "pivot": [
-        266,
-        490
-      ],
-      "renderScale": 0.3,
-      "animation": {"states": ["idle", "compress", "launch", "recover"], "pivotLocked": true},
-      "trigger": {
-        "type": "rect",
-        "bounds": [
-          105,
-          38,
-          425,
-          170
-        ]
-      }
-    },
     "obj_star.png": {
       "visibleBounds": [
         107,
@@ -229,6 +171,40 @@
           425,
           385
         ]
+      }
+    }
+  },
+  "spriteSheets": {
+    "crate_push_sheet.png": {
+      "role": "pushable-weight",
+      "frameSize": [512, 512],
+      "frameCount": 6,
+      "pivot": [256, 430],
+      "renderScale": 0.3,
+      "fps": 9,
+      "loop": false,
+      "sequence": ["idle", "push-left", "push-right", "push-left-small", "settle", "idle-recover"],
+      "solid": {
+        "type": "rect",
+        "bounds": [113, 121, 400, 430]
+      },
+      "walkable": [
+        [115, 121],
+        [398, 121]
+      ]
+    },
+    "mushroom_bounce_sheet.png": {
+      "role": "bounce-pad",
+      "frameSize": [512, 512],
+      "frameCount": 6,
+      "pivot": [256, 470],
+      "renderScale": 0.24,
+      "fps": 12,
+      "loop": false,
+      "sequence": ["idle", "anticipate", "compress", "release", "recover", "idle"],
+      "trigger": {
+        "type": "rect",
+        "bounds": [120, 94, 392, 230]
       }
     }
   }

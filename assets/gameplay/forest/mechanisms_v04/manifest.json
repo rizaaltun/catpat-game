@@ -1,15 +1,15 @@
 {
   "version": 4,
   "assets": {
-    "pressure_button.png": {
+    "crate_pressure_plate.png": {
       "canvas": [768, 422],
-      "role": "pressure-button",
+      "role": "pressure-plate",
       "pivot": [384, 412],
       "renderScale": 0.22,
       "trigger": {"type": "rect", "bounds": [135, 52, 635, 260]},
       "pressedOffset": 12
     },
-    "swing_platform.png": {
+    "swing_platform_complete.png": {
       "canvas": [764, 768],
       "role": "moving-platform",
       "pivot": [382, 760],

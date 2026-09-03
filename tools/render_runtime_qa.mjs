@@ -51,11 +51,11 @@ await capture('Başlangıç / etki', 0, () => {
   sign.rotation = -0.23;
 });
 
-await capture('Bulut bahçesi', 2500, () => {
-  setPlayer(3080, 430, 'jump', -120);
+await capture('Gap school / boşluk', 1900, () => {
+  setPlayer(2400, 550, 'jump', -120);
 });
 
-await capture('Taş asansör', 3450, () => {
+await capture('Taş asansör', 3300, () => {
   const lift = game.level.platforms.find(item => item.id === 'stone-lift');
   const surface = lift.surfaces[0];
   setPlayer((surface.x1 + surface.x2) / 2, (surface.y1 + surface.y2) / 2, 'idle');
@@ -64,26 +64,31 @@ await capture('Taş asansör', 3450, () => {
 const gate = game.level.objects.find(item => item.kind === 'lift-gate');
 gate.active = true;
 for (let frame = 0; frame < 55; frame += 1) game.runtime.updateBeforePlayer(1 / 60, game.player);
-await capture('Düğme / açılır kapı', 5500, () => {
-  setPlayer(6120, 610, 'run');
+await capture('Düğme / açılır kapı', 4900, () => {
+  setPlayer(5480, 610, 'run');
 });
 
-await capture('Sallanan kütük / ritim', 7900, () => {
-  setPlayer(8390, 445, 'idle');
+await capture('Sallanan kütük', 6700, () => {
+  setPlayer(7030, 380, 'idle');
 });
 
 game.runtime.cratePlaced = true;
+game.runtime.cratePlate.active = true;
 for (let frame = 0; frame < 100; frame += 1) game.runtime.updateBeforePlayer(1 / 60, game.player);
 const crate = game.level.objects.find(item => item.kind === 'crate');
-game.runtime.translateOwner(crate, 11695 - crate.x, 0);
+game.runtime.translateOwner(crate, 9650 - crate.x, 0);
 
-await capture('Sandık / köprü / mantar', 10850, () => {
+await capture('Sandık / köprü', 9500, () => {
   const [crateLeft] = objectRect(crate, crate.metadata.solid.bounds);
-  setPlayer(crateLeft - game.player.w / 2 - 18, 540, 'run');
+  setPlayer(crateLeft - game.player.w / 2 - 18, 610, 'run');
 });
 
-await capture('Festival varışı', 13400, () => {
-  setPlayer(14520, 520, 'celebrate');
+await capture('Mantar / bilet', 10500, () => {
+  setPlayer(10850, 610, 'idle');
+});
+
+await capture('Festival varışı', 13600, () => {
+  setPlayer(14150, 462, 'celebrate');
 });
 
 const panelWidth = 640;
@@ -174,11 +179,11 @@ async function renderAnimationQA() {
     {name: 'Karakter · idle', camera: 0, setup: () => setPlayer(410, 610, 'idle')},
     {name: 'Karakter · run', camera: 0, setup: () => setPlayer(410, 610, 'run')},
     {name: 'Karakter · land', camera: 0, setup: () => setPlayer(410, 610, 'land')},
-    {name: 'Mantar · idle', camera: 11820, setup: () => setObjectState(mushroom, 'idle', 0)},
-    {name: 'Mantar · compress', camera: 11820, setup: () => setObjectState(mushroom, 'launch', 0.04)},
-    {name: 'Mantar · release', camera: 11820, setup: () => setObjectState(mushroom, 'launch', 0.12)},
-    {name: 'Sandık · push', camera: 10850, setup: () => setCrateState('push', 0.05, 1)},
-    {name: 'Sandık · settle', camera: 10850, setup: () => setCrateState('settle', 0.18, 1)},
+    {name: 'Mantar · idle', camera: 10500, setup: () => setObjectState(mushroom, 'idle', 0)},
+    {name: 'Mantar · compress', camera: 10500, setup: () => setObjectState(mushroom, 'launch', 0.1)},
+    {name: 'Mantar · release', camera: 10500, setup: () => setObjectState(mushroom, 'launch', 0.2)},
+    {name: 'Sandık · push', camera: 9300, setup: () => setCrateState('push', 0.05, 1)},
+    {name: 'Sandık · settle', camera: 9300, setup: () => setCrateState('settle', 0.18, 1)},
   ];
   const shots = [];
   for (const state of states) {

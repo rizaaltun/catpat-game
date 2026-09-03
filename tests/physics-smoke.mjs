@@ -21,9 +21,9 @@ const idleInput = {
 assert.equal(LEVELS.length, 3, 'the active project must expose exactly three chapters');
 assert.deepEqual(LEVELS.map(item => item.id), [0, 1, 2]);
 assert.equal(LEVELS.filter(item => item.implemented).length, 1, 'only chapter 1 is playable');
-assert.ok(level.platforms.length >= 40, 'extended level must contain at least 40 terrain platforms');
-assert.ok(level.decorations.length >= 20, 'extended level must contain at least 20 decorations');
-assert.ok(level.objects.length >= 18, 'extended level must contain collectibles, checkpoints and mechanisms');
+assert.ok(level.platforms.length >= 20, 'spacious V06 level must contain at least 20 terrain platforms');
+assert.ok(level.decorations.length >= 14, 'level must contain at least 14 decorations');
+assert.ok(level.objects.length >= 12, 'level must contain collectibles, checkpoints and mechanisms');
 assert.ok(level.length >= 15000, 'extended level must span at least 15,000 world units');
 assert.ok(level.surfaces.length > level.platforms.length, 'curves must expand to line segments');
 

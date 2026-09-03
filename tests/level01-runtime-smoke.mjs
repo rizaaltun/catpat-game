@@ -73,20 +73,14 @@ const placeOnGround = (player, x, feetY) => {
   for (let frame = 0; frame < 90; frame += 1) runtime.updateBeforePlayer(1 / 60, player);
   assert.ok(gate.openAmount > 0.99, 'the gate should lift fully');
 
-  const rhythmButton = runtime.buttons.find(button => button.id === 'rhythm-button');
-  const rhythmLift = runtime.level.platforms.find(platform => platform.id === 'rhythm-lift');
-  placeOnGround(player, rhythmButton.x, rhythmButton.y);
-  runtime.updateAfterPlayer(1 / 60, player, input());
-  assert.equal(rhythmButton.active, true, 'the second button should latch it');
-  assert.equal(rhythmLift.active, true, 'the second button should activate the rhythm lift');
-
   player.vx = 300;
   for (let frame = 0; frame < 520 && !runtime.cratePlaced; frame += 1) {
     const crateLeft = runtime.crate.x + (runtime.crate.metadata.solid.bounds[0] - runtime.crate.pivot[0]) * runtime.crate.scale;
     placeOnGround(player, crateLeft - player.w / 2 + 1, runtime.crate.y);
     runtime.updateAfterPlayer(1 / 60, player, input({right: true}));
   }
-  assert.equal(runtime.cratePlaced, true, 'crate should activate the bridge weight');
+  assert.equal(runtime.cratePlaced, true, 'crate should overlap the pressure plate');
+  assert.equal(runtime.cratePlate.active, true, 'the crate plate should activate once the crate sits on it');
   for (let frame = 0; frame < 90; frame += 1) runtime.updateBeforePlayer(1 / 60, player);
   assert.ok(runtime.bridge.currentOffsetY < 1, 'bridge should reach its raised position');
 
@@ -104,18 +98,6 @@ const placeOnGround = (player, x, feetY) => {
   runtime.updateAfterPlayer(1 / 60, player, input({right: true, focus: true}));
   assert.equal(runtime.carefulPass, true, 'focused movement should preserve the sign');
   assert.equal(runtime.signWasTurned, false);
-
-  placeOnGround(player, runtime.mud.x, runtime.mud.y);
-  runtime.updateBeforePlayer(1 / 60, player);
-  assert.equal(runtime.level.speedMultiplier, 0.53, 'mud should slow grounded movement');
-
-  const cloudSurface = runtime.cloud.surfaces[0];
-  player.groundedSurface = cloudSurface;
-  const playerX = player.x;
-  const cloudX = runtime.cloud.x;
-  runtime.updateBeforePlayer(0.1, player);
-  assert.ok(runtime.cloud.x !== cloudX, 'cloud should move');
-  assert.ok(Math.abs((player.x - playerX) - (runtime.cloud.x - cloudX)) < 0.001, 'cloud should carry its rider');
 
   const stoneLift = runtime.level.platforms.find(platform => platform.id === 'stone-lift');
   player.grounded = true;
@@ -151,4 +133,4 @@ const placeOnGround = (player, x, feetY) => {
   assert.equal(runtime.mushroom.animationTime, 0);
 }
 
-console.log('level 01 runtime smoke: choices/collect/checkpoints/buttons/gate/crate/cloud/lift/goal OK');
+console.log('level 01 runtime smoke: choices/collect/checkpoints/button/gate/crate-plate/lift/swing/goal OK');

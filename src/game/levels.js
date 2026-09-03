@@ -14,120 +14,99 @@ export const LEVELS = [
   {id: 2, title: 'Pıtpıt’ın Papatyaları', subtitle: 'Acele etmeden ilerle', objective: 'Papatyalara zarar vermeden Pıtpıt’a ulaş', theme: 'daisies', length: 4600, implemented: false},
 ];
 
-// x/y always denotes the first walkable point, not the image corner. Adjacent
-// surfaces overlap by 18–35 px where the art allows it, preventing visual seams.
+// x/y always denotes the first walkable point, not the image corner. V06 layout:
+// spacious real gaps (no rock/step-stone filler), one dominant mechanic per
+// camera view, world length 15,200 px. See assets/production_v06/chapter01_layout_v06.json.
 const LEVEL01_PLATFORMS = [
-  // 1 — Festival trail: movement, pace and the repairable sign.
-  {id: 'start', asset: 'platform_long.png', x: 0, y: 610, scale: 0.92},
-  {id: 'trail-step', asset: 'platform_step_stone.png', x: 620, y: 585, scale: 0.85},
-  {id: 'trail-ramp', asset: 'platform_ramp.png', x: 740, y: 600, scale: 0.90},
-  {id: 'flower-garden', asset: 'platform_medium.png', x: 1018, y: 452, scale: 0.84},
-  {id: 'garden-short', asset: 'platform_short.png', x: 1428, y: 452, scale: 0.95},
-  {id: 'garden-step', asset: 'platform_step_stone.png', x: 1590, y: 500, scale: 0.85},
-  {id: 'trail-long', asset: 'platform_long.png', x: 1710, y: 540, scale: 0.88},
-  {id: 'checkpoint-rock-1', asset: 'platform_rock.png', x: 2295, y: 520, scale: 0.85},
-  {id: 'rest-garden', asset: 'platform_medium.png', x: 2450, y: 520, scale: 0.84},
-  {id: 'cloud-launch', asset: 'platform_short.png', x: 2860, y: 500, scale: 0.95},
+  // 01 — safe intro: single readable jump, repairable sign.
+  {id: 'start', asset: 'platform_long.png', x: 0, y: 610, scale: 0.95},
+  {id: 'garden-a', asset: 'platform_medium.png', x: 797, y: 610, scale: 0.90},
 
-  // 2 — Cloud garden and a self-contained rising stone platform.
-  {id: 'cloud-landing', asset: 'platform_medium.png', x: 3300, y: 420, scale: 0.84},
-  {id: 'lift-step', asset: 'platform_step_stone.png', x: 3710, y: 405, scale: 0.85},
-  {id: 'stone-lift', asset: 'platform_short.png', x: 3865, y: 520, scale: 0.95, motion: {axis: 'y', range: 170, speed: 0.76, phase: 1.3}},
-  {id: 'lift-balcony', asset: 'platform_medium.png', x: 4050, y: 350, scale: 0.84},
-  {id: 'balcony-step', asset: 'platform_step_stone.png', x: 4460, y: 405, scale: 0.85},
-  {id: 'descent-step', asset: 'platform_short.png', x: 4595, y: 465, scale: 0.95},
-  {id: 'descent-garden', asset: 'platform_medium.png', x: 4700, y: 515, scale: 0.84},
-  {id: 'checkpoint-run-2', asset: 'platform_long.png', x: 5110, y: 555, scale: 0.88},
+  // 02 — gap school: two real jumps, open void beneath (no stepping stones).
+  {id: 'school-a', asset: 'platform_medium.png', x: 1418.5, y: 610, scale: 0.90},
+  {id: 'school-b', asset: 'platform_medium.png', x: 2025, y: 595, scale: 0.90},
+  {id: 'school-c', asset: 'platform_short.png', x: 2656.5, y: 615, scale: 0.95},
 
-  // 3 — Ground button, lifting gate and rising stepping stones.
-  {id: 'button-floor', asset: 'platform_medium.png', x: 5695, y: 610, scale: 0.84},
-  {id: 'gate-floor', asset: 'platform_long.png', x: 6105, y: 610, scale: 0.92},
-  {id: 'gate-ramp', asset: 'platform_ramp.png', x: 6725, y: 610, scale: 0.90},
-  {id: 'rise-one', asset: 'platform_short.png', x: 6995, y: 500, scale: 0.95, motion: {axis: 'y', range: 82, speed: 1.05, phase: 0.2}},
-  {id: 'rise-two', asset: 'platform_step_stone.png', x: 7165, y: 425, scale: 0.85, motion: {axis: 'y', range: 72, speed: 1.18, phase: 2.1}},
-  {id: 'gate-lookout', asset: 'platform_medium.png', x: 7340, y: 405, scale: 0.84},
-  {id: 'lookout-step', asset: 'platform_step_stone.png', x: 7750, y: 465, scale: 0.85},
-  {id: 'checkpoint-run-3', asset: 'platform_long.png', x: 7870, y: 520, scale: 0.88},
+  // 03 — stone lift: vertical carry, no vine/rope/pulley.
+  {id: 'lift-approach', asset: 'platform_medium.png', x: 2980, y: 607, scale: 0.90},
+  {id: 'stone-lift', asset: 'platform_short.png', x: 3581.5, y: 517, scale: 0.90, motion: {axis: 'y', range: 90, speed: 0.8, phase: 0}},
+  {id: 'lift-landing', asset: 'platform_medium.png', x: 3731.5, y: 420, scale: 0.90},
+  {id: 'descent', asset: 'platform_medium.png', x: 4358, y: 520, scale: 0.90},
 
-  // 4 — Swaying log and the rhythm grove.
-  {id: 'swing-landing', asset: 'platform_medium.png', x: 8620, y: 430, scale: 0.84},
-  {id: 'rhythm-one', asset: 'platform_short.png', x: 9028, y: 470, scale: 0.95, motion: {axis: 'y', range: 78, speed: 1.15, phase: 0.3}},
-  {id: 'rhythm-two', asset: 'platform_step_stone.png', x: 9190, y: 420, scale: 0.85, motion: {axis: 'y', range: 92, speed: 1.30, phase: 2.4}},
-  {id: 'rhythm-bridge', asset: 'platform_bridge.png', x: 9360, y: 490, scale: 0.95},
-  {id: 'mud-run', asset: 'platform_long.png', x: 9605, y: 610, scale: 0.92},
-  {id: 'rhythm-ramp', asset: 'platform_ramp.png', x: 10225, y: 610, scale: 0.90},
-  {id: 'rhythm-lift', asset: 'platform_short.png', x: 10505, y: 500, scale: 0.95, motion: {axis: 'y', range: 105, speed: 0.90, phase: 1.7, requires: 'rhythm-button'}},
-  {id: 'checkpoint-garden-4', asset: 'platform_medium.png', x: 10660, y: 455, scale: 0.84},
+  // 04 — button + gate: single continuous runway, one cause-effect.
+  {id: 'button-runway', asset: 'platform_long.png', x: 4969.5, y: 610, scale: 0.95},
+  {id: 'gate-exit', asset: 'platform_long.png', x: 5576.5, y: 610, scale: 0.95},
 
-  // 5 — Crate weight, mushroom high route and festival arrival.
-  {id: 'crate-run', asset: 'platform_long.png', x: 11070, y: 540, scale: 0.88},
-  {id: 'weight-stone', asset: 'platform_step_stone.png', x: 11655, y: 540, scale: 0.70},
-  {id: 'crate-bridge', asset: 'platform_bridge.png', x: 11780, y: 480, scale: 0.88, initialOffsetY: 235, mechanism: 'crate-weight'},
-  {id: 'mushroom-garden', asset: 'platform_medium.png', x: 12015, y: 480, scale: 0.84},
-  {id: 'high-ticket', asset: 'platform_step_stone.png', x: 12160, y: 235, scale: 0.85},
-  {id: 'return-step', asset: 'platform_step_stone.png', x: 12425, y: 510, scale: 0.85},
-  {id: 'festival-ramp', asset: 'platform_ramp.png', x: 12545, y: 565, scale: 0.90},
-  {id: 'festival-highway', asset: 'platform_long.png', x: 12825, y: 417, scale: 0.90},
-  {id: 'festival-step', asset: 'platform_medium.png', x: 13430, y: 470, scale: 0.84},
-  {id: 'festival-floor', asset: 'platform_long.png', x: 13840, y: 520, scale: 0.92},
+  // 05 — swing crossing: full silhouette, single moving target.
+  {id: 'swing-approach', asset: 'platform_medium.png', x: 6393.5, y: 540, scale: 0.90},
+  {id: 'swing-landing', asset: 'platform_medium.png', x: 7260, y: 540, scale: 0.90},
+
+  // 06 — breathing room: quiet recovery beat, no mechanism.
+  {id: 'rest-a', asset: 'platform_medium.png', x: 7876.5, y: 520, scale: 0.90},
+  {id: 'rest-b', asset: 'platform_medium.png', x: 8493, y: 520, scale: 0.90},
+
+  // 07 — crate/plate/bridge puzzle: crate has no decorative purpose.
+  {id: 'crate-runway', asset: 'platform_long.png', x: 9124.5, y: 610, scale: 0.95},
+  {id: 'crate-bridge', asset: 'platform_bridge.png', x: 9751.5, y: 610, scale: 0.88, initialOffsetY: 260, mechanism: 'crate-weight'},
+  {id: 'crate-landing', asset: 'platform_medium.png', x: 10014.14, y: 605, scale: 0.90},
+
+  // 08 — optional mushroom route: small bounce pad, main path stays readable.
+  {id: 'mushroom-main', asset: 'platform_long.png', x: 10650.64, y: 610, scale: 0.95},
+  {id: 'mushroom-upper', asset: 'platform_short.png', x: 10820, y: 300, scale: 0.78},
+  {id: 'mushroom-landing', asset: 'platform_medium.png', x: 11457.64, y: 610, scale: 0.90},
+
+  // 09 — festival finish: safe, open, uncluttered reward area.
+  {id: 'pre-finish', asset: 'platform_long.png', x: 12084.14, y: 610, scale: 0.95},
+  {id: 'festival-ramp', asset: 'platform_ramp.png', x: 12881.14, y: 610, scale: 0.90},
+  {id: 'festival-floor', asset: 'platform_long.png', x: 13158.14, y: 462, scale: 0.95},
+  {id: 'festival-floor-2', asset: 'platform_long.png', x: 13765.14, y: 462, scale: 0.95},
 ];
 
 const LEVEL01_DECORATIONS = [
-  {id: 'start-tree', asset: 'decor_tree.png', x: 160, y: 610, scale: 0.64, layer: 'back'},
-  {id: 'repairable-sign', asset: 'decor_sign.png', x: 505, y: 610, scale: 0.43, layer: 'front'},
-  {id: 'start-grass', asset: 'decor_grass.png', x: 635, y: 585, scale: 0.23, layer: 'front'},
-  {id: 'garden-flowers', asset: 'decor_flowers.png', x: 1120, y: 452, scale: 0.29, layer: 'front'},
-  {id: 'garden-bush', asset: 'decor_bush.png', x: 1340, y: 452, scale: 0.36, layer: 'back'},
-  {id: 'trail-bunting', asset: 'decor_bunting.png', x: 1930, y: 540, scale: 0.43, layer: 'back'},
-  {id: 'rest-flowers', asset: 'decor_flowers.png', x: 2660, y: 520, scale: 0.26, layer: 'front'},
-  {id: 'cloud-tree', asset: 'decor_tree.png', x: 3420, y: 420, scale: 0.50, layer: 'back'},
-  {id: 'balcony-grass', asset: 'decor_grass.png', x: 4310, y: 350, scale: 0.24, layer: 'front'},
-  {id: 'descent-bush', asset: 'decor_bush.png', x: 4880, y: 515, scale: 0.34, layer: 'back'},
-  {id: 'button-flowers', asset: 'decor_flowers.png', x: 5740, y: 610, scale: 0.23, layer: 'front'},
-  {id: 'gate-bunting', asset: 'decor_bunting.png', x: 6420, y: 610, scale: 0.43, layer: 'back'},
-  {id: 'lookout-rocks', asset: 'decor_rocks.png', x: 7540, y: 405, scale: 0.25, layer: 'front'},
-  {id: 'swing-tree', asset: 'decor_tree.png', x: 8730, y: 430, scale: 0.52, layer: 'back'},
-  {id: 'rhythm-flowers', asset: 'decor_flowers.png', x: 9450, y: 490, scale: 0.22, layer: 'front'},
-  {id: 'mud-flowers', asset: 'decor_flowers.png', x: 9700, y: 610, scale: 0.24, layer: 'front'},
-  {id: 'crate-grass', asset: 'decor_grass.png', x: 11130, y: 540, scale: 0.22, layer: 'front'},
-  {id: 'mushroom-bush', asset: 'decor_bush.png', x: 12310, y: 480, scale: 0.32, layer: 'back'},
-  {id: 'festival-bunting', asset: 'decor_bunting.png', x: 13970, y: 520, scale: 0.48, layer: 'back'},
-  {id: 'festival-tent', asset: 'decor_tent.png', x: 14580, y: 520, scale: 0.68, layer: 'back'},
-  {id: 'festival-flowers', asset: 'decor_flowers.png', x: 14110, y: 520, scale: 0.28, layer: 'front'},
+  {id: 'start-tree', asset: 'decor_tree.png', x: 120, y: 610, scale: 0.60, layer: 'back'},
+  {id: 'repairable-sign', asset: 'decor_sign.png', x: 430, y: 610, scale: 0.42, layer: 'front'},
+  {id: 'garden-flowers', asset: 'decor_flowers.png', x: 1000, y: 610, scale: 0.30, layer: 'front'},
+  {id: 'school-bush', asset: 'decor_bush.png', x: 1650, y: 610, scale: 0.34, layer: 'back'},
+  {id: 'school-grass', asset: 'decor_grass.png', x: 2750, y: 615, scale: 0.24, layer: 'front'},
+  {id: 'lift-tree', asset: 'decor_tree.png', x: 3150, y: 607, scale: 0.46, layer: 'back'},
+  {id: 'landing-grass', asset: 'decor_grass.png', x: 3950, y: 420, scale: 0.22, layer: 'front'},
+  {id: 'gate-flowers', asset: 'decor_flowers.png', x: 5050, y: 610, scale: 0.26, layer: 'front'},
+  {id: 'swing-tree', asset: 'decor_tree.png', x: 6550, y: 540, scale: 0.50, layer: 'back'},
+  {id: 'rest-bush', asset: 'decor_bush.png', x: 8000, y: 520, scale: 0.34, layer: 'back'},
+  {id: 'rest-flowers', asset: 'decor_flowers.png', x: 8600, y: 520, scale: 0.26, layer: 'front'},
+  {id: 'crate-grass', asset: 'decor_grass.png', x: 9300, y: 610, scale: 0.22, layer: 'front'},
+  {id: 'mushroom-bush', asset: 'decor_bush.png', x: 11050, y: 610, scale: 0.30, layer: 'back'},
+  {id: 'ramp-grass', asset: 'decor_grass.png', x: 13000, y: 560, scale: 0.20, layer: 'front'},
+  {id: 'festival-tent', asset: 'decor_tent.png', x: 13950, y: 462, scale: 0.62, layer: 'back'},
+  {id: 'festival-flowers', asset: 'decor_flowers.png', x: 14200, y: 462, scale: 0.26, layer: 'front'},
 ];
 
 const LEVEL01_OBJECTS = [
-  {id: 'ticket-1', asset: 'obj_ticket.png', kind: 'ticket', x: 1290, y: 330},
-  {id: 'checkpoint-1', asset: 'obj_lantern.png', kind: 'checkpoint', x: 2600, y: 520},
-  {id: 'moving-cloud', asset: 'obj_cloud.png', kind: 'moving-platform', surfaceX: 3020, surfaceY: 430, scale: 0.52, motion: {axis: 'x', range: 92, speed: 0.72, phase: 0.4}},
-  {id: 'ticket-2', asset: 'obj_ticket.png', kind: 'ticket', x: 4290, y: 235},
-  {id: 'checkpoint-2', asset: 'obj_lantern.png', kind: 'checkpoint', x: 5300, y: 555},
-  {id: 'checkpoint-3', asset: 'obj_lantern.png', kind: 'checkpoint', x: 8050, y: 520},
-  {id: 'mud', asset: 'obj_mud.png', kind: 'mud', x: 9870, y: 610, scale: 0.38},
-  {id: 'checkpoint-4', asset: 'obj_lantern.png', kind: 'checkpoint', x: 10810, y: 455},
-  {id: 'crate', asset: 'obj_crate.png', kind: 'crate', x: 11220, y: 540, pushLimits: [11150, 11725]},
-  {id: 'mushroom', asset: 'obj_mushroom.png', kind: 'mushroom', x: 12210, y: 480},
-  {id: 'ticket-3', asset: 'obj_ticket.png', kind: 'ticket', x: 12240, y: 130},
-  {id: 'star-cloud', asset: 'obj_star.png', kind: 'star', x: 3160, y: 315},
-  {id: 'star-rhythm', asset: 'obj_star.png', kind: 'star', x: 9460, y: 345},
-  {id: 'star-festival', asset: 'obj_star.png', kind: 'star', x: 13230, y: 280},
+  {id: 'ticket-1', asset: 'obj_ticket.png', kind: 'ticket', x: 1700, y: 470},
+  {id: 'checkpoint-1', asset: 'obj_lantern.png', kind: 'checkpoint', x: 2900, y: 615},
+  {id: 'checkpoint-2', asset: 'obj_lantern.png', kind: 'checkpoint', x: 4050, y: 420},
+  {id: 'ticket-2', asset: 'obj_ticket.png', kind: 'ticket', x: 6600, y: 430},
+  {id: 'checkpoint-3', asset: 'obj_lantern.png', kind: 'checkpoint', x: 7950, y: 520},
+  {id: 'crate', asset: 'crate_push_sheet.png', kind: 'crate', x: 9260, y: 610, pushLimits: [9200, 9650]},
+  {id: 'checkpoint-4', asset: 'obj_lantern.png', kind: 'checkpoint', x: 10200, y: 605},
+  {id: 'mushroom', asset: 'mushroom_bounce_sheet.png', kind: 'mushroom', x: 10850, y: 610},
+  {id: 'ticket-3', asset: 'obj_ticket.png', kind: 'ticket', x: 10900, y: 225},
 ];
 
 const LEVEL01_MECHANISMS = [
-  {id: 'gate-button', asset: 'pressure_button.png', kind: 'pressure-button', x: 5885, y: 610, scale: 0.18, targets: ['festival-gate'], latch: true},
-  {id: 'festival-gate', asset: 'festival_gate_frame.png', kind: 'lift-gate', x: 6450, y: 610, scale: 0.55},
-  {id: 'swing-platform', asset: 'swing_platform.png', kind: 'mechanism-platform', surfaceX: 8280, surfaceY: 445, scale: 0.42, motion: {axis: 'swing', range: 0.075, speed: 1.35, phase: 0.6}},
-  {id: 'rhythm-button', asset: 'pressure_button.png', kind: 'pressure-button', x: 9900, y: 610, scale: 0.16, targets: ['rhythm-lift'], latch: true},
+  {id: 'gate-button', asset: 'crate_pressure_plate.png', kind: 'pressure-button', x: 5150, y: 610, scale: 0.18, targets: ['festival-gate'], latch: true},
+  {id: 'festival-gate', asset: 'festival_gate_frame.png', kind: 'lift-gate', x: 5480, y: 610, scale: 0.55},
+  {id: 'swing-platform', asset: 'swing_platform_complete.png', kind: 'mechanism-platform', surfaceX: 7030, surfaceY: 540, scale: 0.42, motion: {axis: 'swing', range: 0.075, speed: 1.35, phase: 0.6}},
+  {id: 'crate-plate', asset: 'crate_pressure_plate.png', kind: 'crate-plate', x: 9650, y: 610, scale: 0.20, targets: ['crate-bridge']},
 ];
 
 const LEVEL01_ZONES = [
-  {id: 'cloud-garden', x: 2780, speaker: 'Çatpat', text: 'Bulutun ritmi var. Her boşluğu hızla değil, doğru anla geçebilirim.'},
-  {id: 'stone-lift-zone', x: 3770, speaker: 'Orman', text: 'Taş platform aşağı iner, kısa bir an bekler ve yeniden yükselir.'},
-  {id: 'gate-zone', x: 5570, speaker: 'Çatpat', text: 'Kapı ağır görünüyor… yakındaki yuvarlak düğme bir şeye bağlı olmalı.'},
-  {id: 'swing-zone', x: 8130, speaker: 'Çatpat', text: 'Kütük sallanıyor. Bir an durup hareketini okuyayım.'},
-  {id: 'rhythm-zone', x: 9650, speaker: 'Orman', text: 'İkinci düğme, ilerideki taşı uyandırır.'},
-  {id: 'crate-zone', x: 10980, speaker: 'Çatpat', text: 'Bu kez hız yetmez. Sandığın ağırlığını doğru yere taşımam gerekiyor.'},
-  {id: 'festival-zone', x: 13200, speaker: 'Çatpat', text: 'Müzik yakında! Son yol, yaptığım seçimlerin ardından açıldı.'},
+  {id: 'lift-zone', x: 3000, speaker: 'Orman', text: 'Taş platform aşağı iner, kısa bir an bekler ve yeniden yükselir.'},
+  {id: 'gate-zone', x: 4700, speaker: 'Çatpat', text: 'Kapı ağır görünüyor… yakındaki plakaya basınca açılabilir.'},
+  {id: 'swing-zone', x: 6300, speaker: 'Çatpat', text: 'Kütük sallanıyor. Bir an durup hareketini okuyayım.'},
+  {id: 'crate-zone', x: 8900, speaker: 'Çatpat', text: 'Bu kez hız yetmez. Sandığı plakaya itmem gerekiyor.'},
+  {id: 'mushroom-zone', x: 10600, speaker: 'Orman', text: 'Küçük mantar isteyeni yukarı fırlatır — üstteki bilete oradan ulaşılır.'},
+  {id: 'festival-zone', x: 12900, speaker: 'Çatpat', text: 'Müzik yakında! Son yol, yaptığım seçimlerin ardından açıldı.'},
 ];
 
 export function createLevel(level, manifests) {
@@ -147,7 +126,7 @@ export function createLevel(level, manifests) {
     ...level,
     spawn: {x: 135, y: 525},
     respawn: {x: 135, y: 525},
-    goal: {x: 14580, y: 520, radius: 155},
+    goal: {x: 14150, y: 462, radius: 150},
     platforms,
     decorations,
     objects: [...objects, ...mechanisms],
@@ -195,9 +174,14 @@ function createDecoration(config, manifest) {
   };
 }
 
-function createObject(config, manifest) {
-  const metadata = manifest.assets[config.asset];
+function lookupObjectMetadata(config, manifest) {
+  const metadata = manifest.assets[config.asset] || manifest.spriteSheets?.[config.asset];
   if (!metadata) throw new Error(`Missing gameplay-object metadata: ${config.asset}`);
+  return metadata;
+}
+
+function createObject(config, manifest) {
+  const metadata = lookupObjectMetadata(config, manifest);
   const scale = config.scale ?? metadata.renderScale;
 
   if (config.kind === 'moving-platform') {
