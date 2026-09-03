@@ -99,6 +99,14 @@ const LEVEL01_MECHANISMS = [
   {id: 'crate-plate', asset: 'crate_pressure_plate.png', kind: 'crate-plate', x: 9650, y: 610, scale: 0.20, targets: ['crate-bridge']},
 ];
 
+// Placeholder critters until real character art lands (see docs note in
+// Mission.js) — color/label only, drawn procedurally by Game.drawFriend().
+const LEVEL01_FRIENDS = [
+  {id: 'friend-porsuk', name: 'Porsuk', x: 3230, y: 600, color: '#b9793f', missionId: 'apple-garden'},
+  {id: 'friend-baykus', name: 'Baykuş', x: 8250, y: 520, color: '#6f8ea6', missionId: 'dark-lanterns'},
+  {id: 'friend-civciv', name: 'Civciv', x: 11150, y: 610, color: '#f2c94c', missionId: 'lost-toy'},
+];
+
 const LEVEL01_ZONES = [
   {id: 'gap-school-zone', x: 1900, speaker: 'Çatpat', text: 'Boşluk geniş görünüyor ama korkmama gerek yok — adımımı doğru zamanlarsam geçerim.'},
   {id: 'lift-zone', x: 3000, speaker: 'Orman', text: 'Taş platform kendi hızında çalışır. Onu zorlamak yerine ritmine güvenip beklemeyi öğreniyorum.'},
@@ -134,6 +142,7 @@ export function createLevel(level, manifests) {
     // objects like the crate always render in front of the plate they sit on.
     objects: [...mechanisms, ...objects],
     mechanisms,
+    friends: LEVEL01_FRIENDS.map(friend => ({...friend, helped: false})),
     zones: LEVEL01_ZONES.map(zone => ({...zone, triggered: false})),
     surfaces,
     speedMultiplier: 1,
@@ -165,7 +174,7 @@ export function createPlatform(config, manifest) {
   return platform;
 }
 
-function createDecoration(config, manifest) {
+export function createDecoration(config, manifest) {
   const metadata = manifest.assets[config.asset];
   if (!metadata) throw new Error(`Missing decoration metadata: ${config.asset}`);
   return {
@@ -183,7 +192,7 @@ function lookupObjectMetadata(config, manifest) {
   return metadata;
 }
 
-function createObject(config, manifest) {
+export function createObject(config, manifest) {
   const metadata = lookupObjectMetadata(config, manifest);
   const scale = config.scale ?? metadata.renderScale;
 
@@ -260,7 +269,7 @@ function createSurfaceObject(config, metadata, scale) {
   return object;
 }
 
-function segmentsFromPoints(points, owner) {
+export function segmentsFromPoints(points, owner) {
   return points.slice(0, -1).map((point, index) => ({
     x1: point.x,
     y1: point.y,

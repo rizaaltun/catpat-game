@@ -20,6 +20,7 @@ MODULES = (
     "src/game/Player.js",
     "src/game/levels.js",
     "src/game/LevelRuntime.js",
+    "src/game/Mission.js",
     "src/game/Game.js",
     "src/ui/UI.js",
     "src/main.js",

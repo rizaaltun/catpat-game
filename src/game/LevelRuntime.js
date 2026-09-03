@@ -22,6 +22,7 @@ export class LevelRuntime {
     this.cratePlate = level.objects.find(item => item.kind === 'crate-plate');
     this.mushroom = level.objects.find(item => item.kind === 'mushroom');
     this.checkpoints = level.objects.filter(item => item.kind === 'checkpoint');
+    this.friends = level.friends || [];
     this.buttons = level.objects.filter(item => item.kind === 'pressure-button');
     this.pressables = [...this.buttons, ...(this.cratePlate ? [this.cratePlate] : [])];
     this.gates = level.objects.filter(item => item.kind === 'lift-gate');
@@ -103,7 +104,8 @@ export class LevelRuntime {
     const cratePrompt = !this.cratePlaced && Math.abs(player.x - this.crate.x) < 195
       ? 'Sandığı plakaya it'
       : '';
-    this.setPrompt(signPrompt || cratePrompt || gatePrompt);
+    const friendPrompt = this.resolveFriends(player, input);
+    this.setPrompt(signPrompt || cratePrompt || gatePrompt || friendPrompt);
     this.resolveCheckpoints(player);
     this.resolveZones(player);
     this.resolveGoal(player);
@@ -253,6 +255,19 @@ export class LevelRuntime {
       return '';
     }
     return 'Etkileşim: Tabelayı düzelt';
+  }
+
+  resolveFriends(player, input) {
+    for (const friend of this.friends) {
+      if (friend.helped) continue;
+      if (Math.abs(player.x - friend.x) > 90 || Math.abs(player.feetY - friend.y) > 140) continue;
+      if (input.consume('interact')) {
+        this.emit('enter-mission', {missionId: friend.missionId, friendId: friend.id});
+        return '';
+      }
+      return `Etkileşim: ${friend.name}’a yardım et`;
+    }
+    return '';
   }
 
   resolvePressureButtons(player) {
@@ -411,13 +426,18 @@ export class LevelRuntime {
     this.completed = true;
     this.setPrompt('');
     const noticedImpact = this.carefulPass || this.signWasRepaired;
-    this.emit('dialogue', {
-      speaker: 'Anne',
-      text: noticedImpact
-        ? 'Biletler tamam, tabela da düzgün duruyor. Gösterdiğin nezaket, senden sonra gelen herkesin yolunu kolaylaştıracak.'
-        : 'Biletler tamam. Belki bu kez acele ettin ama şenlikte herkes seni olduğun gibi karşılayacak — önemli olan denemiş olman.',
-      duration: 4200,
-    });
+    const friendsHelped = this.friends.filter(friend => friend.helped).length;
+    let text;
+    if (friendsHelped === this.friends.length && this.friends.length > 0) {
+      text = 'Biletler tamam ve yol boyunca üç dostuna da yardım ettin. Şenliğe onlarla birlikte, elini uzatarak geldin.';
+    } else if (friendsHelped > 0) {
+      text = `Biletler tamam. Yol boyunca ${friendsHelped} dostuna yardım ettin — küçük bir el uzatmak bile büyük fark yaratıyor.`;
+    } else if (noticedImpact) {
+      text = 'Biletler tamam, tabela da düzgün duruyor. Gösterdiğin nezaket, senden sonra gelen herkesin yolunu kolaylaştıracak.';
+    } else {
+      text = 'Biletler tamam. Belki bu kez acele ettin ama şenlikte herkes seni olduğun gibi karşılayacak — önemli olan denemiş olman.';
+    }
+    this.emit('dialogue', {speaker: 'Anne', text, duration: 4400});
     this.emit('complete', {delay: 4.3});
   }
 

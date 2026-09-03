@@ -1,6 +1,7 @@
 import {Player} from './Player.js';
 import {LevelRuntime, objectRect} from './LevelRuntime.js';
 import {LEVELS, createLevel} from './levels.js';
+import {createMissionWorld, MissionRuntime, SEED_GROW_SECONDS} from './Mission.js';
 
 const CHARACTER_ROOT = './assets/characters/catpat/animation_v03/';
 const PLATFORM_ROOT = './assets/environments/forest/platforms_v03/';
@@ -23,6 +24,10 @@ export class Game {
     this.camera = {x: 0, y: 0};
     this.loopToken = 0;
     this.finishing = 0;
+    this.mission = null;
+    this.missionRuntime = null;
+    this.mainState = null;
+    this.teleportFlash = 0;
     this.assetsReady = this.loadAssets();
 
     addEventListener('keydown', event => {
@@ -132,6 +137,14 @@ export class Game {
   }
 
   update(dt) {
+    this.teleportFlash = Math.max(0, this.teleportFlash - dt * 2.6);
+
+    if (this.mission) {
+      this.updateMission(dt);
+      this.input.endFrame();
+      return;
+    }
+
     if (this.finishing > 0) {
       this.finishing = Math.max(0, this.finishing - dt);
       this.player.state = 'celebrate';
@@ -160,6 +173,69 @@ export class Game {
     this.input.endFrame();
   }
 
+  updateMission(dt) {
+    this.player.update(dt, this.input, this.mission);
+    this.missionRuntime.update(dt, this.player, this.input);
+    this.handleEvents(this.missionRuntime.takeEvents());
+
+    this.camera.x += (
+      clamp(this.player.x - 420, 0, Math.max(0, this.mission.length - this.canvas.width)) - this.camera.x
+    ) * (1 - Math.pow(0.001, dt));
+    this.camera.y += (
+      clamp(this.player.y - 390, 0, 165) - this.camera.y
+    ) * (1 - Math.pow(0.004, dt));
+
+    if (this.player.y > 900) {
+      this.player.x = this.mission.spawn.x;
+      this.player.y = this.mission.spawn.y;
+      this.player.vx = 0;
+      this.player.vy = 0;
+      this.player.grounded = false;
+    }
+
+    if (this.missionRuntime.completed && this.missionRuntime.exitTimer <= 0) this.exitMission();
+  }
+
+  enterMission(missionId, friendId) {
+    const friend = this.level.friends.find(item => item.id === friendId);
+    if (!friend || friend.helped) return;
+
+    this.mainState = {
+      x: this.player.x,
+      y: this.player.y,
+      respawn: {...this.level.respawn},
+      cameraX: this.camera.x,
+    };
+    this.mission = createMissionWorld(missionId, this.manifests);
+    this.mission.friend = friend;
+    this.missionRuntime = new MissionRuntime(this.mission, friend);
+    this.player.x = this.mission.spawn.x;
+    this.player.y = this.mission.spawn.y;
+    this.player.vx = 0;
+    this.player.vy = 0;
+    this.player.grounded = false;
+    this.player.groundedSurface = null;
+    this.camera = {x: 0, y: 0};
+    this.teleportFlash = 1;
+    this.handleEvents(this.missionRuntime.takeEvents());
+  }
+
+  exitMission() {
+    this.mission.friend.helped = true;
+    this.player.x = this.mainState.x;
+    this.player.y = this.mainState.y;
+    this.player.vx = 0;
+    this.player.vy = 0;
+    this.player.grounded = false;
+    this.player.groundedSurface = null;
+    this.level.respawn = this.mainState.respawn;
+    this.camera = {x: this.mainState.cameraX, y: 0};
+    this.teleportFlash = 1;
+    this.mission = null;
+    this.missionRuntime = null;
+    this.mainState = null;
+  }
+
   handleEvents(events) {
     for (const event of events) {
       if (event.type === 'objective') this.ui.setObjective(event.text);
@@ -168,6 +244,7 @@ export class Game {
       if (event.type === 'dialogue') this.ui.showDialogue(event.speaker, event.text, event.duration);
       if (event.type === 'checkpoint') this.ui.pulseProgress();
       if (event.type === 'complete') this.finishing = event.delay;
+      if (event.type === 'enter-mission') this.enterMission(event.missionId, event.friendId);
     }
   }
 
@@ -181,6 +258,11 @@ export class Game {
   }
 
   draw() {
+    if (this.mission) {
+      this.drawMission();
+      this.drawTeleportFlash();
+      return;
+    }
     const ctx = this.ctx;
     const camera = this.camera;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -190,6 +272,7 @@ export class Game {
     for (const object of this.level.objects) {
       if (object.kind !== 'ticket' && object.kind !== 'star') this.drawObject(ctx, object, camera);
     }
+    for (const friend of this.level.friends) this.drawFriend(ctx, camera, friend, friend.x, friend.y);
     this.player.draw(ctx, camera, this.frames);
     this.drawGateForeground(ctx, camera);
     this.drawDecorations(ctx, camera, 'front');
@@ -197,6 +280,161 @@ export class Game {
       if (object.kind === 'ticket' || object.kind === 'star') this.drawObject(ctx, object, camera);
     }
     if (this.debug) this.drawDebug(ctx, camera);
+    this.drawTeleportFlash();
+  }
+
+  drawMission() {
+    const ctx = this.ctx;
+    const camera = this.camera;
+    const mission = this.mission;
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.drawBackground(ctx, camera);
+    for (const platform of mission.platforms) this.drawPlatform(ctx, platform, camera);
+    this.drawMissionExtras(ctx, camera);
+    for (const object of mission.objects) {
+      if (object.visible === false || object.collected) continue;
+      this.drawMissionProp(ctx, object, camera);
+    }
+    this.player.draw(ctx, camera, this.frames);
+    this.drawFriend(ctx, camera, mission.friend, mission.friendSpawn.x, mission.friendSpawn.y);
+    if (mission.tint) {
+      ctx.fillStyle = mission.tint;
+      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    if (this.debug) {
+      ctx.save();
+      ctx.strokeStyle = '#ff3154';
+      ctx.lineWidth = 3;
+      for (const surface of mission.surfaces) {
+        ctx.beginPath();
+        ctx.moveTo(surface.x1 - camera.x, surface.y1 - camera.y);
+        ctx.lineTo(surface.x2 - camera.x, surface.y2 - camera.y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  drawMissionProp(ctx, object, camera) {
+    if (!this.isNearCamera(object.x, camera, 390)) return;
+    const image = this.objectImages[object.asset];
+    ctx.save();
+    ctx.translate(object.x - camera.x, object.y - camera.y);
+    if (object.kind === 'lantern-prop' && object.lit) {
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      ctx.fillStyle = '#ffe27a';
+      ctx.beginPath();
+      ctx.arc(0, -object.pivot[1] * object.scale * 0.5, 48, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.drawImage(
+      image,
+      -object.pivot[0] * object.scale,
+      -object.pivot[1] * object.scale,
+      image.width * object.scale,
+      image.height * object.scale,
+    );
+    ctx.restore();
+  }
+
+  drawMissionExtras(ctx, camera) {
+    if (this.mission.type !== 'apple-garden') return;
+    const props = this.mission.props;
+    const runtime = this.missionRuntime;
+
+    if (!props.seed.taken) {
+      ctx.save();
+      ctx.translate(props.seed.x - camera.x, props.seed.y - camera.y);
+      ctx.fillStyle = '#8a5a2b';
+      ctx.beginPath();
+      ctx.ellipse(0, -14, 10, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.translate(props.plot.x - camera.x, props.plot.y - camera.y);
+    if (runtime.planted) {
+      const growth = runtime.grown ? 1 : Math.min(1, runtime.growTimer / SEED_GROW_SECONDS);
+      const trunkHeight = 20 + growth * 130;
+      ctx.fillStyle = '#7a4a26';
+      ctx.fillRect(-9, -trunkHeight, 18, trunkHeight);
+      if (growth > 0.25) {
+        const canopyScale = (growth - 0.25) / 0.75;
+        ctx.fillStyle = '#5fa050';
+        ctx.beginPath();
+        ctx.arc(0, -trunkHeight, 30 + canopyScale * 46, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      ctx.fillStyle = '#6b4a2a';
+      ctx.beginPath();
+      ctx.ellipse(0, -6, 46, 14, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(props.basket.x - camera.x, props.basket.y - camera.y);
+    ctx.fillStyle = '#c98a3f';
+    ctx.fillRect(-32, -34, 64, 30);
+    ctx.strokeStyle = '#8a5a2b';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(-32, -34, 64, 30);
+    for (let index = -1; index <= 1; index += 1) ctx.strokeRect(-32 + (index + 1) * 21.3, -34, 0, 30);
+    ctx.restore();
+  }
+
+  drawFriend(ctx, camera, friend, x, y) {
+    if (!friend || !this.isNearCamera(x, camera, 390)) return;
+    const screenX = x - camera.x;
+    const screenY = y - camera.y;
+    ctx.save();
+    ctx.translate(screenX, screenY);
+    ctx.fillStyle = friend.color;
+    ctx.beginPath();
+    ctx.ellipse(0, -34, 34, 34, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#20302c';
+    ctx.beginPath();
+    ctx.arc(-11, -40, 4.2, 0, Math.PI * 2);
+    ctx.arc(11, -40, 4.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#20302c';
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    if (friend.helped) ctx.arc(0, -27, 8, 0.15 * Math.PI, 0.85 * Math.PI);
+    else ctx.arc(0, -20, 6, 1.15 * Math.PI, 1.85 * Math.PI);
+    ctx.stroke();
+    ctx.restore();
+
+    if (!friend.helped) {
+      ctx.save();
+      ctx.translate(screenX, screenY - 80);
+      ctx.fillStyle = '#ffe27a';
+      ctx.beginPath();
+      ctx.arc(0, 0, 11, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#7a5b17';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('!', 0, 1);
+      ctx.restore();
+    }
+  }
+
+  drawTeleportFlash() {
+    if (this.teleportFlash <= 0) return;
+    const ctx = this.ctx;
+    const alpha = Math.sin(Math.min(1, this.teleportFlash) * Math.PI) * 0.85;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#fff6d8';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.restore();
   }
 
   drawBackground(ctx, camera) {
