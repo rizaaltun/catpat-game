@@ -130,7 +130,9 @@ export function createLevel(level, manifests) {
     goal: {x: 14150, y: 350, radius: 150},
     platforms,
     decorations,
-    objects: [...objects, ...mechanisms],
+    // Mechanisms (buttons/plates/gates) draw first so pushable/collectible
+    // objects like the crate always render in front of the plate they sit on.
+    objects: [...mechanisms, ...objects],
     mechanisms,
     zones: LEVEL01_ZONES.map(zone => ({...zone, triggered: false})),
     surfaces,

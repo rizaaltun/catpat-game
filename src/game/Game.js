@@ -191,6 +191,7 @@ export class Game {
       if (object.kind !== 'ticket' && object.kind !== 'star') this.drawObject(ctx, object, camera);
     }
     this.player.draw(ctx, camera, this.frames);
+    this.drawGateForeground(ctx, camera);
     this.drawDecorations(ctx, camera, 'front');
     for (const object of this.level.objects) {
       if (object.kind === 'ticket' || object.kind === 'star') this.drawObject(ctx, object, camera);
@@ -222,6 +223,25 @@ export class Game {
         -decoration.pivot[1] * decoration.scale,
         image.width * decoration.scale,
         image.height * decoration.scale,
+      );
+      ctx.restore();
+    }
+  }
+
+  drawGateForeground(ctx, camera) {
+    for (const object of this.level.objects) {
+      if (object.kind !== 'lift-gate' || !this.isNearCamera(object.x, camera, 390)) continue;
+      const image = this.mechanismImages[object.asset];
+      const splitX = object.metadata.solid.bounds[2];
+      ctx.save();
+      ctx.translate(object.x - camera.x, object.y - camera.y);
+      ctx.drawImage(
+        image,
+        splitX, 0, image.width - splitX, image.height,
+        -object.pivot[0] * object.scale + splitX * object.scale,
+        -object.pivot[1] * object.scale,
+        (image.width - splitX) * object.scale,
+        image.height * object.scale,
       );
       ctx.restore();
     }
@@ -266,8 +286,12 @@ export class Game {
       return;
     }
     if (object.kind === 'lift-gate') {
+      // Only the left post + doorway draw here (behind the player). The right
+      // post draws again in drawGateForeground(), after the player, so the
+      // character visibly passes behind it when walking through the gate.
       const panel = this.mechanismImages[object.metadata.panelAsset];
       const lift = object.openAmount * object.metadata.liftDistance * object.scale;
+      const splitX = object.metadata.solid.bounds[2];
       ctx.translate(object.x - camera.x, object.y - camera.y);
       ctx.drawImage(
         panel,
@@ -278,9 +302,10 @@ export class Game {
       );
       ctx.drawImage(
         image,
+        0, 0, splitX, image.height,
         -object.pivot[0] * object.scale,
         -object.pivot[1] * object.scale,
-        image.width * object.scale,
+        splitX * object.scale,
         image.height * object.scale,
       );
       ctx.restore();
