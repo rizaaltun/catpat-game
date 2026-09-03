@@ -45,6 +45,16 @@ mekanik noktayı paylaşmalı.
 - **Öncelik:** Yüksek — şu an yer tutucu olarak `obj_star.png` (yıldız)
   kullanılıyor, bir top/oyuncak yerine yıldız göstermek hikâyeyle
   uyuşmuyor.
+- **ChatGPT teslimat notu — 03.09.2026:** `catpat-v06-civciv-8frame-v03.zip`
+  hazırlandı. Paket yalnız topu değil, önceki 2-kare Civciv temsilinin yerine
+  geçecek yeni seçilmiş Civciv tasarımının 8 kare `waiting` + 8 kare `happy`
+  RGBA PNG animasyonlarını da içerir. Her tekil kare 512×512, pivot `[256,480]`,
+  8 FPS; ayrı `obj_ball.png` 512×512 RGBA statik görev objesidir. Türetilmiş
+  4096×512 yatay sheetler, `manifest.json`, `qa_report.json` ve Claude notu
+  pakettedir. Tüm tekil PNG'ler köşe alfa=0 ve ≥8px görünür marj QA'sını geçti.
+  Entegrasyon talimatı `assets/production_v06/README_FOR_CLAUDE_CIVCIV_UPDATE.md`
+  içinde günceldir. **Talep henüz Completed değildir; Claude entegrasyon ve tam
+  test paketinden sonra taşımalıdır.**
 
 ### 2. Gece Gökyüzü Katmanı (Baykuş — dark-lanterns)
 
