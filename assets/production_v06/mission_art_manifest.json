@@ -1,7 +1,12 @@
 {
-  "version": "v06-mission-art-1",
+  "version": "v06-mission-art-2",
   "format": "RGBA PNG",
   "background": "transparent",
+  "handoff": {
+    "claudeToChatgptRequests": "ASSET-REQUESTS.md",
+    "chatgptToClaudeDeliveries": "docs/CLAUDE_HANDOFF_V06_ART.md",
+    "integrationNotes": "assets/production_v06/README_FOR_CLAUDE_MISSION_ART.md"
+  },
   "friends": {
     "friend-porsuk": {
       "path": "friends/friend_porsuk_sheet.png",
@@ -24,14 +29,76 @@
       "sha256": "819857b19128e3c441efff161d64ef6b3ff83e96d919823793d31aabd5db7c58"
     },
     "friend-civciv": {
-      "path": "friends/friend_civciv_sheet.png",
-      "canvas": [1024, 512],
       "frameSize": [512, 512],
-      "frameCount": 2,
-      "states": {"waiting": 0, "happy": 1},
       "pivot": [256, 480],
       "renderScale": 0.18,
-      "sha256": "9c81b2d65f28d89686755a8977b202b42265c7193877b6471d0e47369ada2d59"
+      "sourceOfTruth": "individual-png-frames",
+      "clips": {
+        "waiting": {
+          "loop": true,
+          "fps": 8,
+          "frames": [
+            "friends/civciv_v02/waiting/friend_civciv_waiting_00.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_01.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_02.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_03.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_04.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_05.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_06.png",
+            "friends/civciv_v02/waiting/friend_civciv_waiting_07.png"
+          ],
+          "sha256": [
+            "fb15bbb5ca96d47037adafcaafbb09452801d225ebf8f1fa20c73f1a674ff987",
+            "7bf057a730aae1f3357ad7338e16501a1fd644c35d4c83250474be7f7e0aa8eb",
+            "34c886f37c94d15e9cf704f3afcf054ece16eb6db1f891af862919e8d653becb",
+            "7bf057a730aae1f3357ad7338e16501a1fd644c35d4c83250474be7f7e0aa8eb",
+            "fb15bbb5ca96d47037adafcaafbb09452801d225ebf8f1fa20c73f1a674ff987",
+            "ada3b4b91e410b3329bd8342a25e58082d94d86aa7e565688200539c9116b03a",
+            "c9d1d2f25d20dadc976194007963001216c092ca2486cdbd818f6bc7a46909c7",
+            "ada3b4b91e410b3329bd8342a25e58082d94d86aa7e565688200539c9116b03a"
+          ]
+        },
+        "happy": {
+          "loop": true,
+          "fps": 8,
+          "frames": [
+            "friends/civciv_v02/happy/friend_civciv_happy_00.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_01.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_02.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_03.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_04.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_05.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_06.png",
+            "friends/civciv_v02/happy/friend_civciv_happy_07.png"
+          ],
+          "sha256": [
+            "6fefabc3b80b9deaaaa78edbfea0a1a70ac10ab8448f2ef9e00ebf76a615d602",
+            "a62053417a5f2c012ab329e3c5da1b688d052e7bb9c6426748f4410f57cf11e4",
+            "578cbecc537204444e5584fe2795652b44cf1e31489ad698956723d4652f2a31",
+            "a62053417a5f2c012ab329e3c5da1b688d052e7bb9c6426748f4410f57cf11e4",
+            "6fefabc3b80b9deaaaa78edbfea0a1a70ac10ab8448f2ef9e00ebf76a615d602",
+            "7f67194becb6bc0725e2b45c578907aa324ff7b988a0980a44da3f155c65e473",
+            "ba3cec184d20dae76177a50f7fcc1c91a0600b272f9bcf0220b74f92478e2213",
+            "7f67194becb6bc0725e2b45c578907aa324ff7b988a0980a44da3f155c65e473"
+          ]
+        }
+      },
+      "quality": {
+        "rgba": true,
+        "cornerAlpha": 0,
+        "minimumVisibleMarginPx": 8,
+        "feetPivotLocked": true,
+        "checkerboardBaked": false
+      }
+    }
+  },
+  "lostToy": {
+    "ball": {
+      "path": "missions/lost_toy/obj_ball.png",
+      "canvas": [512, 512],
+      "pivot": [256, 480],
+      "static": true,
+      "sha256": "632f7828a803d01ce41af8b97c73776254fa6959e1c1bb3cdc5d99c77ce479ff"
     }
   },
   "appleGarden": {
