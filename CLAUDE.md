@@ -8,6 +8,10 @@ Kod veya görsel üretmeden önce sırayla şunları oku:
 1. `docs/CLAUDE_HANDOFF_V05.md`
 2. `assets/production_v05/runtime_asset_manifest.json`
 3. ilgili aktif klasördeki `manifest.json` veya `*_manifest.json`
+4. `ASSET-REQUESTS.md` — Claude ve ChatGPT arasındaki tek görsel talep ve
+   teslimat kaynağı. Yeni bir görsel gerektiğinde talebi buraya ekle;
+   ChatGPT'den teslim alınan görseli entegre ettikten sonra talebi
+   Completed bölümüne taşı (silme).
 
 Bağlayıcı kurallar:
 
