@@ -8,5 +8,8 @@
     "test:budget": "python3 tools/check_asset_budget.py",
     "test:visual": "python3 tools/render_mechanism_alpha_qa.py && node tools/render_runtime_qa.mjs",
     "build:test": "python3 tools/build_standalone_test.py && python3 tests/standalone-contract.py"
+  },
+  "devDependencies": {
+    "@napi-rs/canvas": "^1.0.8"
   }
 }

@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 import {readFile, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
-import {fileURLToPath, pathToFileURL} from 'node:url';
+import {fileURLToPath} from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const moduleRoot = process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES;
-if (!moduleRoot) throw new Error('CODEX_PRIMARY_RUNTIME_NODE_MODULES is required');
-const canvasModule = await import(pathToFileURL(resolve(moduleRoot, '@napi-rs/canvas/index.js')).href);
-const {createCanvas, GlobalFonts, Image, loadImage} = canvasModule;
+const {createCanvas, GlobalFonts, Image, loadImage} = await import('@napi-rs/canvas');
 
 globalThis.Image = Image;
 globalThis.addEventListener = () => {};
