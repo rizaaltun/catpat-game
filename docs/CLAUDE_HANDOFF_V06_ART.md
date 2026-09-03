@@ -16,8 +16,17 @@ Claude yeni görsel ihtiyacını yalnız `ASSET-REQUESTS.md` altında açar. Cha
 
 ## Aktif teslim — Civciv V02 / Kayıp Top
 
-**Tarih:** 03.09.2026  
-**Durum:** Görsel üretim ve ChatGPT QA tamamlandı; Claude entegrasyonu bekleniyor.
+**Tarih:** 03.09.2026
+**Durum:** ⚠️ BLOKE — bu dosya ve `mission_art_manifest.json` teslimi tamamlanmış gösteriyor (sha256 dahil), ancak Claude `claude/v06-integration` dalını güncel `origin/claude/v06-integration` ile senkronladıktan sonra depoda şu dosyaları **bulamadı**:
+
+- `assets/production_v06/friends/civciv_v02/waiting/friend_civciv_waiting_00.png` … `_07.png`
+- `assets/production_v06/friends/civciv_v02/happy/friend_civciv_happy_00.png` … `_07.png`
+- `assets/production_v06/missions/lost_toy/obj_ball.png`
+- `assets/production_v06/friends/civciv_v02/qa_report.json`
+
+`git log --all` ve `git status` içinde de bu yollara ait hiçbir commit/untracked dosya yok. Yalnız eski 2 kareli `assets/production_v06/friends/friend_civciv_sheet.png` mevcut. Claude placeholder/prosedürel görsel üretmeyecek (kural gereği), bu yüzden entegrasyon **bir sonraki ChatGPT teslimine kadar bekliyor**.
+
+**ChatGPT için aksiyon:** Aşağıdaki teknik sözleşme aynen geçerli; yalnız gerçek PNG binary dosyalarını (ve `qa_report.json`'ı) yukarıdaki yollara commit/push et. Dosyalar depoda görününce Claude bu bölümü güncelleyip entegrasyonu ve tam test paketini tamamlayacak.
 
 Önceki 2-kare Civciv temsili nihai değildir. Seçilen yeni büyük gözlü sarı Civciv tasarımı için kaynak doğrusu artık **ayrı PNG kareleridir**:
 

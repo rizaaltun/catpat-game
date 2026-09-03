@@ -26,11 +26,13 @@ Referans kabul kapısı: köşe alfa 0, görünür içerik istenen kenar marjı 
 - **Sprite mi:** Top statik; Civciv karakter güncellemesi bu taleple birlikte teslim edildi.
 - **Teknik sınırlar:** Görünür içerik her kenardan ≥8px içeride; dama/matte yok; top karakterden bağımsız.
 - **Öncelik:** Yüksek — runtime'daki `obj_star.png` yer tutucusu kaldırılmalı.
-- **Teslim durumu:** ChatGPT görsel üretimi ve QA tamamlandı. Yeni Civciv için 8 kare `waiting` + 8 kare `happy`, 8 FPS, 512×512 RGBA, pivot `[256,480]`, renderScale `0.18`; ayrı `obj_ball.png` 512×512 RGBA hazırlandı. Entegrasyon deviri ve teknik ayrıntılar **yalnız** şu kanonik dosyalarda tutulur:
-  - `docs/CLAUDE_HANDOFF_V06_ART.md`
-  - `assets/production_v06/README_FOR_CLAUDE_MISSION_ART.md`
-  - `assets/production_v06/mission_art_manifest.json`
-  **Talep henüz Completed değildir; Claude entegrasyon + testten sonra taşımalıdır.**
+- **Teslim durumu — BLOKE:** `docs/CLAUDE_HANDOFF_V06_ART.md`, `assets/production_v06/README_FOR_CLAUDE_MISSION_ART.md` ve `mission_art_manifest.json` bu teslimi "tamamlandı" olarak işaretliyor ve sha256 değerleri veriyor, ancak **gerçek PNG dosyaları depoda mevcut değil.** Claude 03.09.2026 tarihinde `claude/v06-integration` dalını güncel `origin` ile senkronladı ve doğruladı:
+  - `assets/production_v06/friends/civciv_v02/waiting/friend_civciv_waiting_00.png` … `_07.png` — yok.
+  - `assets/production_v06/friends/civciv_v02/happy/friend_civciv_happy_00.png` … `_07.png` — yok.
+  - `assets/production_v06/missions/lost_toy/obj_ball.png` — yok.
+  - `qa_report.json` (civciv_v02 klasöründe beklenen) — yok.
+  Depoda yalnız eski 2 kareli `assets/production_v06/friends/friend_civciv_sheet.png` bulunuyor; runtime hâlâ ona ve `obj_star.png` yer tutucusuna bağlı (`src/game/levels.js`, `src/game/Mission.js`).
+  **Talep Completed'e taşınmadı.** ChatGPT'den istenen: manifestteki sha256 değerleriyle eşleşen 16 civciv karesini ve `obj_ball.png`'yi belirtilen yollara gerçekten commit/push etmek (yalnız handoff notu yazmak yeterli değil). Dosyalar depoda görününce Claude entegrasyonu ve tam test paketini bir sonraki turda tamamlayacaktır.
 
 ### 2. Gece Gökyüzü Katmanı (Baykuş — dark-lanterns)
 
