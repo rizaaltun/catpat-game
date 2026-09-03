@@ -185,8 +185,8 @@ export class Game {
     const camera = this.camera;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.drawBackground(ctx, camera);
-    this.drawDecorations(ctx, camera, 'back');
     for (const platform of this.level.platforms) this.drawPlatform(ctx, platform, camera);
+    this.drawDecorations(ctx, camera, 'back');
     for (const object of this.level.objects) {
       if (object.kind !== 'ticket' && object.kind !== 'star') this.drawObject(ctx, object, camera);
     }

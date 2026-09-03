@@ -48,8 +48,8 @@ export class LevelRuntime {
     this.emit('progress', {current: 0, total: this.totalTickets});
     this.emit('dialogue', {
       speaker: 'Anne',
-      text: 'Şenlik yolu uzun. Rüzgâr üç giriş biletini patikanın farklı yerlerine savurdu.',
-      duration: 4700,
+      text: 'Şenlik yolu uzun ama yalnız hız için değil. Rüzgâr üç bileti savurdu; onları ararken yol boyunca karşına çıkanlara nazik davranmayı unutma.',
+      duration: 5200,
     });
   }
 
@@ -226,15 +226,15 @@ export class LevelRuntime {
         this.sign.rotation = -0.23;
         this.emit('dialogue', {
           speaker: 'Çatpat',
-          text: 'Vuu! ... Aa, tabela döndü. Böyle kalırsa gelenler ters yöne bakacak.',
+          text: 'Vuu! ... Tabelayı çevirdim. Ben geçtim ama arkamdan gelenler artık yanlış yöne bakacak.',
           duration: 4300,
         });
       } else {
         this.carefulPass = true;
         this.emit('dialogue', {
           speaker: 'Çatpat',
-          text: 'Yavaşlayınca tabelayı da yolu da aynı anda görebiliyorum.',
-          duration: 3000,
+          text: 'Yavaşlayınca hem tabelayı hem yolu görebiliyorum — kimseyi yanlış yöne göndermem.',
+          duration: 3400,
         });
       }
     }
@@ -247,7 +247,7 @@ export class LevelRuntime {
       this.sign.rotation = 0;
       this.emit('dialogue', {
         speaker: 'Çatpat',
-        text: 'Tamamdır! Hızım bende, yol yine herkesi doğru yere götürüyor.',
+        text: 'Tamamdır! Yavaşlayıp düzeltince yolu benden sonra gelenler için de doğru bıraktım.',
         duration: 3800,
       });
       return '';
@@ -273,7 +273,7 @@ export class LevelRuntime {
       if (nextActive) {
         this.emit('dialogue', {
           speaker: 'Çatpat',
-          text: 'Tık! Plaka aşağı indi; büyük kapı yukarı kalkıyor.',
+          text: 'Tık! Plakaya nazikçe basınca kapı da bana yol veriyor.',
           duration: 3200,
         });
         this.emit('mechanism', {id: button.id, active: true});
@@ -335,9 +335,7 @@ export class LevelRuntime {
       : nextRight + player.w / 2 + 0.5;
 
     if (!this.cratePlate) return;
-    const crateRect = objectRect(this.crate, this.crate.metadata.solid.bounds);
-    const plateRect = objectRect(this.cratePlate, this.cratePlate.metadata.trigger.bounds);
-    if (!rectsOverlap(crateRect, plateRect)) return;
+    if (this.crate.x < this.crate.pushLimits[1] - 0.5) return;
 
     this.cratePlaced = true;
     this.cratePlate.active = true;
@@ -346,7 +344,7 @@ export class LevelRuntime {
     this.crate.wobble = 1;
     this.emit('dialogue', {
       speaker: 'Çatpat',
-      text: 'Sandık plakaya oturdu. Köprü yükseliyor!',
+      text: 'Sandık tam yerine oturdu. Köprü, sabrımın karşılığı olarak yükseliyor!',
       duration: 3600,
     });
     this.emit('objective', {text: this.tickets === this.totalTickets ? 'Festival çadırına ulaş' : 'Kalan şenlik biletlerini bul'});
@@ -380,7 +378,7 @@ export class LevelRuntime {
       this.level.respawn = {x: checkpoint.x, y: checkpoint.y - player.h / 2};
       this.emit('dialogue', {
         speaker: 'Yol Feneri',
-        text: 'Işığım seni hatırladı. Düşersen bu noktadan devam edeceksin.',
+        text: 'Işığım seni hatırladı. Düşsen bile buradan sabırla devam edebilirsin.',
         duration: 3300,
       });
       this.emit('checkpoint', {id: checkpoint.id});
@@ -416,8 +414,8 @@ export class LevelRuntime {
     this.emit('dialogue', {
       speaker: 'Anne',
       text: noticedImpact
-        ? 'Biletler tamam, yol da hazır. Enerjin uzun yolu hem hızlı hem özenli yaptı!'
-        : 'Biletler tamam. Uzun yolun sonunda hızının bıraktığı küçük izleri de fark ettin.',
+        ? 'Biletler tamam, tabela da düzgün duruyor. Gösterdiğin nezaket, senden sonra gelen herkesin yolunu kolaylaştıracak.'
+        : 'Biletler tamam. Belki bu kez acele ettin ama şenlikte herkes seni olduğun gibi karşılayacak — önemli olan denemiş olman.',
       duration: 4200,
     });
     this.emit('complete', {delay: 4.3});

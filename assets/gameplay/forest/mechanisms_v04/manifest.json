@@ -20,7 +20,7 @@
     "festival_gate_frame.png": {
       "canvas": [768, 754],
       "role": "lift-gate-frame",
-      "pivot": [384, 743],
+      "pivot": [384, 690],
       "renderScale": 0.55,
       "solid": {"type": "rect", "bounds": [205, 285, 563, 594]},
       "liftDistance": 430,
@@ -29,7 +29,7 @@
     "festival_gate_panel.png": {
       "canvas": [768, 754],
       "role": "lift-gate-panel",
-      "pivot": [384, 743],
+      "pivot": [384, 690],
       "renderScale": 0.55
     }
   },
