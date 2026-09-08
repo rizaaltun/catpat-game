@@ -23,15 +23,30 @@ Implemented:
 - Reduced-motion/touch-control settings applied; storage failures do not crash
   completion. Starting again clears the previous mission state.
 
-## Verification
+## Verification - 2026-09-08
 
-Local checks passed before submission: npm test, test:assets, test:budget and
-build:test. Browser checks and runtime visual rendering run in the development
-CI workflow and are authoritative only when that exact run reports success.
-`tests/story-browser.py` captures desktop 1280x720 and mobile 844x390 screens.
-It exercises real UI/event wiring with scripted mission-completion/arrival
-setup; it is NOT a claim of a full human playthrough. Mission mechanics and
-24 platform jumps have separate smoke/reachability checks.
+Verified source commit: `40d27a221653ed1250ab3e007bff40792adbf93e`.
+GitHub Actions run `34206464467` completed successfully, including:
+`npm test`, `test:assets`, `test:budget`, `test:visual`, `build:test` and
+`test:browser`. The exact run and artifact identifiers, coverage boundaries
+and SHA256 of the offline HTML are recorded in `qa/STORY-01.json`.
+
+The first layout-check run caught portrait overflow; it was fixed rather than
+removing the assertion. Current checks cover desktop 1280x720, landscape
+mobile 844x390, portrait rotation 390x844 and standalone `file://` startup.
+Fifteen actual browser screenshots were retained in the run's browser
+artifact. Menu composition, dialogue and mobile result layouts were visually
+inspected; new character animations are NOT included in this signoff.
+
+Browser scenarios exercise UI/event wiring using scripted mission-completion
+and festival-arrival setup. This is NOT a complete human playthrough or a
+performance certification on physical Mac/Windows/mobile devices. Mission
+mechanics, 24 jumps and the mushroom route have separate tests.
+
+The non-deploying development workflow now retains browser evidence and a
+verified offline HTML playtest on each successful integration-branch run.
+Artifacts expire after seven days; source and the test instructions remain
+in Git so they can be regenerated. Source snapshots expire after three days.
 
 ## Known limitations - do not hide or mark complete
 
@@ -42,7 +57,8 @@ setup; it is NOT a claim of a full human playthrough. Mission mechanics and
    neither eight distinct poses nor a final animation quality signoff.
 3. Companion route-following is implemented, but dedicated walking/air/landing
    animation art is not delivered. Current poses are a functional integration
-   stage, not final animated character movement.
+   stage, not final animated character movement. Foreground scenery can still
+   occlude a follower near the sign; staging needs another visual pass.
 4. The lost-ball mission still uses the old star placeholder until the actual
    approved ball PNG is uploaded and its runtime integration is validated.
 5. Music/SFX are not yet implemented. Two later chapters remain unimplemented.

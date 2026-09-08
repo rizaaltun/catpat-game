@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "milestone": "STORY-01",
+  "result": "PASS_FOR_DECLARED_SCOPE",
+  "sourceCommit": "40d27a221653ed1250ab3e007bff40792adbf93e",
+  "branch": "claude/v06-integration",
+  "runId": 34206464467,
+  "jobId": 101996991706,
+  "runUrl": "https://github.com/rizaaltun/catpat-game/actions/runs/34206464467",
+  "commands": {
+    "npm test": "PASS",
+    "npm run test:assets": "PASS",
+    "npm run test:budget": "PASS",
+    "npm run test:visual": "PASS",
+    "npm run build:test": "PASS",
+    "npm run test:browser": "PASS"
+  },
+  "browser": {
+    "engine": "Chromium",
+    "desktop": [1280, 720],
+    "mobileLandscape": [844, 390],
+    "portraitRotation": [390, 844],
+    "offlineFileStartup": "PASS",
+    "javascriptErrors": [],
+    "screenshots": 15,
+    "viewportBounds": "PASS",
+    "frozenDialoguePhysics": "PASS",
+    "recruitedCompanions": 3
+  },
+  "artifacts": {
+    "browser": 10047987163,
+    "offlinePlaytest": 10047987941,
+    "sourceSnapshot": 10047946774
+  },
+  "offlineHtml": {
+    "bytes": 14302422,
+    "sha256": "7d0dbe4e16c730def43f12bf8d844aaaf83efe770c31830495dea64a4f46d618"
+  },
+  "manualReview": {
+    "reviewed": "Menu, dialogue, landscape/portrait layout, companion scene and festival result screenshots",
+    "observations": [
+      "Mobile menu and result are no longer clipped.",
+      "Catpat is no longer obscured by another cast member in menu art.",
+      "Follower scenery occlusion and final gait artwork still need improvement."
+    ]
+  },
+  "limitations": [
+    "Scripted browser scenarios use explicit quest-completion and festival-arrival setup; they are not a full human playthrough.",
+    "Existing runtime artwork retained; selected new Civciv and ball PNG delivery is unresolved.",
+    "No new eight-pose animation set is claimed.",
+    "No music, later chapters, production deployment or physical-device performance signoff."
+  ],
+  "ownership": "ChatGPT full development; no Claude delegation until explicit user request",
+  "mainMerged": false,
+  "deploymentChanged": false
+}
