@@ -10,3 +10,5 @@ qa-*.json
 assets/environments/forest/terrain_v04/
 
 node_modules/
+
+qa-browser/

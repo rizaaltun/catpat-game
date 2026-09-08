@@ -102,3 +102,86 @@ canvas { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100vh *
 @media (max-width: 760px) { .level-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (orientation: portrait) { .orientation-note { font-size: 14px; } .menu-card { transform: scale(.88); } }
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* STORY-01: all artwork below is rendered from actual repository assets. */
+#menu { grid-template-columns: minmax(290px, 500px) minmax(300px, 620px); gap: clamp(20px, 4vw, 68px); justify-content: center; background: radial-gradient(ellipse at 70% 30%, #387368, #123f3b 75%); }
+#menu .menu-card { width: 100%; padding: clamp(22px, 3vw, 40px); }
+#menu .menu-art { display: none; }
+#menu .menu-copy { font-size: clamp(14px, 1.4vw, 17px); line-height: 1.65; }
+#menu h1 { font-size: clamp(48px, 5.5vw, 82px); }
+#menu .build-badge { font-size: 9px; opacity: .7; }
+.journey-art { width: 100%; margin: 0; color: var(--cream); }
+#menu-illustration { position: relative; inset: auto; display: block; transform: none; width: 100%; height: auto; background: transparent; border: 6px solid #fff7df; border-radius: 44% 44% 20px 20px; box-shadow: 0 22px 70px #092c2a66; }
+.journey-art figcaption { margin: 20px 0; text-align: center; font-size: clamp(14px, 1.5vw, 19px); font-weight: 700; }
+.journey-beats { display: flex; justify-content: space-around; gap: 12px; border-top: 1px solid #fff7df44; padding-top: 16px; font-size: 12px; color: #f5c84c; }
+.journey-beats b { display: block; font-size: 14px; color: #fff7df; margin-top: 5px; }
+.loading-status { min-height: 1.5em; margin: 16px 0 0; font: 600 12px/1.5 system-ui, sans-serif; }
+.loading-status[data-error] { color: #9b2c35; }
+button:disabled { opacity: .55; cursor: wait; }
+.hud-companions { margin-left: auto; margin-right: 12px; padding: 10px 14px; border-radius: 16px; background: #fff7dff2; }
+#companion-list { display: flex; gap: 5px; flex-wrap: wrap; }
+.companion-badge { padding: 3px 6px; border-radius: 6px; background: #d7eed2; font: 700 11px system-ui, sans-serif; }
+#companion-progress { padding-left: 5px; }
+#app:not([data-playing="true"]) #touch-controls,
+#app[data-story="true"] #touch-controls,
+#app.hide-touch #touch-controls { display: none !important; }
+#app[data-story="true"] .hud { visibility: hidden; }
+.story-overlay[hidden] { display: none; }
+.story-overlay { position: absolute; inset: 0; z-index: 40; display: grid; place-items: center; padding: max(20px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left)); background: #103d36c9; backdrop-filter: blur(5px); }
+.story-card { width: min(1060px, 96vw); max-height: calc(100dvh - 40px); display: grid; grid-template-columns: minmax(180px, 32%) 1fr; grid-template-rows: auto minmax(0, 1fr) auto; gap: 20px 30px; padding: 30px 38px; border-radius: 32px; background: #fff7df; box-shadow: 0 25px 90px #092b2a66; }
+.story-heading { grid-column: 1 / -1; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-bottom: 2px solid #123f3b15; padding-bottom: 16px; }
+.story-heading .eyebrow { margin-bottom: 7px; font-size: 10px; }
+.story-heading h2 { margin: 0; font-size: clamp(18px, 2.2vw, 26px); line-height: 1.25; }
+#story-page { flex: none; background: #e8edce; border-radius: 20px; padding: 7px 12px; font: 800 12px system-ui, sans-serif; }
+.story-character { min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+#story-portrait { position: relative; inset: auto; transform: none; width: 100%; height: auto; max-height: min(44dvh, 390px); object-fit: contain; background: transparent; }
+.story-bubble { align-self: center; position: relative; max-height: 100%; overflow-y: auto; background: white; border: 2px solid #123f3b14; border-radius: 26px 26px 26px 8px; padding: clamp(18px, 2.6vw, 32px); }
+#story-speaker { margin: 0 0 12px; color: var(--speaker-color, #237768); font-weight: 900; font-size: 20px; }
+#story-text { margin: 0; color: #234c44; font: 650 clamp(18px, 2.1vw, 25px)/1.65 system-ui, sans-serif; }
+.story-footer { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+#story-next { min-width: 180px; }
+#story-skip { border: none; font-size: 13px; }
+.festival-panel { width: min(700px, 92vw); text-align: center; }
+.festival-panel h2 { font-size: 34px; }
+.festival-friends { font-size: 21px; font-weight: 800; color: #b64d45; margin: 28px 0; }
+#app.reduce-motion *, #app.reduce-motion *::before, #app.reduce-motion *::after { animation: none !important; transition: none !important; }
+@media (max-height: 570px) and (orientation: landscape) {
+  #menu { gap: 24px; padding: 18px 30px; grid-template-columns: minmax(270px, 420px) minmax(220px, 390px); }
+  #menu .menu-card { padding: 17px 24px; }
+  #menu .menu-copy { margin: 10px 0; font-size: 13px; line-height: 1.5; }
+  #menu h1 { font-size: 43px; }
+  #menu .button { min-height: 36px; padding: 8px 15px; }
+  #menu .menu-actions { gap: 7px; }
+  #menu .playtest-controls { font-size: 10px; margin-top: 8px; }
+  .loading-status { margin-top: 9px; font-size: 10px; }
+  .journey-art { max-width: 380px; }
+  #menu-illustration { max-height: 260px; object-fit: cover; }
+  .journey-art figcaption { margin: 10px 0; font-size: 13px; }
+  .journey-beats { padding-top: 9px; font-size: 10px; }
+  .journey-beats b { font-size: 12px; }
+  .orientation-note { display: none; }
+  .story-overlay { padding: 10px 20px; }
+  .story-card { padding: 16px 22px; max-height: calc(100dvh - 20px); gap: 10px 18px; grid-template-columns: minmax(100px, 25%) 1fr; }
+  .story-heading { padding-bottom: 9px; }
+  .story-heading .eyebrow { display: none; }
+  .story-heading h2 { font-size: 17px; }
+  #story-portrait { max-height: 43dvh; }
+  .story-bubble { padding: 14px 19px; }
+  #story-speaker { font-size: 16px; margin-bottom: 6px; }
+  #story-text { font-size: 17px; line-height: 1.55; }
+  #story-next, #story-skip { min-height: 42px; padding: 9px 14px; }
+  .hud-companions { padding: 8px 10px; }
+}
+@media (orientation: portrait) {
+  #menu { display: flex; flex-direction: column; gap: 18px; padding: 28px 24px; overflow-y: auto; }
+  #menu .menu-card { max-width: 470px; transform: none; padding: 24px 28px; }
+  .journey-art { display: none; }
+  .story-card { grid-template-columns: 100px 1fr; gap: 16px; padding: 20px; }
+  .story-bubble { grid-column: 1 / -1; grid-row: 3; }
+  .story-character { grid-column: 1 / -1; }
+  #story-portrait { max-height: 26dvh; width: auto; max-width: 100%; }
+  .story-footer { grid-row: 4; justify-content: space-between; gap: 8px; }
+  #story-next { min-width: 110px; }
+  #story-text { font-size: 18px; }
+  .hud-companions { display: none; }
+}

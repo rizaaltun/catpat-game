@@ -2,6 +2,8 @@ import {Player} from './Player.js';
 import {LevelRuntime, objectRect} from './LevelRuntime.js';
 import {LEVELS, createLevel} from './levels.js';
 import {createMissionWorld, MissionRuntime} from './Mission.js';
+import {CompanionTrail} from './CompanionTrail.js';
+import {missionStory, festivalStory} from '../story/Story.js';
 
 const CHARACTER_ROOT = './assets/characters/catpat/animation_v03/';
 const PLATFORM_ROOT = './assets/environments/forest/platforms_v03/';
@@ -25,6 +27,9 @@ export class Game {
     this.step = 1 / 60;
     this.camera = {x: 0, y: 0};
     this.loopToken = 0;
+    this.raf = null;
+    this.companions = new CompanionTrail();
+    this.time = 0;
     this.finishing = 0;
     this.mission = null;
     this.missionRuntime = null;
@@ -34,7 +39,7 @@ export class Game {
 
     addEventListener('keydown', event => {
       if (event.code === 'F2') this.debug = !this.debug;
-      if (event.code === 'Escape' && this.running) this.ui.pause();
+      if (event.code === 'Escape' && this.running && !this.ui.story) this.ui.pause();
     });
   }
 
@@ -115,6 +120,12 @@ export class Game {
       this.characterManifest.collider,
     );
     this.camera = {x: 0, y: 0};
+    this.mission = null;
+    this.missionRuntime = null;
+    this.mainState = null;
+    this.companions = new CompanionTrail();
+    this.companions.reset(this.player);
+    this.ui.setCompanions?.([]);
     this.acc = 0;
     this.finishing = 0;
     this.running = true;
@@ -123,14 +134,20 @@ export class Game {
     this.ui.showGame(this.level);
     this.handleEvents(this.runtime.takeEvents());
     this.last = performance.now();
-    requestAnimationFrame(now => this.loop(now, token));
+    this.raf = requestAnimationFrame(now => this.loop(now, token));
   }
 
   setPaused(value) {
+    if (this.paused === value) return;
     this.paused = value;
+    const token = ++this.loopToken;
+    if (this.raf !== null && typeof cancelAnimationFrame === 'function') cancelAnimationFrame(this.raf);
+    this.raf = null;
+    this.acc = 0;
+    this.input.reset();
     if (!value && this.running) {
       this.last = performance.now();
-      requestAnimationFrame(now => this.loop(now, this.loopToken));
+      this.raf = requestAnimationFrame(now => this.loop(now, token));
     }
   }
 
@@ -139,15 +156,16 @@ export class Game {
     const frame = Math.min((now - this.last) / 1000, 0.05);
     this.last = now;
     this.acc += frame;
-    while (this.acc >= this.step) {
+    while (this.acc >= this.step && !this.paused) {
       this.update(this.step);
       this.acc -= this.step;
     }
     this.draw();
-    requestAnimationFrame(time => this.loop(time, token));
+    if (!this.paused && token === this.loopToken) this.raf = requestAnimationFrame(time => this.loop(time, token));
   }
 
   update(dt) {
+    if (this.paused) return;
     this.time = (this.time || 0) + dt;
     this.teleportFlash = Math.max(0, this.teleportFlash - dt * 2.6);
 
@@ -172,6 +190,7 @@ export class Game {
     this.runtime.updateBeforePlayer(dt, this.player);
     this.player.update(dt, this.input, this.level);
     this.runtime.updateAfterPlayer(dt, this.player, this.input);
+    this.companions.record(this.player);
     this.handleEvents(this.runtime.takeEvents());
 
     this.camera.x += (
@@ -208,9 +227,14 @@ export class Game {
     if (this.missionRuntime.completed && this.missionRuntime.exitTimer <= 0) this.exitMission();
   }
 
-  enterMission(missionId, friendId) {
+  enterMission(missionId, friendId, afterDialogue = false) {
     const friend = this.level.friends.find(item => item.id === friendId);
-    if (!friend || friend.helped) return;
+    if (!friend || friend.helped || this.mission) return;
+    if (!afterDialogue && this.ui.showStory) {
+      this.ui.showStory(missionStory(missionId, 'before'),
+        () => this.enterMission(missionId, friendId, true), 'G\u00f6reve ba\u015fla');
+      return;
+    }
 
     this.mainState = {
       x: this.player.x,
@@ -229,11 +253,15 @@ export class Game {
     this.player.groundedSurface = null;
     this.camera = {x: 0, y: 0};
     this.teleportFlash = 1;
-    this.handleEvents(this.missionRuntime.takeEvents());
+    const events = this.missionRuntime.takeEvents();
+    this.handleEvents(this.ui.showStory ? events.filter(event => event.type !== 'dialogue') : events);
   }
 
   exitMission() {
+    if (!this.mission || !this.mainState) return;
     this.mission.friend.helped = true;
+    this.companions.recruit(this.mission.friend);
+    this.ui.setCompanions?.(this.companions.members);
     this.player.x = this.mainState.x;
     this.player.y = this.mainState.y;
     this.player.vx = 0;
@@ -246,6 +274,10 @@ export class Game {
     this.mission = null;
     this.missionRuntime = null;
     this.mainState = null;
+    this.ui.setObjective(this.runtime.tickets === this.runtime.totalTickets
+      ? 'Dostlar\u0131nla birlikte festival \u00e7ad\u0131r\u0131na ula\u015f'
+      : this.level.objective);
+    this.ui.setPrompt('');
   }
 
   handleEvents(events) {
@@ -255,7 +287,14 @@ export class Game {
       if (event.type === 'prompt') this.ui.setPrompt(event.text);
       if (event.type === 'dialogue') this.ui.showDialogue(event.speaker, event.text, event.duration);
       if (event.type === 'checkpoint') this.ui.pulseProgress();
-      if (event.type === 'complete') this.finishing = event.delay;
+      if (event.type === 'complete') {
+        if (this.mission) {
+          if (this.ui.showStory) this.ui.showStory(missionStory(this.mission.id, 'after'),
+            () => this.exitMission(), 'Birlikte yola devam');
+        } else if (this.ui.showStory) {
+          this.ui.showStory(festivalStory(this.level.friends), () => { this.finishing = 1.2; }, 'Festivale kat\u0131l');
+        } else this.finishing = event.delay;
+      }
       if (event.type === 'enter-mission') this.enterMission(event.missionId, event.friendId);
     }
   }
@@ -267,6 +306,7 @@ export class Game {
     this.player.vy = 0;
     this.player.grounded = false;
     this.player.groundedSurface = null;
+    this.companions.reset(this.player);
   }
 
   draw() {
@@ -284,7 +324,12 @@ export class Game {
     for (const object of this.level.objects) {
       if (object.kind !== 'ticket' && object.kind !== 'star') this.drawObject(ctx, object, camera);
     }
-    for (const friend of this.level.friends) this.drawFriend(ctx, camera, friend, friend.x, friend.y);
+    for (const friend of this.level.friends) {
+      if (!friend.helped) this.drawFriend(ctx, camera, friend, friend.x, friend.y);
+    }
+    for (const pose of this.companions.poses()) {
+      if (pose.visible) this.drawFriend(ctx, camera, pose.friend, pose.x, pose.y, pose.facing);
+    }
     this.player.draw(ctx, camera, this.frames);
     this.drawGateForeground(ctx, camera);
     this.drawDecorations(ctx, camera, 'front');
@@ -309,7 +354,7 @@ export class Game {
       this.drawMissionProp(ctx, object, camera);
     }
     this.player.draw(ctx, camera, this.frames);
-    this.drawFriend(ctx, camera, mission.friend, mission.friendSpawn.x, mission.friendSpawn.y);
+    this.drawFriend(ctx, camera, {...mission.friend, helped: this.missionRuntime.completed}, mission.friendSpawn.x, mission.friendSpawn.y);
     this.drawDecorations(ctx, camera, 'front', mission.decorations);
     if (mission.tint) {
       ctx.fillStyle = mission.tint;
@@ -394,7 +439,7 @@ export class Game {
     drawProp(art.basket, props.basket.x, props.basket.y);
   }
 
-  drawFriend(ctx, camera, friend, x, y) {
+  drawFriend(ctx, camera, friend, x, y, facing = 1) {
     if (!friend || !this.isNearCamera(x, camera, 390)) return;
     const screenX = x - camera.x;
     const screenY = y - camera.y;
@@ -406,15 +451,14 @@ export class Game {
     // Subtle pivot-locked idle breathing: <=2px lift, <=1.5% scale change.
     // Feet stay fixed because the scale is applied around the translate
     // origin (the friend's own x/y), same pattern as Player.renderMotion.
-    const breath = Math.sin(this.time * 2.1 + x * 0.013);
+    const reducedMotion = this.ui.save?.data.settings.reducedMotion;
+    const breath = reducedMotion ? 0 : Math.sin((this.time || 0) * 2.1 + x * 0.013);
     const scaleY = 1 + breath * 0.015;
     const scaleX = 1 - breath * 0.008;
-    const lift = -Math.max(0, breath) * 2;
 
     ctx.save();
     ctx.translate(screenX, screenY);
-    ctx.translate(0, lift);
-    ctx.scale(scaleX, scaleY);
+    ctx.scale(scaleX * facing, scaleY);
     ctx.drawImage(
       image,
       frameIndex * frameW, 0, frameW, frameH,

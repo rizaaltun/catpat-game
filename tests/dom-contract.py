@@ -40,6 +40,8 @@ def main() -> None:
     required_ids = {
         "app", "game", "hud", "objective", "ticket-count", "interaction-prompt",
         "dialogue", "speaker", "dialogue-text", "touch-controls",
+        "story-dialogue", "story-portrait", "story-next", "story-skip",
+        "story-text", "menu-illustration", "companion-list", "festival-complete",
     }
     assert required_ids <= set(parser.ids), f"missing DOM ids: {sorted(required_ids - set(parser.ids))}"
     assert parser.inputs == {"left", "right", "jump", "focus", "interact"}

@@ -2,6 +2,21 @@
 
 Bu repository üç bölümlük Çatpat oyununun tek ve güncel çalışma alanıdır. Şu anda yalnız **Bölüm 1 — Çatpat Gibi Bir Gün** aktiftir.
 
+## Active development owner - ChatGPT
+
+The user has temporarily assigned the complete project to ChatGPT: art,
+animation, story, gameplay, software, integration and testing. Do not wait for
+Claude or hand over a task unless the user explicitly requests a handover.
+Keep the existing handoff documents current so Claude can resume later.
+Work only on `claude/v06-integration`; do not merge main or change deployment,
+Cloudflare, CNAME or domains. The older alternating-role paragraphs below
+remain historical workflow guidance, not a requirement to delegate now.
+
+Current milestone and known limitations: `docs/DEVELOPMENT_STATUS.md`.
+"Delivered" requires the real files in GitHub, and "tested" requires actual
+results. An eight-file animation containing only five unique images must not
+be described as eight distinct poses.
+
 ## Claude ↔ ChatGPT iletişim sözleşmesi
 
 Kullanıcı sohbetler arasında prompt, ekran görüntüsü veya dosya listesi taşımak zorunda değildir. İki taraf da güncel GitHub dalındaki aşağıdaki dosyaları okuyarak sırayla çalışır.

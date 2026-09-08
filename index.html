@@ -6,26 +6,32 @@
   <meta name="theme-color" content="#123f3b" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>Çatpat — Bölüm 1 V05</title>
-  <link rel="stylesheet" href="./src/styles.css?v=ch1-v05-15200" />
+  <link rel="stylesheet" href="./src/styles.css?v=ch1-story-01" />
 </head>
 <body>
   <main id="app" aria-label="Çatpat: Nezaket Ormanı">
-    <canvas id="game" width="1280" height="720" aria-label="Oyun alanı"></canvas>
+    <canvas id="game" width="1280" height="720" tabindex="0" aria-label="Oyun alanı"></canvas>
 
     <section id="menu" class="screen is-visible" aria-labelledby="game-title">
       <div class="menu-art" aria-hidden="true"><span class="leaf leaf-a"></span><span class="leaf leaf-b"></span></div>
       <div class="menu-card">
-        <p class="eyebrow">R&amp;B STUDIO SUNAR</p>
-        <p class="build-badge">BÖLÜM 1 AKTİF · V05 · 15.2K</p>
+        <p class="eyebrow">BİR NEZAKET YOLCULUĞU</p>
+        <p class="build-badge">BÖLÜM 1 · HİKÂYE GELİŞTİRME SÜRÜMÜ</p>
         <h1 id="game-title"><span>Çatpat</span><small>Nezaket Ormanı</small></h1>
-        <p class="menu-copy">Koş, keşfet, durup düşün ve ormanı birlikte güzelleştir.</p>
+        <p class="menu-copy">Bir tohumu büyüt. Bir yolu aydınlat. Kayıp bir topu bul. Dostlarına yardım et, festivale <strong>birlikte</strong> git.</p>
         <div class="menu-actions">
-          <button class="button button-primary" data-action="continue">Devam Et</button>
+          <button class="button button-primary" data-action="continue">Yolculuğa Başla</button>
           <button class="button button-secondary" data-action="levels">Bölümler</button>
           <button class="button button-quiet" data-action="settings">Ayarlar</button>
         </div>
-        <p class="playtest-controls"><strong>TEST KONTROLLERİ</strong> Yön tuşları · Space ile zıpla · Shift ile odaklan · E ile etkileş</p>
+        <p id="loading-status" class="loading-status" role="status">Orman hazırlanıyor...</p>
+        <p class="playtest-controls"><strong>NASIL OYNANIR?</strong> Yön tuşları · Space ile zıpla · Shift ile odaklan · E ile etkileş</p>
       </div>
+      <figure class="journey-art">
+        <canvas id="menu-illustration" width="620" height="460" aria-label="Çatpat ve üç dostu orman festivaline birlikte gidiyor"></canvas>
+        <figcaption>Birlikte gidince, yol da festival kadar güzel.</figcaption>
+        <div class="journey-beats" aria-label="Yolculuğun amacı"><span>01 <b>Dinle</b></span><span>02 <b>Yardım et</b></span><span>03 <b>Birlikte git</b></span></div>
+      </figure>
       <p class="orientation-note">En iyi deneyim için cihazını yatay çevir.</p>
     </section>
 
@@ -50,22 +56,36 @@
       <div class="panel pause-panel"><p class="eyebrow">KISA BİR MOLA</p><h2 id="pause-title">Oyun Duraklatıldı</h2><div class="menu-actions"><button class="button button-primary" data-action="resume">Devam Et</button><button class="button button-secondary" data-action="restart">Baştan Başla</button><button class="button button-quiet" data-action="menu">Ana Menü</button></div></div>
     </section>
 
+    <section id="festival-complete" class="screen" aria-labelledby="festival-title">
+      <div class="panel festival-panel"><p class="eyebrow">BİRLİKTE BAŞARDIK</p><h2 id="festival-title">Festival daha güzel, birlikte!</h2><p>Dinledin, yardım ettin ve dostlarınla yola devam ettin.</p><p id="festival-friends" class="festival-friends"></p><div class="menu-actions"><button class="button button-primary" data-action="restart">Yolculuğu yeniden oyna</button><button class="button button-quiet" data-action="menu">Ana menü</button></div></div>
+    </section>
+
     <div id="hud" class="hud" hidden>
       <div class="hud-stack">
         <div class="hud-objective"><span class="hud-label">HEDEF</span><strong id="objective">Orman yolunu keşfet</strong></div>
         <div class="hud-progress" aria-label="Toplanan şenlik biletleri"><img src="./assets/gameplay/forest/objects_v03/obj_ticket.png" alt="" /><strong id="ticket-count">0/3</strong></div>
       </div>
+      <div class="hud-companions" aria-label="Yolculuğa katılan dostlar"><span class="hud-label">DOSTLAR <strong id="companion-progress">0/3</strong></span><div id="companion-list"></div></div>
       <button class="hud-pause" data-action="pause" aria-label="Duraklat">Ⅱ</button>
     </div>
 
     <div id="interaction-prompt" class="interaction-prompt" hidden></div>
     <div id="dialogue" class="dialogue" hidden><div><strong id="speaker"></strong><p id="dialogue-text"></p></div></div>
 
+    <section id="story-dialogue" class="story-overlay" role="dialog" aria-modal="true" aria-labelledby="story-title" aria-describedby="story-text" hidden>
+      <div class="story-card">
+        <header class="story-heading"><div><p class="eyebrow">DOSTLUK YOLCULUĞU</p><h2 id="story-title"></h2></div><span id="story-page" aria-label="Konuşma ilerlemesi"></span></header>
+        <div class="story-character"><canvas id="story-portrait" width="420" height="520" role="img"></canvas></div>
+        <div class="story-bubble"><p id="story-speaker"></p><p id="story-text" aria-live="polite"></p></div>
+        <footer class="story-footer"><button id="story-skip" class="button button-quiet" data-action="story-skip">Konuşmayı geç</button><button id="story-next" class="button button-primary" data-action="story-next">Devam</button></footer>
+      </div>
+    </section>
+
     <div id="touch-controls" aria-hidden="true">
       <div class="touch-cluster move-cluster"><button data-input="left">←</button><button data-input="right">→</button></div>
       <div class="touch-cluster action-cluster"><button class="interact-button" data-input="interact" aria-label="Etkileşim">✓</button><button class="focus-button" data-input="focus" aria-label="Odaklı adım">◎</button><button class="jump-button" data-input="jump" aria-label="Zıpla">↑</button></div>
     </div>
   </main>
-  <script type="module" src="./src/main.js?v=ch1-v05-15200"></script>
+  <script type="module" src="./src/main.js?v=ch1-story-01"></script>
 </body>
 </html>

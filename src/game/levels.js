@@ -3,7 +3,7 @@ export const LEVELS = [
     id: 0,
     title: 'Çatpat Gibi Bir Gün',
     subtitle: 'Şenlik yolu açılıyor',
-    objective: '3 şenlik biletini bul, yol boyunca nazik ol ve giriş masasına götür',
+    objective: 'Dostlar\u0131na yard\u0131m et, 3 şenlik biletini bul, yol boyunca nazik ol ve giriş masasına götür',
     theme: 'forest',
     length: 15200,
     targetMinutes: [6, 9],

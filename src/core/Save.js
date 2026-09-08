@@ -47,7 +47,13 @@ export class Save {
   }
 
   write() {
-    localStorage.setItem(KEY, JSON.stringify(this.data));
+    try {
+      localStorage.setItem(KEY, JSON.stringify(this.data));
+      return true;
+    } catch {
+      // Private mode / storage quota must not interrupt a completed mission.
+      return false;
+    }
   }
 
   complete(id) {

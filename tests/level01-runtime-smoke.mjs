@@ -86,6 +86,10 @@ const placeOnGround = (player, x, feetY) => {
 
   placeOnGround(player, runtime.level.goal.x, runtime.level.goal.y);
   runtime.updateAfterPlayer(1 / 60, player, input());
+  assert.equal(runtime.completed, false, 'tickets alone must not finish the journey before all friends can join');
+  assert.ok(runtime.takeEvents().some(event => event.type === 'objective' && event.text.includes('yard')));
+  for (const friend of runtime.friends) friend.helped = true;
+  runtime.updateAfterPlayer(1 / 60, player, input());
   assert.equal(runtime.completed, true);
   assert.ok(runtime.takeEvents().some(event => event.type === 'complete'));
 }

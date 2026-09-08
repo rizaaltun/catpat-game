@@ -423,6 +423,17 @@ export class LevelRuntime {
       return;
     }
 
+    const missing = this.friends.filter(friend => !friend.helped);
+    if (missing.length) {
+      if (this.goalReminderCooldown === 0) {
+        const names = missing.map(friend => friend.name).join(', ');
+        this.emit('objective', {text: `Birlikte gidelim: ${names} yard\u0131m bekliyor`});
+        this.emit('dialogue', {speaker: '\u00c7atpat', text: `Festival burada! ${names} de bize kat\u0131ls\u0131n. Onlar\u0131n yan\u0131na d\u00f6nelim.`, duration: 4400});
+        this.goalReminderCooldown = 5;
+      }
+      return;
+    }
+
     this.completed = true;
     this.setPrompt('');
     const noticedImpact = this.carefulPass || this.signWasRepaired;

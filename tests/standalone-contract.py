@@ -17,7 +17,10 @@ def main() -> None:
     assert "window.__CATPAT_ASSETS" in html
     assert "window.__CATPAT_MANIFESTS" in html
     assert "window.__CATPAT_ASSETS[path]" in html
-    assert "BÖLÜM 1 AKTİF · V05 · 15.2K" in html
+    assert "BÖLÜM 1 · HİKÂYE GELİŞTİRME SÜRÜMÜ" in html
+    assert 'id="story-dialogue"' in html
+    assert "src/story/Story.js" in html
+    assert "src/game/CompanionTrail.js" in html
     assert "import(moduleUrls['src/main.js'])" in html
     assert '<script type="module" src=' not in html
     assert '<link rel="stylesheet"' not in html

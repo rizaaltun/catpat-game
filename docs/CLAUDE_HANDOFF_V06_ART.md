@@ -2,6 +2,16 @@
 
 Bu dosya **ChatGPT → Claude** görsel teslim/devir kanalıdır. Kullanıcının sohbetler arasında prompt taşıması beklenmez.
 
+## Active development update - STORY-01
+
+ChatGPT is currently responsible for the entire implementation, by explicit
+user instruction. This document is continuity documentation, NOT a request
+for Claude to start work. Read `docs/DEVELOPMENT_STATUS.md` for current scope,
+verification status and unresolved asset delivery.
+
+The Civciv binary blockage recorded below remains real. STORY-01 does not
+pretend to resolve it and does not change its manifest hashes.
+
 ## Ortak iletişim sözleşmesi
 
 1. **Claude → ChatGPT görsel talepleri:** kök dizindeki `ASSET-REQUESTS.md`.
