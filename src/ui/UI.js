@@ -273,10 +273,13 @@ export class UI {
     ctx.drawImage(game.decorationImages['decor_bunting.png'], 90, -35, 410, 200);
     ctx.drawImage(game.platformImages['platform_long.png'], -35, 360, 760, 330);
     const hero = game.frames.celebrate;
-    ctx.drawImage(hero, 235, 140, 205, 256);
+    // Keep the hero unobscured and align the cast to one illustrated ground line.
+    ctx.drawImage(hero, 120 - 256 * 0.52, 398 - 620 * 0.52, 512 * 0.52, 640 * 0.52);
     for (const [index, key] of ['friend_porsuk_sheet.png', 'friend_baykus_sheet.png', 'friend_civciv_sheet.png'].entries()) {
       const image = game.friendImages[key];
-      ctx.drawImage(image, 512, 0, 512, 512, 45 + index * 170, 245, 165, 165);
+      const footX = [284, 418, 539][index];
+      const scale = [0.31, 0.30, 0.29][index];
+      ctx.drawImage(image, 512, 0, 512, 512, footX - 256 * scale, 399 - 480 * scale, 512 * scale, 512 * scale);
     }
     this.root.querySelector('#loading-status').textContent = 'Dinle, yard\u0131m et, birlikte yola devam et.';
   }

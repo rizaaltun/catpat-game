@@ -18,6 +18,14 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
 server = http.server.ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(QuietHandler, directory=str(ROOT)))
 threading.Thread(target=server.serve_forever, daemon=True).start()
 url = f'http://127.0.0.1:{server.server_port}/?qa=1'
+def assert_on_screen(page, selector):
+    box = page.locator(selector).bounding_box()
+    size = page.viewport_size
+    assert box is not None, f'{selector} is not visible'
+    assert box['x'] >= -1 and box['y'] >= -1, (selector, box)
+    assert box['x'] + box['width'] <= size['width'] + 1, (selector, box)
+    assert box['y'] + box['height'] <= size['height'] + 1, (selector, box)
+
 results = []
 try:
     with sync_playwright() as p:
@@ -29,13 +37,24 @@ try:
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.goto(url)
             page.wait_for_function('window.__CATPAT_QA__ && window.__CATPAT_QA__.game.background')
+            for selector in ['#menu .menu-card', '.journey-art', '#menu [data-action=continue]', '#menu [data-action=settings]']:
+                assert_on_screen(page, selector)
             page.screenshot(path=str(OUT / f'{name}-01-menu.png'))
             page.click('[data-action="continue"]')
             page.wait_for_selector('#story-dialogue:not([hidden])')
             frozen = page.evaluate('({time:__CATPAT_QA__.game.runtime.time,x:__CATPAT_QA__.game.player.x,y:__CATPAT_QA__.game.player.y})')
             page.wait_for_timeout(350)
             assert frozen == page.evaluate('({time:__CATPAT_QA__.game.runtime.time,x:__CATPAT_QA__.game.player.x,y:__CATPAT_QA__.game.player.y})'), 'physics moved under the dialogue'
+            for selector in ['.story-card', '#story-next', '#story-skip', '#story-text']:
+                assert_on_screen(page, selector)
             page.screenshot(path=str(OUT / f'{name}-02-intro.png'))
+            if mobile:
+                page.set_viewport_size({'width': 390, 'height': 844})
+                assert not page.locator('#menu').is_visible(), 'rotation reopened hidden menu'
+                for selector in ['.story-card', '#story-next', '#story-skip']:
+                    assert_on_screen(page, selector)
+                page.screenshot(path=str(OUT / f'{name}-02b-portrait-dialogue.png'))
+                page.set_viewport_size(size)
             page.keyboard.press('Space')
             assert page.locator('#story-page').inner_text() == '2 / 5'
             page.keyboard.press('Tab')
@@ -87,6 +106,8 @@ try:
             page.click('#story-skip')
             page.wait_for_selector('#festival-complete.is-visible', timeout=8000)
             assert len(page.locator('#festival-friends').inner_text().split(' \u00b7 ')) == 3
+            for selector in ['.festival-panel', '#festival-complete [data-action=restart]', '#festival-complete [data-action=menu]']:
+                assert_on_screen(page, selector)
             page.screenshot(path=str(OUT / f'{name}-07-festival-result.png'))
             assert not errors, errors
             results.append({'viewport': name, 'result': 'PASS', 'browserErrors': errors, 'checks': ['menu', 'intro', 'frozen physics', 'keyboard', 'mission pre-dialogue', 'mission completion', 'recruitment 3/3', 'recorded route following', 'festival', 'chapter save']})

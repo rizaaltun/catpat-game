@@ -15,7 +15,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Check out exact revision
         uses: actions/checkout@v4
@@ -39,10 +39,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install dependencies
+      - name: Install test dependencies and Chromium
         run: |
           npm ci
-          python -m pip install Pillow numpy
+          python -m pip install Pillow numpy playwright
+          python -m playwright install --with-deps chromium
       - name: Run gameplay and contract tests
         run: npm test
       - name: Check asset integrity
@@ -57,5 +58,24 @@ jobs:
       - name: Validate standalone build
         if: ${{ !cancelled() }}
         run: npm run build:test
+      - name: Test desktop, mobile, rotation and offline browser flows
+        if: ${{ !cancelled() }}
+        run: npm run test:browser
+      - name: Retain browser evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: catpat-browser-${{ github.sha }}
+          path: qa-browser/
+          retention-days: 7
+          if-no-files-found: warn
+      - name: Retain verified offline playtest
+        uses: actions/upload-artifact@v4
+        with:
+          name: catpat-playtest-${{ github.sha }}
+          path: dist/catpat-bolum-1-v05.html
+          retention-days: 7
+          if-no-files-found: error
 
-# This workflow does not deploy, change domains, merge branches, or write to the repository.
+# No deployment, domain changes, main merge, repository writes or credentials
+# in artifacts. Playtests and screenshots remain CI artifacts, not git files.
