@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "status": "migration-in-progress",
+  "characters": {
+    "maymun": {"runtimeReady": false, "reason": "final individual transparent animation assets not produced"},
+    "porsuk": {"runtimeReady": false, "reason": "book identity passes but final animation upgrade is incomplete"},
+    "pitpit": {"runtimeReady": false, "reason": "verified master exists locally but canonical Git binary promotion is pending"},
+    "market_cashier": {"runtimeReady": false, "reason": "book identity contract locked; final individual transparent assets not produced"}
+  },
+  "scenes": {
+    "branch_course_scene": {"runtimeReady": false, "reason": "final image-authored branch scene package not produced"},
+    "market_queue_scene": {"runtimeReady": false, "reason": "final image-authored market scene package not produced"},
+    "daisy_garden_scene": {"runtimeReady": false, "reason": "final image-authored daisy scene and interaction states not produced"}
+  },
+  "promotionRule": "runtimeReady becomes true only after canonical Git assets, manifests, technical QA, book-fidelity QA and mobile visual QA all pass."
+}
