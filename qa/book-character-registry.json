@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "title": "Çatpat Nezaketi Öğreniyor",
+    "review": "full 12-PDF-page / 22-interior-page scan",
+    "evidenceConvention": "pdfPage is the rendered PDF page; printedSpread is the InDesign/book spread printed in the source"
+  },
+  "characters": {
+    "catpat": {
+      "name": "Çatpat",
+      "status": "verified-primary",
+      "pdfPages": [2,3,4,5,6,7,8,9,10,11],
+      "identity": ["green child crocodile/dinosaur-like character","large white eyes with black pupils","pink/coral cheeks","peach belly","yellow rounded crest","red boots","single friendly protruding tooth when mouth angle reveals it","hand-painted children's-book texture"]
+    },
+    "maymun": {
+      "name": "Maymun",
+      "status": "verified-recurring-friend",
+      "pdfPages": [4,10],
+      "printedSpreads": ["6-7","18-19"],
+      "storyEvidence": "Maymun builds a game from tree branches with Porsuk and politely invites Çatpat; later appears in the reflection on how Çatpat could have responded politely.",
+      "identity": ["warm brown monkey","large rounded pink inner ears","light beige muzzle/belly","coral cheeks","thin curved tail","large black-and-white eyes","soft painterly texture"]
+    },
+    "porsuk": {
+      "name": "Porsuk",
+      "status": "verified-recurring-friend",
+      "pdfPages": [4,10],
+      "printedSpreads": ["6-7","18-19"],
+      "storyEvidence": "Porsuk plays the branch game with Maymun and is shocked by Çatpat's rude rejection; later appears in the reflection scene.",
+      "identity": ["black/dark charcoal body","broad pale gray face stripe","pink inner ears","coral cheek circles","long pointed snout with black nose","large black-and-white eyes","soft painterly texture"],
+      "currentRuntimeArtReview": "PASS identity match; current two-pose sheet is insufficient for final animation but is visually book-faithful."
+    },
+    "pitpit": {
+      "name": "Pıtpıt",
+      "role": "Tavşan",
+      "status": "verified-recurring-friend",
+      "pdfPages": [5,10],
+      "printedSpreads": ["8-9","18-19"],
+      "storyEvidence": "Pıtpıt carefully selects daisies for their mother; Çatpat rushes through the flower garden and damages it; later the book explicitly says Çatpat could have passed carefully.",
+      "identity": ["warm gray-brown rabbit","very large upright ears","coral/pink inner ears","coral cheeks","small peach-pink nose","white whiskers","large black-and-white eyes with eyelashes","short rounded tail","soft painterly texture"],
+      "availableBookDerivedMaster": "verified local transparent master exists; must be promoted as individual PNG only after technical QA"
+    },
+    "market_cashier": {
+      "name": "Market kasiyeri",
+      "role": "Mor su aygırı",
+      "status": "verified-secondary",
+      "pdfPages": [6],
+      "printedSpreads": ["10-11"],
+      "storyEvidence": "The cashier allows Çatpat to scan items for one time after the mother asks; the queue loses patience.",
+      "identity": ["purple hippo","large rounded muzzle","small ears","friendly retail role"]
+    },
+    "tilki_queue": {
+      "name": "Tilki",
+      "status": "verified-background-secondary",
+      "pdfPages": [6],
+      "identity": ["orange fox","white muzzle/chest","queue/customer context"]
+    }
+  },
+  "notVerifiedAsBookCharacters": {
+    "baykus": {"name":"Baykuş","runtimeStatus":"replacement-required"},
+    "civciv": {"name":"Civciv","runtimeStatus":"replacement-required"}
+  },
+  "promotionRule": "No named runtime character may be promoted without an entry above or an explicit later evidence update based on the source book."
+}
