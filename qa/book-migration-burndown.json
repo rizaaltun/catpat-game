@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "metric": "legacy-book-inconsistent-runtime-token-occurrences",
+  "baseline": {
+    "commit": "bd2ef4a4eefd25c057ddf38671e78156b865e28c",
+    "total": 44,
+    "files": {
+      "src/story/Story.js": 22,
+      "src/game/Mission.js": 13,
+      "src/game/levels.js": 9
+    }
+  },
+  "target": 0,
+  "blockingGateAtZero": true,
+  "rules": [
+    "A reduced count only qualifies when the replacement behavior is book-grounded; renaming tokens does not count.",
+    "Story, mission behavior, level trigger, character asset, manifest and QA must migrate together before a legacy event is closed.",
+    "The book-story CI audit remains non-blocking only while total is above zero and the migration is explicitly active.",
+    "When total reaches zero, the CI audit must become blocking and all rejected legacy character assets must be unreferenced by runtime."
+  ]
+}
