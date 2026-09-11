@@ -4,11 +4,30 @@ import {BookMissionRuntime} from './BookMissionRuntime.js';
 import {markMissionRecruitsHelped} from './BookMissionModel.js';
 import {bookMissionStory} from '../story/BookStory.js';
 
+const BOOK_ASSET_STATUS = './assets/production_v07/book_mission_asset_status.json';
+
 export class ProductionGame extends Game {
   constructor(...args) {
     super(...args);
     this.availableBookCharacters = new Set();
     this.availableBookScenes = new Set();
+    this.bookAssetStatus = null;
+    const baseAssetsReady = this.assetsReady;
+    this.assetsReady = baseAssetsReady.then(() => this.loadBookAssetStatus());
+  }
+
+  async loadBookAssetStatus() {
+    const response = await fetch(BOOK_ASSET_STATUS);
+    if (!response.ok) throw new Error(`Book mission asset status failed: ${response.status}`);
+    const status = await response.json();
+    this.bookAssetStatus = status;
+    this.setBookCharacterAvailability(
+      Object.entries(status.characters || {}).filter(([, value]) => value.runtimeReady).map(([id]) => id),
+    );
+    this.setBookSceneAvailability(
+      Object.entries(status.scenes || {}).filter(([, value]) => value.runtimeReady).map(([id]) => id),
+    );
+    return status;
   }
 
   setBookCharacterAvailability(ids = []) {
