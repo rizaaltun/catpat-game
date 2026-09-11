@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 7,
+  "packageId": "catpat-professional-production-v07",
+  "status": "day-01-production-reset",
+  "activeBranch": "chatgpt/month-01",
+  "sourceBaseline": "claude/v06-integration",
+  "visualPolicy": {
+    "imageFirst": true,
+    "codedFinishedUiAllowed": false,
+    "staticUiTextMustBeAuthoredIntoImage": true,
+    "dynamicTextRequiresAuthoredFrame": true,
+    "fullBookPageStoryPresentationAllowed": false,
+    "comicDialogueRequired": true
+  },
+  "characterPolicy": {
+    "sourceOfTruth": "book + first-approved Catpat",
+    "separateTransparentFrames": true,
+    "minimumLoopFrames": 8,
+    "identityDriftAllowed": false,
+    "runFramesAllowedForJump": false,
+    "preferredCanvas": [512, 640],
+    "preferredFootPivot": [256, 620]
+  },
+  "requiredPlayerClips": {
+    "idle": {"targetFrames": 8, "loop": true},
+    "run": {"targetFrames": 10, "loop": true},
+    "jump": {"targetFrames": 6, "loop": false},
+    "apex": {"targetFrames": 3, "loop": false},
+    "fall": {"targetFrames": 6, "loop": false},
+    "land": {"targetFrames": 4, "loop": false},
+    "celebrate": {"targetFrames": 10, "loop": true},
+    "talkReact": {"targetFrames": 8, "loop": false}
+  },
+  "environmentPolicy": {
+    "greenOnGreenPlayerLaneAllowed": false,
+    "preferredLaneMaterials": ["warm-earth", "honey-wood", "pale-stone", "cream-paper", "light-water"],
+    "stretchedPlatformArtAllowed": false,
+    "authoredWalkSurfaceMetadataRequired": true,
+    "visualContactTolerancePx": 2
+  },
+  "hazardPolicy": {
+    "mandatoryHazardRequiresMeasuredFeasibility": true,
+    "unavoidableDamageAllowed": false,
+    "softLockAllowed": false,
+    "mobileToleranceRequired": true
+  },
+  "uiPackages": [
+    "ui/menu",
+    "ui/map",
+    "ui/pause",
+    "ui/settings",
+    "ui/results",
+    "ui/dialogue"
+  ],
+  "characterPackages": [
+    "characters/catpat",
+    "characters/friends"
+  ],
+  "worldPackages": [
+    "backgrounds/chapter01",
+    "backgrounds/chapter02",
+    "platforms/core",
+    "hazards/core",
+    "story/chapter01",
+    "story/chapter02",
+    "fx"
+  ],
+  "day01": {
+    "runtimeMultiFrameJumpSupport": true,
+    "artBible": "../../docs/ART_BIBLE_V07.md",
+    "roadmap": "../../docs/PRODUCTION_ROADMAP_30_DAYS_V07.md",
+    "next": "canonical Catpat reference master"
+  }
+}
