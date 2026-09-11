@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "characterId": "pitpit",
+  "name": "Pıtpıt",
+  "source": "Çatpat Nezaketi Öğreniyor",
+  "bookEvidence": {"pdfPages": [5,10], "event": "pitpit-daisy-garden"},
+  "status": "production-contract-ready",
+  "assetPolicy": {
+    "individualTransparentPngOnly": true,
+    "spriteSheetAsSourceForbidden": true,
+    "canvas": [512,640],
+    "groundPivot": [256,620],
+    "leftDirection": "exact-runtime-mirror"
+  },
+  "identityLock": {
+    "species": "rabbit",
+    "body": "warm gray-brown childlike rabbit",
+    "ears": "very large upright ears with coral-pink inner ears",
+    "eyes": "large black-and-white eyes with visible eyelashes",
+    "cheeks": "coral circular cheeks",
+    "nose": "small peach-pink nose",
+    "muzzle": "soft pale muzzle with white whiskers",
+    "belly": "soft pale belly patch",
+    "tail": "small rounded pale tail",
+    "rendering": "soft hand-painted children's-book texture"
+  },
+  "rejectIf": [
+    "generic bunny redesign",
+    "wrong body palette",
+    "realistic rabbit anatomy",
+    "tiny eyes or missing eyelashes",
+    "missing coral cheeks",
+    "invented clothing",
+    "3D plastic shading",
+    "hard vector mascot outline"
+  ],
+  "qa": {
+    "identityComparisonRequiredPerFrame": true,
+    "groundedBottomTolerancePx": 1,
+    "centerDriftTolerancePx": 2,
+    "failedFramesGoToQuarantine": true,
+    "failedFramesMustNotBeShownToUser": true
+  }
+}
