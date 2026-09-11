@@ -1,4 +1,5 @@
 import {assertBookEvent} from '../story/BookCanon.js';
+import {createPlatform} from './levels.js';
 import {createBookMissionDescriptor} from './BookMissionModel.js';
 
 const BLUEPRINTS = Object.freeze({
@@ -20,6 +21,7 @@ const BLUEPRINTS = Object.freeze({
       'complete-course': {x: 2050, y: 520, radius: 150, input: 'automatic'},
       'polite-response': {x: 2360, y: 520, radius: 135, input: 'interact'},
     }),
+    castAnchors: Object.freeze({maymun: {x: 250, y: 540}, porsuk: {x: 430, y: 540}}),
     requiredCharacterAssets: Object.freeze(['maymun', 'porsuk']),
     recruits: Object.freeze(['maymun', 'porsuk']),
   }),
@@ -39,6 +41,7 @@ const BLUEPRINTS = Object.freeze({
       'ask-politely': {x: 1500, y: 560, radius: 120, input: 'interact'},
       'thank-cashier': {x: 1810, y: 560, radius: 120, input: 'interact'},
     }),
+    castAnchors: Object.freeze({market_cashier: {x: 1840, y: 560}}),
     requiredCharacterAssets: Object.freeze(['market_cashier']),
     recruits: Object.freeze([]),
   }),
@@ -59,6 +62,7 @@ const BLUEPRINTS = Object.freeze({
       'repair-if-damaged': {x: 1960, y: 550, radius: 135, input: 'interact-if-needed'},
       apologize: {x: 2310, y: 540, radius: 125, input: 'interact'},
     }),
+    castAnchors: Object.freeze({pitpit: {x: 2350, y: 540}}),
     requiredCharacterAssets: Object.freeze(['pitpit']),
     recruits: Object.freeze(['pitpit']),
   }),
@@ -78,10 +82,14 @@ export function getBookMissionBlueprint(eventId) {
   if (!blueprint) throw new Error(`Missing book mission blueprint: ${eventId}`);
   return {
     ...blueprint,
+    id: eventId,
     spawn: {...blueprint.spawn},
     platforms: blueprint.platforms.map(item => ({...item})),
     behaviourTriggers: Object.fromEntries(
       Object.entries(blueprint.behaviourTriggers).map(([key, value]) => [key, {...value}]),
+    ),
+    castAnchors: Object.fromEntries(
+      Object.entries(blueprint.castAnchors).map(([key, value]) => [key, {...value}]),
     ),
     requiredCharacterAssets: [...blueprint.requiredCharacterAssets],
     recruits: [...blueprint.recruits],
@@ -94,4 +102,31 @@ export function bookMissionRuntimeReady(eventId, availableCharacters = []) {
   const available = new Set(availableCharacters);
   const missing = blueprint.requiredCharacterAssets.filter(id => !available.has(id));
   return {ready: missing.length === 0, missing, runtimeStatus: blueprint.runtimeStatus};
+}
+
+export function createBookMissionWorld(eventId, manifests, availableCharacters = []) {
+  const gate = bookMissionRuntimeReady(eventId, availableCharacters);
+  if (!gate.ready) throw new Error(`Book mission art gate blocked ${eventId}: ${gate.missing.join(', ')}`);
+  if (!manifests?.platforms) throw new Error(`Book mission platform manifest missing: ${eventId}`);
+
+  const blueprint = getBookMissionBlueprint(eventId);
+  const platforms = blueprint.platforms.map(config => createPlatform(config, manifests.platforms));
+  const surfaces = platforms.flatMap(platform => platform.surfaces);
+  return {
+    id: eventId,
+    type: 'book-mission',
+    kind: blueprint.kind,
+    length: blueprint.length,
+    spawn: {...blueprint.spawn},
+    objectiveText: blueprint.objective,
+    platforms,
+    decorations: [],
+    objects: [],
+    surfaces,
+    behaviourTriggers: blueprint.behaviourTriggers,
+    castAnchors: blueprint.castAnchors,
+    bookDescriptor: blueprint.bookDescriptor,
+    requiredCharacterAssets: blueprint.requiredCharacterAssets,
+    speedMultiplier: 1,
+  };
 }
