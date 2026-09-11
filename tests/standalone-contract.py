@@ -19,11 +19,18 @@ def main() -> None:
     assert "window.__CATPAT_ASSETS[path]" in html
     assert "BÖLÜM 1 · HİKÂYE GELİŞTİRME SÜRÜMÜ" in html
     assert 'id="story-dialogue"' in html
-    assert "src/story/Story.js" in html
-    assert "src/story/BookCanon.js" in html
-    assert "src/game/CompanionTrail.js" in html
-    assert "src/game/BookMissionModel.js" in html
-    assert "src/game/ProductionGame.js" in html
+    for module in [
+        "src/story/Story.js",
+        "src/story/BookCanon.js",
+        "src/story/BookStory.js",
+        "src/game/BookBehaviourProgress.js",
+        "src/game/BookMissionModel.js",
+        "src/game/BookMissionBlueprints.js",
+        "src/game/BookMissionRuntime.js",
+        "src/game/CompanionTrail.js",
+        "src/game/ProductionGame.js",
+    ]:
+        assert module in html, f"missing offline module: {module}"
     assert "new ProductionGame(canvas, input, ui)" in html
     assert "import(moduleUrls['src/main.js'])" in html
     assert '<script type="module" src=' not in html
@@ -31,7 +38,7 @@ def main() -> None:
     assert not re.findall(r'<img[^>]+src="\./', html), "unembedded HTML image"
     assert html.count("data:image/") >= 40, "production images were not embedded"
     assert BUILD.stat().st_size < 15 * 1024 * 1024, "standalone build is unexpectedly large"
-    print(f"standalone contract: production runtime + offline dependencies embedded / {BUILD.stat().st_size / 1048576:.2f} MiB OK")
+    print(f"standalone contract: full production runtime + offline dependencies embedded / {BUILD.stat().st_size / 1048576:.2f} MiB OK")
 
 
 if __name__ == "__main__":
