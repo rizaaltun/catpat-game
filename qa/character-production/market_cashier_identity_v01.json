@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "characterId": "market_cashier",
+  "name": "Kasiyer",
+  "bookEvidencePdfPages": [6],
+  "status": "identity-locked-art-needed",
+  "role": "non-recruitable market NPC",
+  "identity": {
+    "species": "hippopotamus",
+    "body": "purple/violet",
+    "head": "large rounded hippo head and broad muzzle",
+    "eyes": "large black-and-white eyes",
+    "eyewear": "red oval glasses",
+    "cheeks": "soft peach/coral circular cheeks",
+    "clothing": "white shop/cashier coat with small orange-red badge detail",
+    "rendering": "soft hand-painted children's-book texture"
+  },
+  "requiredStates": ["neutral-counter", "patient-listen", "speaking", "gentle-concern", "friendly-thanks"],
+  "rejectIf": [
+    "species changes",
+    "red glasses are omitted",
+    "white cashier coat is omitted or redesigned into unrelated clothing",
+    "purple palette changes substantially",
+    "character is treated as a recruitable travelling friend",
+    "generic vector/cartoon rendering replaces book texture"
+  ],
+  "runtimeAssetRule": "individual transparent PNG states/frames only"
+}
