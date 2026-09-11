@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "characterId": "pitpit",
+  "source": "book-derived transparent master",
+  "status": "TECHNICAL_PASS_GIT_BINARY_PROMOTION_PENDING",
+  "sha256": "50917df75faa5ecd2faf3f35befe58817c6f908f81ca26efca42b99bbbef15df",
+  "image": {
+    "width": 512,
+    "height": 640,
+    "mode": "RGBA",
+    "alphaBounds": [89, 80, 424, 620],
+    "visibleBottom": 620,
+    "transparentCorners": true
+  },
+  "visualBookFidelity": "PASS against Pıtpıt appearance on PDF page 5 / printed spread 8-9",
+  "delivery": {
+    "canonicalGitPath": "assets/characters/pitpit/master/pitpit_master_00.png",
+    "presentAtCanonicalGitPath": false,
+    "countsAsDelivered": false
+  },
+  "promotionRule": "Do not mark delivered or reference from runtime until the binary PNG exists at the canonical Git path and the repository QA gate passes."
+}
