@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "active-migration",
+  "events": [
+    {
+      "legacy": "apple-garden",
+      "target": "branch-game-invitation",
+      "cast": ["maymun", "porsuk"],
+      "recruits": ["maymun", "porsuk"],
+      "mechanic": "dal parkuru + davete nazik cevap"
+    },
+    {
+      "legacy": "dark-lanterns",
+      "target": "market-queue",
+      "cast": ["market_cashier"],
+      "recruits": [],
+      "mechanic": "sıranı bekle + rica et + teşekkür et"
+    },
+    {
+      "legacy": "lost-toy",
+      "target": "pitpit-daisy-garden",
+      "cast": ["pitpit"],
+      "recruits": ["pitpit"],
+      "mechanic": "papatyalara zarar vermeden ilerle; hata varsa düzelt ve özür dile"
+    }
+  ],
+  "runtimeChange": "missions must support zero, one or multiple recruits instead of exactly one friend",
+  "finalGate": "Baykuş/Civciv and all three legacy mission events must be absent from active runtime before book-story QA becomes blocking"
+}
