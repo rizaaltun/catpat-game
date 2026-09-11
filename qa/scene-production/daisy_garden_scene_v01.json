@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "daisy_garden_scene",
+  "bookEvent": "pitpit-daisy-garden",
+  "status": "ART_NEEDED",
+  "referencePdfPages": [5, 10],
+  "visualGoal": "Pıtpıt'ın papatya bahçesini kitapla tutarlı biçimde korumayı, zarar vermeyi ve onarmayı görsel olarak okunur hale getirmek",
+  "requiredAssets": [
+    {"id":"daisy_bg_far","type":"opaque-background","target":"landscape","final":true},
+    {"id":"daisy_bg_mid","type":"transparent-midground","final":true},
+    {"id":"daisy_start","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"daisy_garden_a","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"daisy_garden_b","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"daisy_finish","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"daisy_bed_intact","type":"transparent-interaction-state","final":true},
+    {"id":"daisy_bed_damaged","type":"transparent-interaction-state","final":true},
+    {"id":"daisy_bed_repaired","type":"transparent-interaction-state","final":true},
+    {"id":"daisy_petals_fx","type":"transparent-fx-sequence","final":true}
+  ],
+  "artRules": [
+    "Pıtpıt is a separate character asset and is never baked into the environment plate",
+    "intact, damaged and repaired flower states must visibly differ without relying on text",
+    "safe path is readable through composition rather than code-drawn lanes or boxes",
+    "green foliage is pushed away from the direct player silhouette so green Catpat stays readable",
+    "flower damage must be gentle and child-appropriate, never destructive or alarming"
+  ],
+  "technicalGate": {
+    "walkableMetadataRequired": true,
+    "flowerDamageTriggerMetadataRequired": true,
+    "stateAlignmentTolerancePx": 2,
+    "visualSurfaceContactTolerancePx": 2,
+    "mobileReadabilityRequired": true,
+    "individualPngForTransparentModules": true
+  }
+}
