@@ -103,6 +103,13 @@ export class BookMissionRuntime {
         this.gardenExited = true;
         this.accept('protect-daisies', {damaged: this.daisyDamaged});
         if (!this.repairNeeded) this.accept('repair-if-damaged', {skippedBecauseUndamaged: true});
+        // A traversal transition and a deliberate interaction must never happen
+        // on the same frame. This prevents a buffered button press from silently
+        // repairing a damaged flower or apologizing without a readable beat.
+        this.setPrompt(this.repairNeeded
+          ? 'Geri dön ve zarar gören papatyayı düzelt'
+          : 'Pıtpıt’a ulaş');
+        return;
       }
     }
 
@@ -114,6 +121,8 @@ export class BookMissionRuntime {
           this.repairNeeded = false;
           this.accept('repair-if-damaged', {repaired: true});
           this.emit('daisy-repaired', {});
+          this.setPrompt('Pıtpıt’a ulaş');
+          return;
         }
       } else {
         prompt = 'Geri dön ve zarar gören papatyayı düzelt';
