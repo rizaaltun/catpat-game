@@ -52,6 +52,17 @@ jobs:
       - name: Check asset budget
         if: ${{ !cancelled() }}
         run: npm run test:budget
+      - name: Validate book binary asset promotions
+        if: ${{ !cancelled() && github.ref_name == 'chatgpt/month-01' }}
+        run: python qa/book_binary_asset_gate.py
+      - name: Retain book binary asset report
+        if: ${{ always() && github.ref_name == 'chatgpt/month-01' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: catpat-book-binary-${{ github.sha }}
+          path: qa/book-binary-assets-last-report.json
+          retention-days: 7
+          if-no-files-found: warn
       - name: Audit book-story migration
         if: ${{ !cancelled() && github.ref_name == 'chatgpt/month-01' }}
         continue-on-error: true
@@ -92,5 +103,7 @@ jobs:
 # Book-story audit is intentionally non-blocking only while the legacy mission
 # migration is active. It becomes blocking when all replacement-required tokens
 # have been removed from active runtime source.
+# Book binary asset validation is blocking on a wrong/tampered file but reports
+# PENDING without failing CI until the expected canonical PNG has been uploaded.
 # No deployment, domain changes, main merge, repository writes or credentials
 # in artifacts. Playtests and screenshots remain CI artifacts, not git files.
