@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "source": "Çatpat Nezaketi Öğreniyor full-book review",
+  "status": "active-replacement-plan",
+  "rules": {
+    "replaceBookExternalCharacters": true,
+    "replaceIncorrectCharacterInterpretations": true,
+    "doNotDeleteBeforeReplacementIsRuntimeReady": true,
+    "replacementRequiresBookEvidence": true,
+    "replacementRequiresTransparentIndividualPngAssets": true,
+    "replacementRequiresStoryAndLevelMigrationTogether": true
+  },
+  "verifiedRecurringCharacters": [
+    {"id":"catpat","name":"Çatpat","status":"verified"},
+    {"id":"porsuk","name":"Porsuk","status":"verified"},
+    {"id":"maymun","name":"Maymun","status":"verified"},
+    {"id":"pitpit","name":"Pıtpıt","role":"tavşan","status":"verified"}
+  ],
+  "runtimeAudit": [
+    {
+      "currentId":"baykus",
+      "currentName":"Baykuş",
+      "status":"replacement-required",
+      "reason":"not verified in reviewed book source",
+      "currentMission":"dark-lanterns",
+      "replacement":"TBD from verified book cast after narrative-fit review"
+    },
+    {
+      "currentId":"civciv",
+      "currentName":"Civciv",
+      "status":"replacement-required",
+      "reason":"not verified in reviewed book source",
+      "currentMission":"lost-toy",
+      "replacement":"Pıtpıt candidate; final mapping requires mission rewrite and book-consistent art"
+    },
+    {
+      "currentId":"porsuk",
+      "currentName":"Porsuk",
+      "status":"keep-but-revalidate-art",
+      "reason":"character exists in book; current runtime art still requires page-faithfulness review"
+    }
+  ],
+  "migrationOrder": [
+    "lock book character registry with evidence",
+    "review current Porsuk art against book",
+    "author Pıtpıt individual transparent PNG asset family",
+    "rewrite lost-toy mission to a book-consistent Pıtpıt interaction",
+    "choose verified replacement for dark-lanterns only if narrative role remains useful",
+    "migrate Story.js and levels.js in same batch",
+    "remove old Baykuş/Civciv runtime references",
+    "run QA gate",
+    "commit only if replacement batch passes"
+  ]
+}
