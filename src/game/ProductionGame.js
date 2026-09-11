@@ -1,5 +1,5 @@
 import {Game} from './Game.js';
-import {bookMissionRuntimeReady, createBookMissionWorld} from './BookMissionBlueprints.js';
+import {createProductionBookMissionWorld, productionBookMissionReady} from './BookMissionArtGate.js';
 import {BookMissionRuntime} from './BookMissionRuntime.js';
 import {markMissionRecruitsHelped} from './BookMissionModel.js';
 import {bookMissionStory} from '../story/BookStory.js';
@@ -8,18 +8,25 @@ export class ProductionGame extends Game {
   constructor(...args) {
     super(...args);
     this.availableBookCharacters = new Set();
+    this.availableBookScenes = new Set();
   }
 
   setBookCharacterAvailability(ids = []) {
     this.availableBookCharacters = new Set(ids);
   }
 
+  setBookSceneAvailability(ids = []) {
+    this.availableBookScenes = new Set(ids);
+  }
+
   enterBookMission(eventId, afterDialogue = false) {
     if (this.mission) return false;
-    const available = [...this.availableBookCharacters];
-    const gate = bookMissionRuntimeReady(eventId, available);
+    const characters = [...this.availableBookCharacters];
+    const scenes = [...this.availableBookScenes];
+    const gate = productionBookMissionReady(eventId, characters, scenes);
     if (!gate.ready) {
-      throw new Error(`Book mission cannot enter before canonical art is ready: ${eventId} (${gate.missing.join(', ')})`);
+      const missing = [...gate.missingCharacters, ...gate.missingScenes];
+      throw new Error(`Book mission cannot enter before canonical art is ready: ${eventId} (${missing.join(', ')})`);
     }
 
     if (!afterDialogue && this.ui.showStory) {
@@ -37,7 +44,7 @@ export class ProductionGame extends Game {
       respawn: {...this.level.respawn},
       cameraX: this.camera.x,
     };
-    this.mission = createBookMissionWorld(eventId, this.manifests, available);
+    this.mission = createProductionBookMissionWorld(eventId, this.manifests, characters, scenes);
     this.missionRuntime = new BookMissionRuntime(eventId);
     this.player.x = this.mission.spawn.x;
     this.player.y = this.mission.spawn.y;
