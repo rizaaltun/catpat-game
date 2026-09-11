@@ -30,6 +30,7 @@ MODULES = (
     "src/game/Game.js",
     "src/game/BookMissionModel.js",
     "src/game/BookMissionBlueprints.js",
+    "src/game/BookMissionArtGate.js",
     "src/game/BookMissionRuntime.js",
     "src/story/BookStory.js",
     "src/game/ProductionGame.js",
