@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = ROOT / "dist"
 OUTPUT = OUTPUT_DIR / "catpat-bolum-1-v05.html"
 
+# Order matters because the offline loader rewrites ESM imports to object URLs
+# and each dependency must already have a URL when its importer is processed.
 MODULES = (
     "src/core/Input.js",
     "src/core/Save.js",
@@ -22,8 +24,11 @@ MODULES = (
     "src/game/LevelRuntime.js",
     "src/game/Mission.js",
     "src/story/Story.js",
+    "src/story/BookCanon.js",
     "src/game/CompanionTrail.js",
     "src/game/Game.js",
+    "src/game/BookMissionModel.js",
+    "src/game/ProductionGame.js",
     "src/ui/UI.js",
     "src/main.js",
 )
