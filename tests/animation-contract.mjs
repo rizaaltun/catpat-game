@@ -5,7 +5,7 @@ import {Player} from '../src/game/Player.js';
 
 globalThis.addEventListener = () => {};
 
-// Sprite-sheet sequences (see assets/production_v06/manifest.json):
+// Sprite-sheet sequences (legacy environment/gameplay objects):
 // crate:    idle, push-left, push-right, push-left-small, settle, idle-recover
 // mushroom: idle, anticipate, compress, release, recover, idle
 
@@ -40,9 +40,16 @@ assert.ok([0, 5].includes(mushroomFrameIndex(idleMushroom, 0)), 'idle mushroom m
 const player = new Player(0, 0, {width: 68, height: 102});
 player.state = 'idle';
 player.animTime = 0.4;
-assert.notDeepEqual(player.renderMotion(), {scaleX: 1, scaleY: 1, y: 0, rotation: 0});
+assert.notDeepEqual(player.renderMotion(), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'legacy single-frame idle may use procedural breathing');
+assert.deepEqual(player.renderMotion({idleSequence: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored idle sequence must not receive procedural breathing');
+
+player.state = 'run';
+player.animTime = 0.07;
+assert.deepEqual(player.renderMotion({run: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored run frames must not receive double-bounce transforms');
+
 player.state = 'land';
 player.animTime = 0.02;
-assert.ok(player.renderMotion().scaleY < 1, 'landing frame must squash without moving the feet pivot');
+assert.ok(player.renderMotion().scaleY < 1, 'legacy single-frame landing keeps temporary foot-pivot squash fallback');
+assert.deepEqual(player.renderMotion({land: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored landing sequence must carry its own squash and recovery');
 
-console.log('animation contract: character/crate/mushroom motion states OK');
+console.log('animation contract: authored character motion + legacy object/fallback states OK');
