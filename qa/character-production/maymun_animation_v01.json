@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "characterId": "maymun",
+  "status": "art-needed",
+  "clips": {
+    "idle": {"uniqueFrames": 8},
+    "walk": {"uniqueFrames": 8},
+    "invite_talk": {"uniqueFrames": 8},
+    "listen": {"uniqueFrames": 6},
+    "surprised": {"uniqueFrames": 6},
+    "happy": {"uniqueFrames": 8},
+    "branch_game": {"uniqueFrames": 8}
+  },
+  "actingNotes": [
+    "tail supports gesture and balance but never becomes a separate character",
+    "large ears must remain stable in size and attachment point",
+    "branch-game poses should read as playful invitation, not frantic motion",
+    "eye line must support comic left/right staging"
+  ],
+  "technical": {
+    "transparentBackground": true,
+    "individualPngFrames": true,
+    "duplicateFramesForbidden": true,
+    "transformOnlyVariantsForbidden": true
+  }
+}
