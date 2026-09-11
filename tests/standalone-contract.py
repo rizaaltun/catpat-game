@@ -20,14 +20,18 @@ def main() -> None:
     assert "BÖLÜM 1 · HİKÂYE GELİŞTİRME SÜRÜMÜ" in html
     assert 'id="story-dialogue"' in html
     assert "src/story/Story.js" in html
+    assert "src/story/BookCanon.js" in html
     assert "src/game/CompanionTrail.js" in html
+    assert "src/game/BookMissionModel.js" in html
+    assert "src/game/ProductionGame.js" in html
+    assert "new ProductionGame(canvas, input, ui)" in html
     assert "import(moduleUrls['src/main.js'])" in html
     assert '<script type="module" src=' not in html
     assert '<link rel="stylesheet"' not in html
     assert not re.findall(r'<img[^>]+src="\./', html), "unembedded HTML image"
     assert html.count("data:image/") >= 40, "production images were not embedded"
     assert BUILD.stat().st_size < 15 * 1024 * 1024, "standalone build is unexpectedly large"
-    print(f"standalone contract: offline dependencies embedded / {BUILD.stat().st_size / 1048576:.2f} MiB OK")
+    print(f"standalone contract: production runtime + offline dependencies embedded / {BUILD.stat().st_size / 1048576:.2f} MiB OK")
 
 
 if __name__ == "__main__":
