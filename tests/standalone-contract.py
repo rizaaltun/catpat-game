@@ -26,6 +26,7 @@ def main() -> None:
         "src/game/BookBehaviourProgress.js",
         "src/game/BookMissionModel.js",
         "src/game/BookMissionBlueprints.js",
+        "src/game/BookMissionArtGate.js",
         "src/game/BookMissionRuntime.js",
         "src/game/CompanionTrail.js",
         "src/game/ProductionGame.js",
