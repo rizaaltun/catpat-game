@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "characterId": "pitpit",
+  "clips": {
+    "idle": {"fps":7,"frames":["neutral","inhale","blink-start","blink-closed","eyes-open-head-tilt","one-ear-react","settle","bridge-neutral"]},
+    "hop_run": {"fps":10,"frames":["contact-a","down-a","push-a","air-pass-a","landing-extend-a","contact-b","down-b","push-b","air-pass-b","bridge"]},
+    "careful_walk": {"fps":8,"purpose":"papatya bahçesinde dikkatli hareket","frames":["look-down-test-a","weight-a","small-step-a","settle-a","look-down-test-b","weight-b","small-step-b","bridge"]},
+    "talk_react": {"fps":8,"frames":["upset-daisies","tear-hold","listen-apology","hopeful","smile-start","grateful","hold-daisy-carefully","happy-settle"]},
+    "celebrate": {"fps":10,"frames":["anticipation","arms-lift","hop-takeoff","airborne-joy","apex","descend","landing","recovery"]}
+  },
+  "rules": {
+    "allFramesUniqueAuthoredPoses": true,
+    "duplicateHashReject": true,
+    "visualPoseUniquenessRequired": true,
+    "noTransformOnlyFrameGeneration": true,
+    "individualTransparentPngOnly": true,
+    "groundedFramesUsePivotY": 620,
+    "failedFramesMustNotBeShownToUser": true
+  }
+}
