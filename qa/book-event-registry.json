@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "sourceTitle": "Çatpat Nezaketi Öğreniyor",
+  "verifiedEvents": [
+    {
+      "id": "branch-game-invitation",
+      "characters": ["catpat", "maymun", "porsuk"],
+      "bookEvidence": "Maymun and Porsuk play a game built from tree branches and politely invite Çatpat. Çatpat rejects them rudely; later the book reflects that she could have declined politely.",
+      "allowedGameplayThemes": ["branch-course", "polite-response", "taking-turns", "joining-or-declining-kindly"]
+    },
+    {
+      "id": "pitpit-daisy-garden",
+      "characters": ["catpat", "pitpit"],
+      "bookEvidence": "Pıtpıt carefully chooses daisies for their mother. Çatpat rushes through the flower garden, damages it and leaves Pıtpıt upset; later the book says Çatpat could have crossed carefully.",
+      "allowedGameplayThemes": ["careful-movement", "protect-flowers", "repair-after-harm", "apology", "help-pitpit"]
+    },
+    {
+      "id": "market-queue",
+      "characters": ["catpat", "market_cashier"],
+      "bookEvidence": "At the forest market Çatpat insists on scanning items herself, delaying the queue. The book later says she could shop and wait her turn like everyone else.",
+      "allowedGameplayThemes": ["wait-your-turn", "queue-order", "please", "thank-you", "consider-others"]
+    },
+    {
+      "id": "father-conversation",
+      "characters": ["catpat"],
+      "bookEvidence": "Çatpat's father explains that how she acts can hurt others and introduces thinking about others and polite words.",
+      "allowedGameplayThemes": ["reflection", "listen", "please", "thank-you", "sorry"]
+    }
+  ],
+  "replacementRequiredLegacyContent": [
+    {"token":"baykus","reason":"named runtime character not verified in source book"},
+    {"token":"Baykuş","reason":"named runtime character not verified in source book"},
+    {"token":"civciv","reason":"named runtime character not verified in source book"},
+    {"token":"Civciv","reason":"named runtime character not verified in source book"},
+    {"token":"apple-garden","reason":"legacy mission event not grounded in source book"},
+    {"token":"dark-lanterns","reason":"legacy mission event not grounded in source book"},
+    {"token":"lost-toy","reason":"legacy mission event not grounded in source book"}
+  ],
+  "migrationTargets": {
+    "apple-garden": "branch-game-invitation",
+    "dark-lanterns": "market-queue",
+    "lost-toy": "pitpit-daisy-garden"
+  },
+  "rule": "Legacy identifiers may remain temporarily only during migration. Production-complete status is forbidden while any replacementRequiredLegacyContent token remains in active runtime files."
+}
