@@ -46,6 +46,7 @@ MANIFESTS = (
     "assets/gameplay/forest/mechanisms_v04/manifest.json",
     "assets/gameplay/forest/friends_v01/manifest.json",
     "assets/gameplay/forest/mission_props_v01/manifest.json",
+    "assets/production_v07/book_mission_asset_status.json",
 )
 
 ASSET_DIRECTORIES = (
