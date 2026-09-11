@@ -1,7 +1,7 @@
 {
-  "schemaVersion": 7,
+  "schemaVersion": 8,
   "packageId": "catpat-professional-production-v07",
-  "status": "day-01-production-reset",
+  "status": "book-canon-migration-foundation",
   "activeBranch": "chatgpt/month-01",
   "sourceBaseline": "claude/v06-integration",
   "visualPolicy": {
@@ -11,6 +11,15 @@
     "dynamicTextRequiresAuthoredFrame": true,
     "fullBookPageStoryPresentationAllowed": false,
     "comicDialogueRequired": true
+  },
+  "bookFidelityPolicy": {
+    "wholeBookReviewed": true,
+    "characterRegistry": "../../qa/book-character-registry.json",
+    "eventRegistry": "../../qa/book-event-registry.json",
+    "bookExternalNamedCharactersAllowed": false,
+    "inventedCoreMissionsAllowed": false,
+    "incorrectCharacterMustBeReplaced": true,
+    "characterAndMissionEvidenceRequiredBeforePromotion": true
   },
   "characterPolicy": {
     "sourceOfTruth": "book + first-approved Catpat",
@@ -31,6 +40,18 @@
     "celebrate": {"targetFrames": 10, "loop": true},
     "talkReact": {"targetFrames": 8, "loop": false}
   },
+  "verifiedBookCast": {
+    "catpat": {"status": "canonical"},
+    "porsuk": {"status": "identity-pass-animation-upgrade-required"},
+    "maymun": {"status": "identity-locked-art-needed"},
+    "pitpit": {"status": "verified-local-master-git-promotion-pending"},
+    "market_cashier": {"status": "identity-locked-art-needed", "recruitable": false}
+  },
+  "replacementRequired": {
+    "characters": ["baykus", "civciv"],
+    "legacyMissions": ["apple-garden", "dark-lanterns", "lost-toy"],
+    "targetEvents": ["branch-game-invitation", "market-queue", "pitpit-daisy-garden"]
+  },
   "environmentPolicy": {
     "greenOnGreenPlayerLaneAllowed": false,
     "preferredLaneMaterials": ["warm-earth", "honey-wood", "pale-stone", "cream-paper", "light-water"],
@@ -44,31 +65,15 @@
     "softLockAllowed": false,
     "mobileToleranceRequired": true
   },
-  "uiPackages": [
-    "ui/menu",
-    "ui/map",
-    "ui/pause",
-    "ui/settings",
-    "ui/results",
-    "ui/dialogue"
-  ],
-  "characterPackages": [
-    "characters/catpat",
-    "characters/friends"
-  ],
-  "worldPackages": [
-    "backgrounds/chapter01",
-    "backgrounds/chapter02",
-    "platforms/core",
-    "hazards/core",
-    "story/chapter01",
-    "story/chapter02",
-    "fx"
-  ],
-  "day01": {
-    "runtimeMultiFrameJumpSupport": true,
-    "artBible": "../../docs/ART_BIBLE_V07.md",
-    "roadmap": "../../docs/PRODUCTION_ROADMAP_30_DAYS_V07.md",
-    "next": "canonical Catpat reference master"
-  }
+  "qa": {
+    "transactionalAfterMeaningfulBatch": true,
+    "beforeCanonicalPromotion": true,
+    "beforeCommit": true,
+    "ciOnProductionBranch": true,
+    "legacyBookStoryAuditTemporarilyNonBlocking": true
+  },
+  "uiPackages": ["ui/menu", "ui/map", "ui/pause", "ui/settings", "ui/results", "ui/dialogue"],
+  "characterPackages": ["characters/catpat", "characters/porsuk", "characters/maymun", "characters/pitpit", "characters/market_cashier"],
+  "worldPackages": ["backgrounds/chapter01", "platforms/core", "hazards/core", "story/chapter01", "fx"],
+  "nextGate": "promote verified individual book-character PNG assets and wire zero-one-many book mission runtime"
 }
