@@ -1,6 +1,6 @@
 import {Input} from './core/Input.js';
 import {Save} from './core/Save.js';
-import {Game} from './game/Game.js';
+import {ProductionGame} from './game/ProductionGame.js';
 import {UI} from './ui/UI.js';
 
 const root = document.querySelector('#app');
@@ -8,7 +8,7 @@ const canvas = document.querySelector('#game');
 const save = new Save();
 const input = new Input(root);
 const ui = new UI(root, save);
-const game = new Game(canvas, input, ui);
+const game = new ProductionGame(canvas, input, ui);
 ui.attach(game);
 addEventListener('contextmenu', event => event.preventDefault());
 addEventListener('blur', () => { if (game.running && !game.paused) ui.pause(); });
