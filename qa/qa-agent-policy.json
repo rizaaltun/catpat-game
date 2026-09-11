@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 3,
+  "agent": "catpat-production-qa",
+  "mode": "transactional-book-grounded-gate",
+  "runPolicy": {
+    "afterMeaningfulAssetBatch": true,
+    "afterIntegrationStep": true,
+    "beforeCanonicalPromotion": true,
+    "beforeCommit": true,
+    "hourlyQa": false
+  },
+  "bookFidelity": {
+    "sourceTitle": "Çatpat Nezaketi Öğreniyor",
+    "registry": "qa/book-character-registry.json",
+    "bookEvidenceRequired": true,
+    "sideCharactersMustExistInBook": true,
+    "inventedPlayableCharactersForbidden": true,
+    "incorrectCharacterIdentityIsBlocking": true,
+    "unknownCharacterStatus": "replacement-required",
+    "bookExternalCharacterStatus": "replacement-required",
+    "replacementMustUseVerifiedBookCharacter": true,
+    "replacementMustIncludeBookEvidenceBeforeRuntimePromotion": true,
+    "doNotKeepRejectedCharacterAsTemporaryFinal": true,
+    "compareFields": [
+      "species-role",
+      "silhouette",
+      "proportions",
+      "face-construction",
+      "eye-shape-spacing",
+      "muzzle-beak-ears",
+      "palette-markings",
+      "clothing-accessories",
+      "relative-scale",
+      "emotional-acting",
+      "rendering-language"
+    ]
+  },
+  "canonicalCatpat": {
+    "canvas": [512, 640],
+    "pivot": [256, 620],
+    "requireTransparentRgbaPng": true,
+    "rejectDuplicateFrames": true,
+    "rejectSpriteSheetAsCanonicalSource": true,
+    "rejectIdentityReinterpretation": true,
+    "leftDirectionPolicy": "exact-runtime-horizontal-mirror"
+  },
+  "ui": {
+    "imageFirst": true,
+    "finishedCodedPanelsForbidden": true,
+    "staticTextShouldBeEmbeddedInArt": true,
+    "dynamicTextRequiresAuthoredFrame": true
+  },
+  "gameplay": {
+    "requireVisibleSurfaceColliderMatch": true,
+    "groundContactTolerancePx": 2,
+    "mandatoryHazardsRequireMovementEnvelope": true,
+    "noStretchedTerrain": true,
+    "rejectGreenOnGreenPlayerLane": true
+  },
+  "delivery": {
+    "canonicalAssetMustExistInGit": true,
+    "manifestMustReferenceCanonicalPath": true,
+    "localOnlyDoesNotCountAsDelivered": true,
+    "orphanBlobDoesNotCountAsDelivered": true,
+    "rejectedAssetsMustNotBeReferencedByRuntime": true
+  },
+  "severity": {
+    "P0": "broken flow, soft-lock, impossible mandatory obstacle, missing critical runtime asset",
+    "P1": "character drift, book-external character, incorrect book character, fake frame duplication, floating contact, coded final UI, unreadable comic/UI",
+    "P2": "polish defect, minor seam, timing mismatch, secondary overlap"
+  }
+}
