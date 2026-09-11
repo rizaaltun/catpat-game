@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "market_queue_scene",
+  "bookEvent": "market-queue",
+  "status": "ART_NEEDED",
+  "referencePdfPages": [6, 10],
+  "visualGoal": "Kitaptaki market sırası ve mor su aygırı kasiyer sahnesini, sıra bekleme davranışını görsel olarak anlaşılır kılan oynanabilir bir mekâna dönüştürmek",
+  "requiredAssets": [
+    {"id":"market_bg_far","type":"opaque-background","target":"landscape","final":true},
+    {"id":"market_shelves_mid","type":"transparent-midground","final":true},
+    {"id":"market_floor_a","type":"transparent-walkable-floor","stretchAllowed":false},
+    {"id":"market_floor_b","type":"transparent-walkable-floor","stretchAllowed":false},
+    {"id":"market_counter_floor","type":"transparent-walkable-floor","stretchAllowed":false},
+    {"id":"market_checkout_counter","type":"transparent-prop","final":true},
+    {"id":"market_queue_spot","type":"transparent-world-marker","final":true},
+    {"id":"market_register","type":"transparent-interaction-prop","final":true}
+  ],
+  "artRules": [
+    "queue position is communicated by floor/world illustration, never a CSS rectangle",
+    "cashier remains a separate character asset and is not baked into the background",
+    "counter perspective and cashier foot/body anchor must agree",
+    "shelves frame the scene without hiding Catpat or interaction points",
+    "static signage text, if used, must be authored into the image and Turkish copy checked before baking"
+  ],
+  "technicalGate": {
+    "walkableMetadataRequired": true,
+    "queueSpotTriggerMetadataRequired": true,
+    "visualSurfaceContactTolerancePx": 2,
+    "mobileReadabilityRequired": true,
+    "individualPngForTransparentModules": true
+  }
+}
