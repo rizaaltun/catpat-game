@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "characterId": "maymun",
+  "name": "Maymun",
+  "bookEvidencePdfPages": [4, 10],
+  "status": "identity-locked-art-needed",
+  "identity": {
+    "species": "monkey",
+    "body": "warm medium brown",
+    "muzzleAndBelly": "light beige/tan",
+    "ears": "very large rounded ears with coral-pink inner ear",
+    "cheeks": "round coral-pink",
+    "eyes": "large white eyes with large black pupils",
+    "tail": "long thin curved tail",
+    "handsFeet": "rounded childlike hands and feet",
+    "rendering": "soft hand-painted children's-book texture"
+  },
+  "rejectIf": [
+    "generic cartoon monkey style replaces book proportions",
+    "ears become small or pointed",
+    "tail becomes thick or absent",
+    "palette changes substantially",
+    "clothing/accessories are invented",
+    "facial proportions drift from book evidence"
+  ],
+  "runtimeAssetRule": "individual transparent PNG frames only; no sprite-sheet source"
+}
