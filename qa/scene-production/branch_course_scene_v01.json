@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "sceneId": "branch_course_scene",
+  "bookEvent": "branch-game-invitation",
+  "status": "ART_NEEDED",
+  "referencePdfPages": [4, 10],
+  "visualGoal": "Maymun ve Porsuk'un dallardan kurduğu oyunun, kitabın sıcak orman dilini koruyan oynanabilir yorumu",
+  "requiredAssets": [
+    {"id":"branch_bg_far","type":"opaque-background","target":"landscape","final":true},
+    {"id":"branch_bg_mid","type":"transparent-midground","final":true},
+    {"id":"branch_start","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"branch_step_a","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"branch_step_b","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"branch_run","type":"transparent-walkable-platform","stretchAllowed":false},
+    {"id":"branch_finish","type":"transparent-walkable-platform","stretchAllowed":false}
+  ],
+  "artRules": [
+    "platforms read as intentionally arranged tree branches, not generic floating rectangles",
+    "walkable top plane must remain visible at 844x390",
+    "warm bark, pale sky and earth behind Catpat; avoid dense green directly behind the player lane",
+    "Maymun and Porsuk are separate character assets and are never baked into the environment plate",
+    "no code-drawn arrows, boxes or finish markers as final art"
+  ],
+  "technicalGate": {
+    "walkableMetadataRequired": true,
+    "visualSurfaceContactTolerancePx": 2,
+    "mobileReadabilityRequired": true,
+    "individualPngForTransparentModules": true
+  }
+}
