@@ -74,8 +74,6 @@ export class Player {
     this.groundedSurface = null;
 
     if (this.vy < 0) return;
-    let landingY = Infinity;
-    let landingSurface = null;
     const findLanding = footSamples => {
       let candidateY = Infinity;
       let candidateSurface = null;
@@ -97,14 +95,12 @@ export class Player {
     const candidate = centerHasSurface
       ? findLanding([this.x])
       : findLanding([this.x - this.w * 0.28, this.x + this.w * 0.28]);
-    landingY = candidate.y;
-    landingSurface = candidate.surface;
 
-    if (landingY < Infinity) {
-      this.y = landingY - this.h / 2;
+    if (candidate.y < Infinity) {
+      this.y = candidate.y - this.h / 2;
       this.vy = 0;
       this.grounded = true;
-      this.groundedSurface = landingSurface;
+      this.groundedSurface = candidate.surface;
     }
   }
 
@@ -145,24 +141,77 @@ export class Player {
       return {scaleX: 1 + Math.abs(stride) * 0.012, scaleY: 1 - Math.abs(stride) * 0.009, y: -Math.abs(stride) * 1.5, rotation: stride * 0.012};
     }
     if (this.state === 'land') {
-      const recover = Math.min(1, this.animTime / 0.12);
-      return {scaleX: 1.08 - recover * 0.08, scaleY: 0.92 + recover * 0.08, y: 0, rotation: 0};
+      // A authored landing sequence should carry the squash/recovery itself.
+      // Keep the legacy transform only when no landing sequence exists.
+      return {scaleX: 1, scaleY: 1, y: 0, rotation: 0};
     }
     return {scaleX: 1, scaleY: 1, y: 0, rotation: 0};
   }
 
   selectFrame(frames) {
     if (!frames) return null;
+
     if (this.state === 'run' || this.state === 'walk') {
-      const fps = this.state === 'walk' ? 8 : frames.runFps;
-      return frames.run[Math.floor(this.animTime * fps) % frames.run.length];
+      const sequence = asSequence(frames.run);
+      const fps = this.state === 'walk' ? (frames.walkFps ?? 8) : (frames.runFps ?? 12);
+      return loopFrame(sequence, this.animTime, fps) ?? firstFrame(frames);
     }
-    if (this.state === 'jump') return this.vy < -220 ? frames.jumpStart : frames.jumpApex;
-    if (this.state === 'fall') return frames.fall;
-    if (this.state === 'land') return frames.land;
-    if (this.state === 'celebrate') return frames.celebrate;
-    return frames.idle || frames.run[0];
+
+    if (this.state === 'jump') {
+      const sequence = asSequence(frames.jump);
+      if (sequence.length) {
+        // Jump animation is intentionally non-looping. The final ascent pose holds
+        // until the physics state changes to fall; this prevents "running in air".
+        return clampFrame(sequence, this.animTime, frames.jumpFps ?? 12);
+      }
+      return this.vy < -220 ? frames.jumpStart : frames.jumpApex;
+    }
+
+    if (this.state === 'fall') {
+      const sequence = asSequence(frames.fall);
+      if (sequence.length) return clampFrame(sequence, this.animTime, frames.fallFps ?? 12);
+      return frames.fall ?? frames.jumpApex ?? frames.jumpStart;
+    }
+
+    if (this.state === 'land') {
+      const sequence = asSequence(frames.land);
+      if (sequence.length) return clampFrame(sequence, this.animTime, frames.landFps ?? 18);
+      return frames.land ?? firstFrame(frames);
+    }
+
+    if (this.state === 'celebrate') {
+      const sequence = asSequence(frames.celebrate);
+      if (sequence.length) return loopFrame(sequence, this.animTime, frames.celebrateFps ?? 10);
+      return frames.celebrate ?? firstFrame(frames);
+    }
+
+    const idleSequence = asSequence(frames.idleSequence);
+    if (idleSequence.length) return loopFrame(idleSequence, this.animTime, frames.idleFps ?? 8);
+    return frames.idle ?? firstFrame(frames);
   }
+}
+
+function asSequence(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value.filter(Boolean) : [];
+}
+
+function firstFrame(frames) {
+  return frames.idle
+    ?? asSequence(frames.idleSequence)[0]
+    ?? asSequence(frames.run)[0]
+    ?? null;
+}
+
+function loopFrame(sequence, time, fps) {
+  if (!sequence.length) return null;
+  return sequence[Math.floor(time * fps) % sequence.length];
+}
+
+function clampFrame(sequence, time, fps) {
+  if (!sequence.length) return null;
+  const index = Math.min(sequence.length - 1, Math.floor(time * fps));
+  return sequence[index];
 }
 
 export function surfaceYAt(surface, x) {
