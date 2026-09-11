@@ -1,0 +1,23 @@
+{
+  "canvas": [512, 640],
+  "pivot": [256, 620],
+  "idle": {"file":"catpat_idle_00.png","bounds":[79,214,433,620],"centerX":256.0},
+  "run": [
+    {"file":"catpat_run_00.png","bounds":[62,214,449,620],"centerX":255.5},
+    {"file":"catpat_run_01.png","bounds":[24,214,489,620],"centerX":256.5},
+    {"file":"catpat_run_02.png","bounds":[39,214,473,620],"centerX":256.0},
+    {"file":"catpat_run_03.png","bounds":[68,214,444,620],"centerX":256.0},
+    {"file":"catpat_run_04.png","bounds":[56,214,456,620],"centerX":256.0},
+    {"file":"catpat_run_05.png","bounds":[34,214,479,620],"centerX":256.5},
+    {"file":"catpat_run_06.png","bounds":[42,214,471,620],"centerX":256.5},
+    {"file":"catpat_run_07.png","bounds":[64,214,449,620],"centerX":256.5}
+  ],
+  "checks": {
+    "visibleTop":214,
+    "visibleBottom":620,
+    "visibleHeight":406,
+    "centerRange":[255.5,256.5],
+    "transparentCorners":true,
+    "uniqueRunFrames":8
+  }
+}
