@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "characterId": "porsuk",
+  "status": "existing-identity-pass-animation-upgrade-required",
+  "bookEvidencePdfPages": [4, 10],
+  "existingRuntimeArt": "assets/gameplay/forest/friends_v01/friend_porsuk_sheet.png",
+  "existingIdentityVerdict": "PASS",
+  "existingAnimationVerdict": "REJECT_FOR_FINAL: two poses are insufficient",
+  "clips": {
+    "idle": {"uniqueFrames": 8},
+    "walk": {"uniqueFrames": 8},
+    "listen": {"uniqueFrames": 6},
+    "talk": {"uniqueFrames": 6},
+    "surprised": {"uniqueFrames": 6},
+    "happy": {"uniqueFrames": 8}
+  },
+  "rules": [
+    "preserve broad pale face stripe and long pointed snout",
+    "preserve black/dark charcoal body and coral cheek",
+    "preserve large eyes and pink inner ears",
+    "do not fake frame count with duplicate PNGs or transforms",
+    "individual transparent PNG frames only"
+  ]
+}
