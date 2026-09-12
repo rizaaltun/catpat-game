@@ -42,4 +42,11 @@ assert.equal(context.missionRuntime, null);
 assert.equal(context.mainState, null);
 assert.equal(context.ui.lastPrompt, '');
 
+const blockedContext = {canonBlockedEvents: [], mission: null};
+ProductionGame.prototype.handleEvents.call(blockedContext, [
+  {type: 'enter-mission', missionId: 'apple-garden', friendId: 'friend-porsuk'},
+]);
+assert.equal(blockedContext.canonBlockedEvents.length, 1);
+assert.equal(blockedContext.canonBlockedEvents[0].reason, 'legacy-mission-entry-disabled');
+
 console.log('production-game-contract: PASS');

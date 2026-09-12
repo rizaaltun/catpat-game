@@ -1,68 +1,56 @@
 # Çatpat development status
 
-## V0.7 professional production reset — Day 1 started
+## V0.7 professional production — canonical runtime migration active
 
 Active developer: **ChatGPT**.
-Active branch: `chatgpt/month-01`.
-Baseline: `claude/v06-integration` was used only as the source snapshot; Claude is not an active developer and must not resume unless the user explicitly asks.
+Active runtime production branch: `chatgpt/month-01`.
+Baseline history may remain in the repository for migration evidence, but it is not production authority.
 
 No main merge, deployment, Cloudflare/domain change, or production publish is authorized.
 
-## Direction lock
+## Canonical source lock
 
-The project now follows `docs/ART_BIBLE_V07.md` and `docs/PRODUCTION_ROADMAP_30_DAYS_V07.md`.
+The project follows `docs/ART_BIBLE_V07.md`, `docs/PRODUCTION_ROADMAP_30_DAYS_V07.md`, the complete **Çatpat Nezaketi Öğreniyor** book evidence registry, and the first-approved Çatpat gameplay family.
 
-Non-negotiable rules:
-- finished visible UI is image-authored, not CSS/canvas boxes
-- static Turkish titles/buttons/labels are authored into image assets
-- book + first-approved Catpat are the character source of truth
-- sprites are separate transparent PNG frames with locked pivot/scale
-- jump/fall/land are authored animations; run frames may not be reused in air
-- green-on-green playable-lane composition is rejected
-- platform colliders must match the painted walkable surface
-- mandatory hazards require measured feasibility and mobile tolerance
-- story is delivered through a consistent comic-dialogue system, not full book pages
+Book-verified mission events currently modeled for production are:
+- Maymun + Porsuk branch-game invitation
+- forest-market queue
+- Pıtpıt daisy garden
 
-## Day 1 corrective implementation
+Baykuş, Civciv, `apple-garden`, `dark-lanterns`, and `lost-toy` remain replacement-required migration content and may not surface in the production runtime.
 
-`src/game/Player.js` has been upgraded so the runtime can consume rich multi-frame sequences for:
-- run/walk
-- jump
-- fall
-- land
-- celebrate
-- optional idle sequence
+## Roadmap gate status
 
-Jump/fall/land sequences are non-looping where appropriate, so the runtime no longer forces the future animation package into a running-in-air look. Legacy single-frame fields remain supported while new art is produced.
+Day 02 canonical Çatpat audit is accepted as the technical baseline: one idle frame plus eight unique run frames on a 512×640 canvas with ground pivot 256,620 and a shared visible-bottom contact at y=620.
 
-## Hazard finding
+Day 03 is the next unfinished visual gate. It is **not complete**: the roadmap requires eight genuinely authored idle poses and ten run-right frames. Duplicate frames, synthetic code motion, character drift, or unverified derived poses do not qualify. No false canonical promotion has been made.
 
-A repository search of the current baseline did not find a named `thorn`, `spike`, `diken` or generic hazard entry in the active level source. Therefore no speculative coordinate-only hazard deletion was made. From V0.7 onward, any mandatory hazard must be registered in the production manifest and pass the measured feasibility gate before runtime use.
+## Current production runtime protection
 
-## Canonical V0.7 production package
+The production runtime now has a defensive canon lock around the still-migrating V0.6 base game:
+- friend encounters tied to legacy invented missions are removed before they can be used as production encounters
+- friend encounters backed only by sprite-sheet runtime art are withheld from production
+- legacy `enter-mission` events are blocked before they can reach the old mission runtime
+- canonical `enter-book-mission` events remain governed by the existing character + scene readiness gate
+- when legacy friends are withheld, the active objective falls back to traversal and the existing three-ticket gameplay instead of asking the player to complete invented friend missions
 
-`assets/production_v07/manifest.json` now records:
-- image-only finished UI policy
-- character identity policy
-- target animation richness
-- platform/contact requirements
-- hazard feasibility requirements
-- target production package layout
+No character or scene `runtimeReady` flag was promoted by this change.
 
-## Current known visual defects carried from V0.6
+Transactional evidence is recorded in `qa/production-canon-lock-v01.json`; branch CI remains the final repository-level verification after commit.
 
-These remain open until their scheduled production days:
-1. main-menu Catpat can read as a separately placed layer rather than part of the festival scene
-2. menu/map/pause screens still contain coded UI/text patterns that are not acceptable as final art
-3. companion animation richness is insufficient
-4. final Catpat jump/fall/land/celebrate art is not yet delivered
-5. story presentation still needs the image-first comic dialogue system
-6. some background/platform combinations are too green for strong Catpat readability
-7. all mandatory obstacles must be revalidated against the final movement envelope before signoff
+## Hard art blockers carried forward
 
-## Immediate next production target
+The following canonical production art is still unavailable for promotion and must remain gated:
+1. Day 03 authored Çatpat idle/run completion.
+2. Final individual transparent Maymun animation assets.
+3. Final Porsuk animation upgrade beyond the book-faithful two-pose legacy sheet.
+4. Pıtpıt verified master binary promotion to Git plus final animation package.
+5. Final individual transparent forest-market cashier assets.
+6. Final branch-course, market-queue, and daisy-garden scene packages.
+7. Conversion of remaining active gameplay sprite-sheet art (notably crate/mushroom) to individual transparent PNG frames before final-art signoff.
 
-Day 2: canonical Catpat reference master.
-The first-approved Catpat will be checked against book identity and converted into a locked production reference for all future sprite, portrait, menu and comic work.
+The repository must continue to reject concept/sprite-sheet boards as final runtime sources, duplicate animation frames, floating contact, unmeasured mandatory hazards, green-on-green readability failures, and coded finished UI.
 
-Daily reports live in `docs/daily/`.
+## Next unblocked technical target
+
+Keep shrinking the legacy production dependency surface without promoting missing art: stop ProductionGame from loading unused legacy friend/mission binary sheets, then migrate production encounter triggers to canonical book-event IDs only. The book-story audit stays non-blocking until replacement-required active-runtime tokens reach zero for real behavior, not by renaming alone.

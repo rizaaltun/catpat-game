@@ -2,6 +2,7 @@ import {Game} from './Game.js';
 import {createProductionBookMissionWorld, productionBookMissionReady} from './BookMissionArtGate.js';
 import {BookMissionRuntime} from './BookMissionRuntime.js';
 import {markMissionRecruitsHelped} from './BookMissionModel.js';
+import {applyProductionCanonLock, filterProductionEvents} from './ProductionCanonLock.js';
 import {bookMissionStory} from '../story/BookStory.js';
 
 const BOOK_ASSET_STATUS = './assets/production_v07/book_mission_asset_status.json';
@@ -12,6 +13,8 @@ export class ProductionGame extends Game {
     this.availableBookCharacters = new Set();
     this.availableBookScenes = new Set();
     this.bookAssetStatus = null;
+    this.canonLockReport = null;
+    this.canonBlockedEvents = [];
     const baseAssetsReady = this.assetsReady;
     this.assetsReady = baseAssetsReady.then(() => this.loadBookAssetStatus());
   }
@@ -28,6 +31,17 @@ export class ProductionGame extends Game {
       Object.entries(status.scenes || {}).filter(([, value]) => value.runtimeReady).map(([id]) => id),
     );
     return status;
+  }
+
+  async start(id = 0) {
+    await super.start(id);
+    if (!this.level || !this.runtime) return;
+    this.canonLockReport = applyProductionCanonLock(this.level);
+    this.runtime.friends = this.level.friends;
+    if (this.canonLockReport.removedFriends.length) {
+      this.ui.setCompanions?.([]);
+      this.ui.setObjective(this.level.objective);
+    }
   }
 
   setBookCharacterAvailability(ids = []) {
@@ -78,7 +92,9 @@ export class ProductionGame extends Game {
   }
 
   handleEvents(events) {
-    for (const event of events) {
+    const filtered = filterProductionEvents(events);
+    if (filtered.blocked.length) this.canonBlockedEvents.push(...filtered.blocked);
+    for (const event of filtered.accepted) {
       if (event.type === 'enter-book-mission') {
         this.enterBookMission(event.eventId);
         continue;

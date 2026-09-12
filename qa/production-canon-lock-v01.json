@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "gate": "production-runtime-canon-lock",
+  "status": "PASS",
+  "scope": [
+    "remove legacy mission friend encounters from ProductionGame runtime",
+    "remove sprite-sheet-backed friend encounters from ProductionGame runtime",
+    "block legacy enter-mission events before Game legacy mission handling",
+    "keep canonical enter-book-mission events eligible for the existing asset gate",
+    "replace the now-invalid friend-help objective with traversal-only approved gameplay wording"
+  ],
+  "precommitChecks": [
+    {"check": "ProductionCanonLock unit contract", "status": "PASS"},
+    {"check": "ProductionGame syntax", "status": "PASS"},
+    {"check": "ProductionGame isolated integration via VM-linked Game stub", "status": "PASS"},
+    {"check": "package.json parse", "status": "PASS"}
+  ],
+  "promotion": {
+    "bookCharacterRuntimeReadyChanged": false,
+    "bookSceneRuntimeReadyChanged": false,
+    "binaryArtPromoted": false
+  },
+  "knownBlockers": [
+    "Day 03 Catpat idle/run final art remains incomplete: the accepted Day 02 baseline has one idle frame and eight run frames, while the roadmap requires eight idle and ten run frames.",
+    "Canonical Maymun, Porsuk animation upgrade, Pıtpıt Git binary promotion, market cashier and all three book mission scene packages remain runtimeReady=false.",
+    "Legacy source modules and their binary manifests still exist for migration/QA; this batch prevents their friend/mission encounters from surfacing through ProductionGame but does not delete migration history.",
+    "Base gameplay still contains sprite-sheet-backed crate/mushroom animation art; conversion to individual transparent PNG frames remains a separate final-art gate."
+  ]
+}
