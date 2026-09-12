@@ -131,26 +131,9 @@ export class Player {
     ctx.restore();
   }
 
-  renderMotion(frames = null) {
-    // Authored sprite sequences own their body mechanics. Applying procedural
-    // squash/bob on top produces double motion and can break the foot pivot.
-    if (this.state === 'idle') {
-      if (asSequence(frames?.idleSequence).length) return neutralMotion();
-      const breath = Math.sin(this.animTime * 3.1);
-      return {scaleX: 1 - breath * 0.008, scaleY: 1 + breath * 0.012, y: -Math.max(0, breath) * 1.2, rotation: 0};
-    }
-    if (this.state === 'run' || this.state === 'walk') {
-      if (asSequence(frames?.run).length) return neutralMotion();
-      const stride = Math.sin(this.animTime * (this.state === 'walk' ? 16 : 22));
-      return {scaleX: 1 + Math.abs(stride) * 0.012, scaleY: 1 - Math.abs(stride) * 0.009, y: -Math.abs(stride) * 1.5, rotation: stride * 0.012};
-    }
-    if (this.state === 'land') {
-      if (asSequence(frames?.land).length) return neutralMotion();
-      // Temporary compatibility only for legacy single-frame landing art.
-      // Scaling happens around the foot pivot because draw() translates there first.
-      const compression = Math.max(0, 1 - this.animTime / 0.12);
-      return {scaleX: 1 + compression * 0.055, scaleY: 1 - compression * 0.075, y: 0, rotation: 0};
-    }
+  renderMotion() {
+    // Character body mechanics must come from authored PNG frames. Runtime
+    // scaling/bobbing would fake animation richness and can move the foot pivot.
     return neutralMotion();
   }
 

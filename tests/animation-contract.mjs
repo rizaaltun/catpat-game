@@ -38,18 +38,14 @@ const idleMushroom = {kind: 'mushroom', animationState: 'idle', animationTime: 0
 assert.ok([0, 5].includes(mushroomFrameIndex(idleMushroom, 0)), 'idle mushroom must breathe between its two idle frames');
 
 const player = new Player(0, 0, {width: 68, height: 102});
-player.state = 'idle';
-player.animTime = 0.4;
-assert.notDeepEqual(player.renderMotion(), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'legacy single-frame idle may use procedural breathing');
-assert.deepEqual(player.renderMotion({idleSequence: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored idle sequence must not receive procedural breathing');
+for (const state of ['idle', 'run', 'walk', 'land', 'jump', 'fall']) {
+  player.state = state;
+  player.animTime = 0.4;
+  assert.deepEqual(
+    player.renderMotion(),
+    {scaleX: 1, scaleY: 1, y: 0, rotation: 0},
+    `${state} must never fake authored character motion with runtime transforms`,
+  );
+}
 
-player.state = 'run';
-player.animTime = 0.07;
-assert.deepEqual(player.renderMotion({run: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored run frames must not receive double-bounce transforms');
-
-player.state = 'land';
-player.animTime = 0.02;
-assert.ok(player.renderMotion().scaleY < 1, 'legacy single-frame landing keeps temporary foot-pivot squash fallback');
-assert.deepEqual(player.renderMotion({land: [{}, {}]}), {scaleX: 1, scaleY: 1, y: 0, rotation: 0}, 'authored landing sequence must carry its own squash and recovery');
-
-console.log('animation contract: authored character motion + legacy object/fallback states OK');
+console.log('animation contract: authored character motion only; no procedural Catpat transforms OK');
