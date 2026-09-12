@@ -84,13 +84,10 @@ const placeOnGround = (player, x, feetY) => {
   for (let frame = 0; frame < 90; frame += 1) runtime.updateBeforePlayer(1 / 60, player);
   assert.ok(runtime.bridge.currentOffsetY < 1, 'bridge should reach its raised position');
 
+  assert.deepEqual(runtime.friends, [], 'book-external legacy friends must not exist in production traversal');
   placeOnGround(player, runtime.level.goal.x, runtime.level.goal.y);
   runtime.updateAfterPlayer(1 / 60, player, input());
-  assert.equal(runtime.completed, false, 'tickets alone must not finish the journey before all friends can join');
-  assert.ok(runtime.takeEvents().some(event => event.type === 'objective' && event.text.includes('yard')));
-  for (const friend of runtime.friends) friend.helped = true;
-  runtime.updateAfterPlayer(1 / 60, player, input());
-  assert.equal(runtime.completed, true);
+  assert.equal(runtime.completed, true, 'verified traversal may finish while book missions remain art-gated');
   assert.ok(runtime.takeEvents().some(event => event.type === 'complete'));
 }
 

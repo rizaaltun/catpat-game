@@ -17,5 +17,15 @@
     "Story, mission behavior, level trigger, character asset, manifest and QA must migrate together before a legacy event is closed.",
     "The book-story CI audit remains non-blocking only while total is above zero and the migration is explicitly active.",
     "When total reaches zero, the CI audit must become blocking and all rejected legacy character assets must be unreferenced by runtime."
-  ]
+  ],
+  "current": {
+    "commit": "PENDING_VERIFIED_COMMIT",
+    "total": 0,
+    "files": {
+      "src/story/Story.js": 0,
+      "src/game/Mission.js": 0,
+      "src/game/levels.js": 0
+    }
+  },
+  "status": "CLOSED_ZERO_LEGACY_RUNTIME_TOKENS"
 }

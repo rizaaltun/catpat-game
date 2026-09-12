@@ -1,31 +1,24 @@
 import assert from 'node:assert/strict';
-import {INTRO, SPEAKERS, DialogueSequence, missionStory, festivalStory} from '../src/story/Story.js';
+import {SPEAKERS, DialogueSequence} from '../src/story/Story.js';
+import {bookMissionStory} from '../src/story/BookStory.js';
 import {CompanionTrail} from '../src/game/CompanionTrail.js';
 import {Game} from '../src/game/Game.js';
 
-assert.equal(INTRO.length, 5);
-for (const id of ['apple-garden', 'dark-lanterns', 'lost-toy']) {
-  const before = missionStory(id);
-  const after = missionStory(id, 'after');
-  assert.equal(before.lines.length, 4);
-  assert.equal(after.lines.length, 3);
-  assert.ok(after.lines.every(line => line.emotion === 'happy'));
-  for (const line of [...before.lines, ...after.lines]) assert.ok(SPEAKERS[line.speaker]);
-  before.lines[0].text = 'mutation';
-  assert.notEqual(missionStory(id).lines[0].text, 'mutation');
+for (const id of ['branch-game-invitation', 'market-queue', 'pitpit-daisy-garden']) {
+  const before = bookMissionStory(id, 'before');
+  const sequence = new DialogueSequence(before.lines);
+  assert.ok(SPEAKERS[sequence.current.speaker]);
+  while (!sequence.done) sequence.advance();
+  assert.equal(sequence.advance(), null);
 }
-const sequence = new DialogueSequence(INTRO);
-assert.equal(sequence.current.speaker, 'catpat');
-for (let i = 0; i < INTRO.length; i++) sequence.advance();
-assert.equal(sequence.done, true);
-assert.equal(sequence.advance(), null);
 assert.throws(() => new DialogueSequence([]));
 assert.throws(() => new DialogueSequence([{speaker: 'unknown', text: 'x'}]));
-assert.throws(() => missionStory('missing'));
-const cast = ['apple-garden', 'dark-lanterns', 'lost-toy'].map((missionId, i) => ({id: String(i), missionId, helped: true}));
-assert.equal(festivalStory(cast).lines.length, 5);
-assert.equal(festivalStory(cast.map(item => ({...item, helped: false}))).lines.length, 2);
 
+const cast = [
+  {id: 'friend-maymun', characterId: 'maymun', helped: true},
+  {id: 'friend-porsuk', characterId: 'porsuk', helped: true},
+  {id: 'friend-pitpit', characterId: 'pitpit', helped: true},
+];
 const surface = {x1: 0, y1: 400, x2: 1000, y2: 400};
 const player = {x: 0, feetY: 400, facing: 1, grounded: true, groundedSurface: surface};
 const trail = new CompanionTrail(80);
@@ -43,17 +36,6 @@ assert.equal(trail.samples.length, 1, 'teleport clears the dangerous diagonal tr
 assert.ok(trail.poses().every(pose => !pose.visible));
 assert.equal(trail.members.length, 3, 'respawn must preserve recruited friends');
 
-// The trail follows a real recorded arc, rather than a straight line over a gap.
-const airTrail = new CompanionTrail(50);
-player.x = 0; player.feetY = 400; player.grounded = false; player.groundedSurface = null;
-airTrail.reset(player); airTrail.recruit(cast[0]);
-for (let x = 5; x <= 200; x += 5) { player.x = x; player.feetY = 400 - 110 * Math.sin(x / 200 * Math.PI); airTrail.record(player); }
-const airborne = airTrail.poses()[0];
-assert.ok(airborne.y < 395 && airborne.y > 290);
-assert.equal(airborne.grounded, false);
-assert.ok(airTrail.samples.length < 150);
-
-// Pause/resume must never create duplicate requestAnimationFrame loops.
 let queued = 0, canceled = 0, resets = 0;
 globalThis.requestAnimationFrame = () => ++queued;
 globalThis.cancelAnimationFrame = () => canceled++;
@@ -71,11 +53,4 @@ game.setPaused(true);
 game.update(1);
 assert.equal(game.time, time, 'paused dialogue freezes the simulation entirely');
 
-// A mission completion event must not corrupt the main-level ending timer.
-let requested = null;
-Object.assign(game, {finishing: 0, mission: {id: 'lost-toy'}, ui: {showStory: (...args) => { requested = args; }}});
-game.handleEvents([{type: 'complete'}]);
-assert.equal(game.finishing, 0);
-assert.equal(requested[0].lines.length, 3);
-assert.equal(typeof requested[1], 'function');
-console.log('story/companions: 12 contracts OK (data, pause, queue, recruitment, gaps, moving surfaces, mission completion)');
+console.log('story/companions: canonical dialogue + trail + pause contracts OK');

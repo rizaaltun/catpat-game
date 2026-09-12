@@ -3,7 +3,7 @@ export const LEVELS = [
     id: 0,
     title: 'Çatpat Gibi Bir Gün',
     subtitle: 'Şenlik yolu açılıyor',
-    objective: 'Dostlar\u0131na yard\u0131m et, 3 şenlik biletini bul, yol boyunca nazik ol ve giriş masasına götür',
+    objective: 'Şenlik yolunda ilerle, 3 şenlik biletini bul ve giriş masasına ulaş',
     theme: 'forest',
     length: 15200,
     targetMinutes: [6, 9],
@@ -99,13 +99,7 @@ const LEVEL01_MECHANISMS = [
   {id: 'crate-plate', asset: 'crate_pressure_plate.png', kind: 'crate-plate', x: 9650, y: 610, scale: 0.20, targets: ['crate-bridge']},
 ];
 
-// Friend sprite sheets: assets/gameplay/forest/friends_v01/, 2 frames each
-// (0 waiting, 1 happy) — see friends_v01/manifest.json.
-const LEVEL01_FRIENDS = [
-  {id: 'friend-porsuk', name: 'Porsuk', x: 3230, y: 600, sheetAsset: 'friend_porsuk_sheet.png', missionId: 'apple-garden'},
-  {id: 'friend-baykus', name: 'Baykuş', x: 8250, y: 520, sheetAsset: 'friend_baykus_sheet.png', missionId: 'dark-lanterns'},
-  {id: 'friend-civciv', name: 'Civciv', x: 11150, y: 610, sheetAsset: 'friend_civciv_sheet.png', missionId: 'lost-toy'},
-];
+const LEVEL01_FRIENDS = [];
 
 const LEVEL01_ZONES = [
   {id: 'gap-school-zone', x: 1900, speaker: 'Çatpat', text: 'Boşluk geniş görünüyor ama korkmama gerek yok — adımımı doğru zamanlarsam geçerim.'},

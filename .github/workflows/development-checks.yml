@@ -65,7 +65,6 @@ jobs:
           if-no-files-found: warn
       - name: Audit book-story migration
         if: ${{ !cancelled() && github.ref_name == 'chatgpt/month-01' }}
-        continue-on-error: true
         run: python qa/book_story_gate.py
       - name: Retain book-story audit
         if: ${{ always() && github.ref_name == 'chatgpt/month-01' }}
@@ -100,9 +99,7 @@ jobs:
           retention-days: 7
           if-no-files-found: error
 
-# Book-story audit is intentionally non-blocking only while the legacy mission
-# migration is active. It becomes blocking when all replacement-required tokens
-# have been removed from active runtime source.
+# Book-story audit is blocking: replacement-required legacy runtime tokens are zero.
 # Book binary asset validation is blocking on a wrong/tampered file but reports
 # PENDING without failing CI until the expected canonical PNG has been uploaded.
 # No deployment, domain changes, main merge, repository writes or credentials
