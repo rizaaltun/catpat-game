@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "BLOCKED_BINARY_PROMOTION",
+  "gate": "individual-runtime-png-promotion",
+  "branch": "chatgpt/month-01",
+  "scope": [
+    "crate animation source board replacement",
+    "mushroom animation source board replacement",
+    "canonical Pıtpıt binary promotion"
+  ],
+  "verifiedUnpromotedArt": {
+    "crateUniqueTransparentFrames": 5,
+    "mushroomUniqueTransparentFrames": 5,
+    "duplicateSourceFramesRejected": true,
+    "technicalChecks": ["RGBA transparency", "unique pixel hashes", "runtime sequence mapping", "asset budget", "standalone build"]
+  },
+  "blocker": "The connected repository write interface does not expose a local binary-file upload action. Encoding PNG bytes as text or promoting source boards would violate the final-runtime-art contract.",
+  "promotionRule": "Do not mark this art canonical or reference the uncommitted PNG paths from runtime until the exact verified PNG binaries can be uploaded and revalidated transactionally.",
+  "nextUnblockedTask": "remove book-external traversal dialogue and continue text/runtime canon cleanup"
+}

@@ -8,6 +8,7 @@ import {
 
 const level = {
   objective: 'legacy objective',
+  zones: [{id: 'legacy-zone', speaker: 'Orman', text: 'invented'}],
   friends: [
     {id: 'friend-porsuk', characterId: 'porsuk', missionId: 'apple-garden', sheetAsset: 'friend_porsuk_sheet.png'},
     {id: 'friend-baykus', characterId: 'baykus', missionId: 'dark-lanterns', sheetAsset: 'friend_baykus_sheet.png'},
@@ -19,6 +20,8 @@ const level = {
 const report = applyProductionCanonLock(level);
 assert.deepEqual(level.friends.map(friend => friend.id), ['friend-maymun']);
 assert.equal(level.objective, PRODUCTION_TRAVERSAL_OBJECTIVE);
+assert.deepEqual(level.zones, []);
+assert.equal(report.removedNarrativeZones, 1);
 assert.deepEqual(report.activeFriends, ['friend-maymun']);
 assert.equal(report.removedFriends.length, 3);
 assert.ok(report.removedFriends.every(item => item.reasons.length > 0));
@@ -29,13 +32,14 @@ assert.deepEqual(productionFriendRejectionReasons({
 
 const events = [
   {type: 'objective', text: 'safe'},
+  {type: 'dialogue', speaker: 'Anne', text: 'blocked'},
   {type: 'enter-mission', missionId: 'apple-garden', friendId: 'friend-porsuk'},
   {type: 'enter-book-mission', eventId: 'branch-game-invitation'},
   {type: 'prompt', text: 'safe'},
 ];
 const filtered = filterProductionEvents(events);
 assert.deepEqual(filtered.accepted.map(event => event.type), ['objective', 'enter-book-mission', 'prompt']);
-assert.equal(filtered.blocked.length, 1);
-assert.equal(filtered.blocked[0].reason, 'legacy-mission-entry-disabled');
+assert.equal(filtered.blocked.length, 2);
+assert.deepEqual(filtered.blocked.map(item => item.reason), ['non-book-traversal-dialogue-disabled', 'legacy-mission-entry-disabled']);
 
 console.log('production-canon-lock: PASS');

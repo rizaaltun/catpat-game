@@ -19,7 +19,7 @@
     "When total reaches zero, the CI audit must become blocking and all rejected legacy character assets must be unreferenced by runtime."
   ],
   "current": {
-    "commit": "PENDING_VERIFIED_COMMIT",
+    "commit": "6f5fd14b5e50e2a4b1acd62b80ba4438a9e2afa5",
     "total": 0,
     "files": {
       "src/story/Story.js": 0,

@@ -17,7 +17,7 @@ export function productionFriendRejectionReasons(friend = {}) {
 
 export function applyProductionCanonLock(level) {
   if (!level || !Array.isArray(level.friends)) {
-    return {removedFriends: [], activeFriends: []};
+    return {removedFriends: [], activeFriends: [], removedNarrativeZones: 0};
   }
 
   const removedFriends = [];
@@ -29,10 +29,13 @@ export function applyProductionCanonLock(level) {
   }
 
   level.friends = activeFriends;
+  const removedNarrativeZones = Array.isArray(level.zones) ? level.zones.length : 0;
+  if (Array.isArray(level.zones)) level.zones = [];
   if (removedFriends.length) level.objective = PRODUCTION_TRAVERSAL_OBJECTIVE;
   return {
     removedFriends,
     activeFriends: activeFriends.map(friend => friend.id),
+    removedNarrativeZones,
   };
 }
 
@@ -40,6 +43,10 @@ export function filterProductionEvents(events = []) {
   const accepted = [];
   const blocked = [];
   for (const event of events) {
+    if (event?.type === 'dialogue') {
+      blocked.push({event, reason: 'non-book-traversal-dialogue-disabled'});
+      continue;
+    }
     if (event?.type === 'enter-mission') {
       blocked.push({event, reason: 'legacy-mission-entry-disabled'});
       continue;
