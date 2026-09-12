@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_NO_MANDATORY_DAMAGE_HAZARDS",
+  "mandatoryHazards": [],
+  "traversalEvidence": {
+    "reachabilityTest": "tests/level01-reachability.mjs",
+    "runtimeSmoke": "tests/level01-runtime-smoke.mjs",
+    "mobileToleranceRequiredForFutureMandatoryHazards": true
+  },
+  "rule": "A mandatory hazard may be added only with measured geometry, timing/speed feasibility, unavoidable-damage proof, mobile tolerance, and a passing runtime test."
+}

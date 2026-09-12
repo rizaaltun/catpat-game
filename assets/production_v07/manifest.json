@@ -1,7 +1,7 @@
 {
   "schemaVersion": 8,
   "packageId": "catpat-professional-production-v07",
-  "status": "book-canon-migration-foundation",
+  "status": "book-canon-runtime-clean-art-promotion-blocked",
   "activeBranch": "chatgpt/month-01",
   "sourceBaseline": "claude/v06-integration",
   "visualPolicy": {
@@ -70,10 +70,11 @@
     "beforeCanonicalPromotion": true,
     "beforeCommit": true,
     "ciOnProductionBranch": true,
-    "legacyBookStoryAuditTemporarilyNonBlocking": true
+    "legacyBookStoryAuditTemporarilyNonBlocking": false,
+    "canonicalPromotionGate": "../../qa/production_promotion_gate.py"
   },
   "uiPackages": ["ui/menu", "ui/map", "ui/pause", "ui/settings", "ui/results", "ui/dialogue"],
   "characterPackages": ["characters/catpat", "characters/porsuk", "characters/maymun", "characters/pitpit", "characters/market_cashier"],
   "worldPackages": ["backgrounds/chapter01", "platforms/core", "hazards/core", "story/chapter01", "fx"],
-  "nextGate": "promote verified individual book-character PNG assets and wire zero-one-many book mission runtime"
+  "nextGate": "promote verified individual transparent PNG assets; binary repository upload is currently blocked"
 }
